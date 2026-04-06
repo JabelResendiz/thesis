@@ -14,6 +14,16 @@
 \usepackage{xcolor}
 \usepackage{multicol}
 \usepackage{graphicx}
+\usepackage{mdframed}
+\definecolor{mygrey}{rgb}{0.95,0.95,0.95} % Un gris claro para el fondo
+\mdfsetup{
+    backgroundcolor=mygrey,
+    linewidth=0pt, % Sin borde
+    innertopmargin=1em, % Margen interno superior
+    innerbottommargin=1em, % Margen interno inferior
+    innerleftmargin=1.5em, % Margen interno izquierdo (para simular indentación)
+    innerrightmargin=1.5em % Margen interno derecho
+}
 \floatstyle{plaintop}
 \restylefloat{table}
 \addbibresource{Bibliography.bib}
@@ -54,7 +64,7 @@
 \advisor{\\\vspace{0.25cm}MsC. Joanna Campbell Amos\\\vspace{0.2cm}MsC. Aracelys García Armenteros}
 \degree{Licenciado en Ciencia de la Computación}
 \faculty{Facultad de Matemática y Computación}
-\date{4 de Abril de 2026\\\vspace{0.25cm}\href{https://github.com/JabelResendiz/thesis}{github.com/JabelResendiz/thesis}}
+\date{\today \\\vspace{0.25cm}\href{https://github.com/JabelResendiz/thesis}{github.com/JabelResendiz/thesis}}
 \logo{Graphics/uhlogo}
 \makenomenclature
 
