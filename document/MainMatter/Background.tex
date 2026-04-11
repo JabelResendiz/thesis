@@ -76,13 +76,92 @@ Además, los reportes no permiten establecer relaciones causales directas entre 
 En este sentido \textquote{Tras realizar investigaciones, los científicos concluyen que la mayoría de los eventos notificados al VAERS no están asociados con la vacunación} (traducción propia) \cite{cdc_vaers}.
 Estas limitaciones requieren que los posibles riesgos identificados sean evaluados mediante sistemas complementarios y estudios más rigurosos, evidenciando la necesidad de enfoques más robustos en el diseño de sistemas de farmacovigilancia.
 
-\subsection{V-safe}
+\subsection{Sistema NotificaRAM de la Agencia Española de Medicamentos y Productos Sanitarios}
 
-% Sistema activo basado en móviles
-% Uso en COVID
-% Recolección estructurada
-% Ventajas vs VAERS
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.3]{Graphics/Logo_notifica_ram.png}
+    \caption{Logotipo del sistema NotificaRAM (notificaram.es)}
+    \label{fig:figura4}
+\end{figure}
+
+% Descripción general
+El sistema \textbf{notificaRAM} constituye el formulario electrónico oficial de notificación de sospechas de reacciones adversas a medicamentos en España, permitiendo la comunicación de posibles efectos adversos por parte de ciudadanos y profesionales sanitarios \cite{aemps_manual_2025}. 
+Este formulario se integra en el Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H), una red nacional coordinada por la Agencia Española de Medicamentos y Productos Sanitarios (AEMPS) para la recogida, registro y evaluación de sospechas de reacciones adversas \cite{aemps_sefv_2025}.
+
+% Tipo de notificación
+El sistema se basa en un modelo de notificación espontánea, en el que las sospechas de reacciones adversas pueden ser comunicadas tanto por profesionales sanitarios como por la ciudadanía \cite{aemps_notificacion_2026}. 
+Los profesionales sanitarios deben notificar estas sospechas cuando las detectan, mientras que la ciudadanía puede hacerlo cuando sospecha una posible reacción adversa \cite{aemps_notificacion_2026}.
+
+% Actores que reportan
+Los actores implicados en la notificación incluyen profesionales sanitarios (como médicos, farmacéuticos y personal de enfermería) y ciudadanos o pacientes. 
+Ambos grupos pueden comunicar sospechas de reacciones adversas mediante los formularios disponibles en la plataforma \cite{aemps_manual_2025, aemps_notificacion_2026}.
+
+% Canal de notificación
+La notificación se realiza a través de formularios electrónicos disponibles en la plataforma oficial \url{https://www.notificaram.es}, donde el usuario selecciona el tipo de formulario según sea ciudadano o profesional sanitario. 
+Las notificaciones son remitidas a los centros autonómicos de farmacovigilancia para su evaluación e incorporación al sistema \cite{aemps_manual_2025, aemps_sefv_2025}.
+
+% Infraestructura del sistema
+El SEFV-H es una red descentralizada en la que los centros autonómicos de farmacovigilancia registran y evalúan las sospechas de reacciones adversas en una base de datos común denominada \textbf{FEDRA} (Farmacovigilancia Española, Datos de Reacciones Adversas) \cite{aemps_fedra_2026}. 
+Este sistema permite la recogida y análisis coordinado de las notificaciones dentro del sistema nacional de farmacovigilancia \cite{aemps_sefv_2025}.
+
+Asimismo, los casos registrados en FEDRA son transmitidos a la base de datos europea de sospechas de reacciones adversas \textbf{EudraVigilance}, utilizada por las agencias reguladoras de la Unión Europea para la detección de señales de seguridad \cite{aemps_notificacion_2026}.
+
 % Limitaciones
+El sistema presenta limitaciones propias del modelo de notificación espontánea, ya que la información depende de las sospechas comunicadas por los notificadores y de la calidad de los datos registrados \cite{aemps_notificacion_2026}. 
+En este sentido, pueden existir problemas de infranotificación, especialmente en casos leves o no reconocidos como reacciones adversas, así como variabilidad en la completitud y precisión de la información reportada. 
+Asimismo, la dependencia de la iniciativa del notificador introduce posibles sesgos, condicionados por factores como la experiencia clínica, el nivel de conocimiento del sistema o la percepción de gravedad del evento adverso.
+Adicionalmente, al no tratarse de un sistema de vigilancia activa, la capacidad para identificar de manera oportuna eventos poco frecuentes o establecer relaciones causales directas entre el medicamento y la reacción adversa puede verse limitada, requiriendo la realización de estudios complementarios más rigurosos.
+
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=1.8]{Graphics/logo_aemps.jpg}
+%     \caption{Logotipo del sistema NotificaRAM (notificaram.es)}
+%     \label{fig:figura4}
+% \end{figure}
+
+
+
+\subsection{Sistema V-safe del Centers for Disease Control and Prevention}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{Graphics/v-safe-logo.png}
+    \caption{Logotipo del sistema V-safe (vsafe.cdc.gov)}
+    \label{fig:figura5}
+\end{figure}
+
+
+El sistema \textbf{V-safe} es una herramienta digital de monitoreo de seguridad vacunal desarrollada por el \textit{Centers for Disease Control and Prevention} (CDC), orientada al seguimiento de personas vacunadas en los Estados Unidos.
+Se lanzó originalmente en diciembre de 2020 para monitorear la seguridad de las vacunas contra el \textbf{COVID-19}. 
+Ahora, V-safe permite rastrear a sujetos vacunados después de recibir una vacuna contra el COVID-19 o contra el \textbf{Virus Respiratorio Sincitial} (VRS)\cite{cdc_about_vsafe}. 
+
+A diferencia de los sistemas tradicionales de farmacovigilancia basados en notificación espontánea, V-safe implementa un enfoque de \textbf{vigilancia activa}, en el cual el sistema contacta de manera proactiva a los usuarios mediante encuestas periódicas enviadas tras la vacunación. 
+Después de inscribirse y seleccionar la vacuna que recibió, V-safe hace preguntas por mensajes de texto (SMS) o correo electrónico sobre cómo se siente el sujeto después de la vacunación, incluso si no presenta efectos secundarios. 
+De este modo, el sistema está dirigido principalmente a personas vacunadas que participan de forma voluntaria, permitiendo la recopilación sistemática de información directamente desde el usuario.
+Recibe un chequeo diario durante la primera semana, y luego un chequeo semanal durante seis semanas adicionales \cite{cdc_vsafe_portal}.
+
+La Figura \ref{fig:vsafe_flujo} muestra un ejemplo del flujo de interacción del sistema V-safe, donde se ilustra el proceso de envío de encuestas y la recolección de información por parte de los usuarios \cite{vsafe_monitoring_article}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=2.5]{Graphics/gr1_lrg.jpg}
+    \caption{Ejemplo del flujo de interacción del sistema V-safe mediante encuestas digitales}
+    \label{fig:vsafe_flujo}
+\end{figure}
+
+
+Desde una perspectiva funcional, una de las principales fortalezas de V-safe radica en su capacidad para implementar un modelo de vigilancia activa a gran escala, permitiendo la recopilación de datos en tiempo casi real sobre la seguridad de las vacunas. Durante su implementación inicial, el sistema demostró un alcance masivo: "más de 10 millones de personas se registraron y completaron más de 151 millones de encuestas" \cite{vsafe_monitoring_article}. Este enfoque permite al CDC comprender mejor los efectos secundarios experimentados poco después de la inmunización, aportando datos que a menudo superan los obtenidos en ensayos clínicos tradicionales.
+El diseño del sistema facilita un seguimiento longitudinal riguroso de los individuos vacunados. Esto se logra mediante un esquema de comunicación automatizado donde el usuario recibe un "chequeo de salud diario durante la primera semana después de la vacunación y luego un chequeo semanal por seis semanas adicionales". Esta periodicidad mejora la detección temprana de posibles eventos adversos y permite una observación continuada de la salud del paciente.
+Asimismo, la estandarización de las encuestas y el uso de tecnologías móviles (mensajes de texto y correos electrónicos) garantizan la obtención de datos estructurados y comparables. Al emplear herramientas digitales para realizar "chequeos que típicamente toman menos de dos minutos", el sistema optimiza la recolección de información técnica que ya ha sido utilizada en más de 25 publicaciones científicas para validar la seguridad de las vacunas \cite{vsafe_monitoring_article}
+
+No obstante, el sistema presenta limitaciones asociadas a su diseño y funcionamiento. 
+Entre ellas se encuentra la dependencia del acceso a dispositivos móviles y conectividad, lo cual puede generar sesgos en la población participante. 
+Asimismo, al tratarse de un sistema basado en autodeclaración, la información reportada puede carecer de validación clínica directa. 
+Adicionalmente, la participación voluntaria y longitudinal (que dura 6 semanas o más) fatiga al participante, un fenómeno documentado donde la respuesta suele decaer tras los primeros días. 
+Finalmente, aunque el sistema permite identificar patrones y señales de seguridad, no es suficiente por sí solo para establecer relaciones causales entre la vacunación y los eventos adversos reportados.
+
 
 \subsection{EudraVigilance}
 
@@ -92,13 +171,6 @@ Estas limitaciones requieren que los posibles riesgos identificados sean evaluad
 % Enfoque regulatorio
 % Limitaciones
 
-
-\subsection{Notificación de sospechas de reacciones adversas a medicamentos (RAM) de uso humano}
-
-% Descripción General y Gestión Institucional
-
-El Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H) se define como uns estructura descentralizada,
-coordinada por la Agencia Española de Medicamentos y Productos Sanitarios (AEMPS). Su
 
 \subsection{Iniciativas internacionales de la Organización de las Naciones Unidas}
 
@@ -114,15 +186,163 @@ coordinada por la Agencia Española de Medicamentos y Productos Sanitarios (AEMP
 
 
 
+\section{Análisis de tecnologías para la implementación del sistema propuesto}
+\label{section:analisis_tecnologias}
+
+
+\subsection{Criterios técnicos para la selección de tecnologías}
+\label{subsection:criterios}
+
+\subsection{Tecnologías para el desarrollo del backend}
+\label{subsection:backend}
+
+\subsubsection{.NET Core}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/dotnetcore-original.png}
+    \caption{Logo de .NET.}
+    \label{fig:dotnet_core}
+\end{figure}
+
+.NET Core (actualmente integrado dentro de la plataforma unificada .NET 6+) es un framework de desarrollo multiplataforma, de código abierto, mantenido por Microsoft \cite{dotnet_official}, orientado a la construcción de aplicaciones modernas, incluyendo servicios web, APIs REST y aplicaciones de alto rendimiento. 
+Su diseño modular y su enfoque en la eficiencia lo convierten en una alternativa adecuada para el desarrollo de sistemas backend que requieren confiabilidad y escalabilidad.
+
+Una de las principales características de la plataforma .NET es su modelo de ejecución basado en el Common Language Runtime (CLR), el cual proporciona un entorno gestionado para la ejecución del código, permitiendo un manejo eficiente de la memoria, control de excepciones y seguridad en tiempo de ejecución \cite{dotnet_official}.
+
+El framework proporciona soporte nativo para la construcción de servicios web mediante ASP.NET Core, facilitando el desarrollo de APIs REST con una arquitectura desacoplada y orientada a servicios \cite{ms_aspnet_architecture}. 
+Este enfoque contribuye a la separación de responsabilidades dentro del sistema, favoreciendo la mantenibilidad y la evolución del software.
+
+Asimismo, .NET integra herramientas como Entity Framework Core, que permiten interactuar con bases de datos relacionales mediante un enfoque orientado a objetos \cite{dotnet_official}. 
+Este mecanismo simplifica el acceso a datos y facilita la implementación de operaciones transaccionales, contribuyendo a la consistencia de la información en sistemas que gestionan datos críticos.
+
+Adicionalmente, la plataforma se integra con patrones de diseño ampliamente utilizados en el desarrollo de software moderno, tales como la arquitectura en capas, el patrón MVC y la inyección de dependencias, lo cual favorece la construcción de sistemas escalables y mantenibles \cite{ms_aspnet_architecture}.
+
+Desventajas:
+\begin{itemize}
+    \item Dependencia del ecosistema Microsoft, lo cual puede limitar la portabilidad en ciertos contextos tecnológicos.
+    \item Menor flexibilidad en la integración con herramientas fuera del entorno .NET en comparación con otras alternativas.
+    \item Curva de aprendizaje asociada a la comprensión del ecosistema completo (.NET, ASP.NET, Entity Framework).
+    \item Requiere una correcta estructuración inicial para aprovechar adecuadamente sus capacidades arquitectónicas.
+\end{itemize}
 
 
 
+\subsubsection{Spring Boot}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/spring-original.png}
+    \caption{Logo de Spring Boot}
+    \label{fig:spring_boot}
+\end{figure}
+
+Spring Boot es un framework de desarrollo basado en Java, de código abierto, mantenido por VMware, orientado a la construcción de aplicaciones backend modernas, incluyendo servicios web, APIs REST y aplicaciones empresariales escalables \cite{spring_official}. 
+Su enfoque en la configuración automática y la reducción de complejidad en la inicialización de proyectos lo convierten en una alternativa ampliamente utilizada en el desarrollo de sistemas robustos.
+
+Una de las principales características del ecosistema Spring es su modelo basado en la Inversión de Control (IoC), implementado a través de un contenedor que gestiona el ciclo de vida de los componentes y sus dependencias \cite{spring_official}. 
+Este mecanismo permite desacoplar las distintas partes del sistema, facilitando la mantenibilidad y promoviendo buenas prácticas de diseño.
+
+El framework proporciona soporte para la construcción de servicios web mediante Spring MVC, lo cual permite el desarrollo de APIs REST siguiendo un enfoque basado en controladores y patrones bien definidos \cite{spring_in_action}.
+Este modelo favorece la separación de responsabilidades dentro del sistema y contribuye a una organización estructurada del código.
+
+Asimismo, Spring Boot integra herramientas como Spring Data, que permiten la interacción con bases de datos relacionales mediante abstracciones de alto nivel \cite{spring_official}.
+Este enfoque simplifica el acceso a datos y facilita la implementación de operaciones transaccionales, contribuyendo a la consistencia de la información en sistemas que manejan datos críticos.
+
+Adicionalmente, el modelo basado en inversión de control permite una gestión flexible de las dependencias entre componentes, facilitando la extensibilidad del sistema y su adaptación a cambios en los requisitos \cite{spring_in_action}.
+
+Desventajas:
+\begin{itemize}
+    \item Complejidad conceptual asociada al modelo de inversión de control y al uso extensivo de anotaciones, lo cual puede dificultar la comprensión del flujo de ejecución del sistema.
+    \item Mayor esfuerzo inicial requerido para estructurar correctamente la aplicación, especialmente en sistemas con múltiples módulos.
+    \item Posibilidad de introducir errores de configuración si no se gestiona adecuadamente el ciclo de vida de los componentes.
+    \item Verbosidad inherente al lenguaje Java, lo cual puede afectar la productividad en comparación con alternativas más concisas.
+\end{itemize}
+
+
+\subsubsection{NestJS}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/nestjs-original.png}
+    \caption{Logo de NestJS}
+    \label{fig:nest_js}
+\end{figure}
+
+NestJS es un framework de desarrollo backend basado en Node.js y TypeScript, de código abierto, diseñado para la construcción de aplicaciones escalables y mantenibles \cite{nestjs_official}. 
+Su arquitectura está fuertemente inspirada en patrones como la inversión de control y la programación modular, lo cual permite estructurar aplicaciones de manera organizada y predecible.
+
+Una de sus principales características es el uso intensivo de TypeScript, lo cual introduce tipado estático en el desarrollo sobre Node.js, favoreciendo la detección temprana de errores y mejorando la mantenibilidad del código.
+
+El framework implementa un sistema de inyección de dependencias similar al de otros frameworks modernos, permitiendo desacoplar componentes y facilitar la prueba y reutilización del código \cite{nestjs_official}.
+
+Asimismo, NestJS utiliza una arquitectura basada en módulos, controladores y servicios, lo cual permite organizar la lógica de negocio de manera estructurada, similar a patrones utilizados en frameworks como Spring Boot o ASP.NET Core.
+Adicionalmente, NestJS puede integrarse con bibliotecas de persistencia de datos como TypeORM o Prisma, lo cual permite la interacción con bases de datos relacionales mediante un enfoque basado en entidades o esquemas tipados, dependiendo de la implementación seleccionada.
+
+Desventajas:
+\begin{itemize}
+    \item Menor madurez en entornos empresariales críticos en comparación con frameworks como Spring Boot o .NET.
+    \item Dependencia del ecosistema Node.js, lo cual puede introducir variabilidad en la gestión de dependencias.
+    \item Rendimiento dependiente del runtime de JavaScript/Node en comparación con soluciones compiladas.
+    \item Comunidad y ecosistema aún en crecimiento en comparación con alternativas más consolidadas.
+\end{itemize}
+
+\subsection{Conclusiones sobre las plataformas de desarrollo expuestas}
+
+A partir del análisis realizado, se evidencia que las tres tecnologías estudiadas presentan enfoques válidos para el desarrollo de aplicaciones backend modernas, con características que responden a distintos paradigmas de diseño y necesidades de implementación.
+
+.NET Core destaca por su integración con el ecosistema Microsoft y su fuerte soporte para aplicaciones empresariales con altos requerimientos de confiabilidad y consistencia de datos. 
+Por su parte, Spring Boot ofrece un modelo de desarrollo basado en la inversión de control que favorece la flexibilidad y la organización modular del sistema. 
+En contraste, NestJS representa una alternativa moderna dentro del ecosistema Node.js, caracterizada por el uso de TypeScript y una arquitectura inspirada en patrones ampliamente utilizados en frameworks empresariales.
+
+En función del contexto del sistema propuesto, orientado a la gestión de información sensible en el ámbito de la salud, se identifican como aspectos relevantes la robustez del modelo de persistencia de datos, el soporte para arquitecturas estructuradas y la madurez del ecosistema tecnológico. 
+Estos elementos serán tomados como base para la selección de las tecnologías que conformarán la solución final del sistema.
+
+
+%-------------------------------------------------
+
+\subsection{Frameworks para el desarrollo de aplicaciones móviles}
+\label{subsection:frontend}
+
+\subsubsection{Flutter}
+\subsubsection{React Native}
+
+%-------------------------------------------------
+
+\subsection{Sistemas de gestión de bases de datos}
+\label{subsection:bases_datos}
+
+\subsubsection{MySQL (Relacional)}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/mysql-original-wordmark.png}
+    \caption{Logo de MySQL}
+    \label{fig:mysql}
+\end{figure}
+
+\subsubsection{MongoDB (NoSQL)}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/mongodb-original-wordmark.png}
+    \caption{Logo de MongoDB}
+    \label{fig:mongodb}
+\end{figure}
+
+%-------------------------------------------------
+
+\subsection{Síntesis comparativa de las tecnologías analizadas}
+\label{subsection:sintesis}
+
+\subsection{Selección tecnológica del sistema}
+\label{subsection:seleccion}
 
 
 
-\section{Tecnologías para el desarrollo de la plataforma}
-% Comparativa de Frameworks (Flutter vs React Native, etc.)
-\subsection{Justificación de la tecnología seleccionada}
 
 \section{Estándares y librerías para la gestión de datos médicos}
 % Análisis de SQLite, librerías de validación, etc.
