@@ -120,8 +120,6 @@ Adicionalmente, al no tratarse de un sistema de vigilancia activa, la capacidad 
 %     \label{fig:figura4}
 % \end{figure}
 
-
-
 \subsection{Sistema V-safe del Centers for Disease Control and Prevention}
 
 
@@ -163,35 +161,60 @@ Adicionalmente, la participación voluntaria y longitudinal (que dura 6 semanas 
 Finalmente, aunque el sistema permite identificar patrones y señales de seguridad, no es suficiente por sí solo para establecer relaciones causales entre la vacunación y los eventos adversos reportados.
 
 
-\subsection{EudraVigilance}
-
-% Sistema europeo
-% Gestión institucional
-% Nivel de integración
-% Enfoque regulatorio
-% Limitaciones
-
-
-\subsection{Iniciativas internacionales de la Organización de las Naciones Unidas}
-
-% Planes/global frameworks
-% Enfoque estratégico más que técnico
-% Importancia de digitalización
-% Brechas en implementación
-
 \subsection{Análisis comparativo de los sistemas estudiados}
+
+El análisis de los sistemas VAERS, V-safe y NotificaRAM permite identificar diferencias significativas en cuanto a su enfoque metodológico, nivel de digitalización y mecanismos de captura de información.
+
+En primer lugar, se observa una distinción clara en el modelo de vigilancia implementado. VAERS y NotificaRAM se basan en esquemas de vigilancia pasiva, donde la calidad y cantidad de los datos dependen de la iniciativa de los notificadores. En contraste, V-safe adopta un enfoque de vigilancia activa, permitiendo la recolección sistemática y periódica de información directamente desde los usuarios vacunados.
+
+Desde la perspectiva tecnológica, V-safe presenta un mayor grado de digitalización al integrar mecanismos automatizados de seguimiento mediante dispositivos móviles, lo que facilita la interacción continua con el usuario. Por su parte, VAERS y NotificaRAM, aunque disponen de plataformas web, dependen en mayor medida de la acción voluntaria del usuario para el envío de reportes.
+
+En cuanto a los actores involucrados, los sistemas pasivos permiten una mayor diversidad de notificadores, incluyendo profesionales de la salud, fabricantes y ciudadanos. Sin embargo, esta apertura introduce variabilidad en la calidad de los datos. En contraste, V-safe se centra en usuarios previamente registrados, lo que permite una mayor consistencia en la información recolectada.
+
+Finalmente, en términos de limitaciones, los sistemas de vigilancia pasiva presentan problemas de subregistro, sesgos de notificación y dificultades para establecer relaciones causales. Por otro lado, aunque V-safe mejora la calidad y frecuencia de los datos, su alcance se limita a los usuarios que participan voluntariamente en el sistema.
+
+En conjunto, estos sistemas reflejan diferentes enfoques dentro de la farmacovigilancia moderna, evidenciando un tránsito desde modelos reactivos hacia estrategias más proactivas y centradas en el usuario.
 
 \subsection{Conclusiones sobre las soluciones actuales}
 
+El estudio de los sistemas analizados evidencia que, si bien existen soluciones consolidadas para la notificación de eventos adversos, estas presentan limitaciones significativas desde el punto de vista funcional y tecnológico.
 
+Los sistemas basados en vigilancia pasiva, como VAERS y NotificaRAM, continúan siendo fundamentales debido a su amplia cobertura y apertura a múltiples actores. No obstante, su dependencia de la notificación voluntaria limita la completitud, oportunidad y calidad de los datos recolectados.
+
+Por otro lado, soluciones más recientes como V-safe introducen enfoques innovadores basados en vigilancia activa y tecnologías móviles, mejorando la frecuencia y consistencia de la información. Sin embargo, estos sistemas presentan restricciones en términos de alcance poblacional y dependencia de la participación voluntaria de los usuarios.
+
+De manera general, se identifica la necesidad de sistemas que integren las ventajas de ambos enfoques, combinando la accesibilidad y cobertura de la vigilancia pasiva con mecanismos automatizados que permitan una recolección más sistemática, oportuna y estructurada de los datos.
+
+Estas limitaciones evidencian oportunidades para el diseño de nuevas soluciones tecnológicas orientadas a mejorar la eficiencia, calidad e interoperabilidad en la notificación de eventos adversos, lo cual constituye la base para el desarrollo del sistema propuesto en la presente investigación.
 
 
 \section{Análisis de tecnologías para la implementación del sistema propuesto}
 \label{section:analisis_tecnologias}
 
+El desarrollo de sistemas informáticos modernos orientados al dominio clínico requiere la selección de un conjunto de tecnologías que garanticen propiedades fundamentales como la confiabilidad, la integridad de los datos, la escalabilidad y la mantenibilidad del software. A diferencia de aplicaciones convencionales, en este tipo de sistemas resulta especialmente relevante la correcta gestión de la información, así como la capacidad de respuesta ante un crecimiento progresivo de usuarios y volumen de datos.
+
+En este sentido, el presente análisis se basa en el estudio de diferentes alternativas tecnológicas utilizadas en la construcción de sistemas modernos, abarcando tanto el desarrollo del backend como de las interfaces de usuario y los sistemas de gestión de bases de datos. La selección de estas tecnologías no se realiza de manera arbitraria, sino a partir de criterios técnicos previamente definidos que permiten evaluar de forma objetiva las distintas opciones disponibles.
 
 \subsection{Criterios técnicos para la selección de tecnologías}
 \label{subsection:criterios}
+
+Con el objetivo de garantizar una selección fundamentada de las tecnologías que conformarán la solución propuesta, se establecen los siguientes criterios de evaluación:
+
+En primer lugar, se considera la eficiencia y el rendimiento de las tecnologías, entendidos como la capacidad del sistema para responder de manera adecuada bajo cargas de trabajo variables y potencialmente elevadas. 
+Este aspecto resulta especialmente relevante en sistemas de autorreporte clínico, donde la disponibilidad y rapidez de respuesta impactan directamente en la calidad del servicio.
+
+En segundo lugar, se analiza la capacidad de escalabilidad, es decir, la posibilidad de que las tecnologías seleccionadas permitan el crecimiento del sistema sin requerir cambios estructurales significativos. 
+Esto incluye tanto la escalabilidad vertical como horizontal, dependiendo del componente analizado.
+
+Un tercer criterio corresponde a la mantenibilidad del sistema, entendida como la facilidad para realizar modificaciones, extensiones o correcciones en el software sin afectar negativamente su funcionamiento global. 
+Este aspecto está directamente relacionado con la calidad de la arquitectura y el nivel de acoplamiento entre componentes.
+
+Asimismo, se evalúa la madurez tecnológica y el soporte de las comunidades asociadas a cada herramienta, lo cual influye en la disponibilidad de documentación, librerías, actualizaciones y soluciones a problemas comunes.
+
+Finalmente, se considera la adecuación al dominio del problema, es decir, la capacidad de la tecnología para ajustarse a los requerimientos específicos de un sistema orientado al manejo de información clínica, donde la consistencia de los datos y la trazabilidad de la información son aspectos fundamentales.
+
+A partir de estos criterios, en las siguientes subsecciones se realiza un análisis comparativo de las principales alternativas tecnológicas para el desarrollo del backend, el frontend y los sistemas de gestión de bases de datos.
+
 
 \subsection{Tecnologías para el desarrollo del backend}
 \label{subsection:backend}
@@ -227,9 +250,7 @@ Desventajas:
 \end{itemize}
 
 
-
 \subsubsection{Spring Boot}
-
 
 \begin{figure}[htbp]
     \centering
@@ -262,7 +283,6 @@ Desventajas:
 
 
 \subsubsection{NestJS}
-
 
 \begin{figure}[htbp]
     \centering
@@ -303,45 +323,138 @@ Estos elementos serán tomados como base para la selección de las tecnologías 
 
 %-------------------------------------------------
 
-\subsection{Frameworks para el desarrollo de aplicaciones móviles}
+\subsection{Tecnologías para el desarrollo del frontend}
 \label{subsection:frontend}
 
-\subsubsection{Flutter}
-\subsubsection{React Native}
+\subsubsection{React}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/react-original-wordmark.png}
+    \caption{Logo de React}
+    \label{fig:react}
+\end{figure}
+
+React es una biblioteca de JavaScript de código abierto desarrollada por Meta, orientada a la construcción de interfaces de usuario basadas en componentes reutilizables. Su paradigma declarativo permite describir el estado de la interfaz y delegar la actualización del DOM a un mecanismo eficiente de reconciliación \cite{react_official}.
+
+Una de sus principales características es el uso de un Virtual DOM, lo cual optimiza las actualizaciones de la interfaz al minimizar operaciones directas sobre el DOM real. Este enfoque resulta especialmente útil en aplicaciones con alta interacción del usuario y cambios frecuentes en la interfaz.
+
+Adicionalmente, React puede ser complementado con TypeScript, lo cual introduce tipado estático y mejora la mantenibilidad del código en sistemas de mediana y gran escala.
+
+Sin embargo, React no constituye una solución completa por sí misma, ya que requiere la integración de librerías externas para aspectos como enrutamiento, gestión de estado y arquitectura de la aplicación, lo cual puede incrementar la complejidad del ecosistema.
+
+\subsubsection{Angular}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/angularjs-original.png}
+    \caption{Logo de Angular}
+    \label{fig:angular}
+\end{figure}
+
+Angular es un framework de desarrollo frontend basado en TypeScript, mantenido por Google, orientado a la construcción de aplicaciones web de gran escala. A diferencia de bibliotecas como React, Angular proporciona una solución integral que incluye enrutamiento, inyección de dependencias, manejo de formularios y herramientas de estructuración de aplicaciones \cite{angular_official}.
+
+Su arquitectura basada en componentes y módulos permite organizar el código de manera estructurada, favoreciendo la escalabilidad en proyectos complejos. Además, su sistema de inyección de dependencias facilita la modularidad y la reutilización de componentes.
+
+No obstante, Angular introduce una curva de aprendizaje más pronunciada debido a la cantidad de conceptos integrados en el framework, así como una mayor complejidad inicial en comparación con alternativas más ligeras.
+
+\subsubsection{Vue}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{Graphics/vuejs-original-wordmark.png}
+    \caption{Logo de Vue.js}
+    \label{fig:vue}
+\end{figure}
+
+Vue.js es un framework progresivo de JavaScript diseñado para la construcción de interfaces de usuario interactivas. Su diseño incremental permite su adopción gradual, integrándose fácilmente en proyectos existentes o utilizándose como framework completo en aplicaciones modernas \cite{vue_official}.
+
+Vue combina características de frameworks como Angular y React, ofreciendo un sistema de reactividad eficiente y una sintaxis accesible para el desarrollo de interfaces declarativas.
+
+Sin embargo, aunque su ecosistema ha crecido considerablemente, en entornos empresariales de gran escala su adopción es menor en comparación con Angular o React, lo cual puede influir en la disponibilidad de recursos y soporte a largo plazo.
+
+
+\subsection{Conclusiones sobre los frameworks de frontend expuestos}
+
+A partir del análisis realizado, se observa que React, Angular y Vue representan enfoques distintos para la construcción de interfaces de usuario modernas.
+
+React destaca por su flexibilidad y su amplio ecosistema, permitiendo la construcción de interfaces altamente dinámicas mediante un enfoque basado en componentes. 
+Angular, por su parte, proporciona una solución más estructurada e integral, adecuada para aplicaciones de gran escala que requieren una arquitectura estricta desde el inicio. 
+Vue se posiciona como una alternativa intermedia, con una curva de aprendizaje más suave y un enfoque progresivo.
+
+En el contexto del sistema propuesto, caracterizado por interfaces altamente interactivas basadas en formularios dinámicos, se considera adecuado el uso de un enfoque basado en componentes con alta reactividad, lo cual favorece la elección de React como tecnología base para el desarrollo del frontend.
+
+
 
 %-------------------------------------------------
 
 \subsection{Sistemas de gestión de bases de datos}
 \label{subsection:bases_datos}
 
-\subsubsection{MySQL (Relacional)}
+\subsubsection{Bases de datos relacionales}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.8]{Graphics/mysql-original-wordmark.png}
-    \caption{Logo de MySQL}
+    \caption{Sistema de gestión de bases de datos relacionales : MySQL}
     \label{fig:mysql}
 \end{figure}
 
-\subsubsection{MongoDB (NoSQL)}
+Las bases de datos relacionales constituyen un modelo de almacenamiento de información basado en estructuras tabulares compuestas por filas y columnas, donde las relaciones entre entidades se establecen mediante claves primarias y foráneas. 
+Este enfoque permite garantizar propiedades fundamentales como la integridad referencial, la consistencia de los datos y el cumplimiento de transacciones ACID, aspectos críticos en sistemas que gestionan información sensible o estructurada \cite{elmasri2016fundamentals}.
+
+MySQL es uno de los sistemas de gestión de bases de datos relacionales más ampliamente utilizados en el desarrollo de aplicaciones web y empresariales, caracterizado por su madurez, rendimiento y amplio soporte comunitario \cite{mysql_official}. 
+Su modelo relacional facilita la implementación de esquemas bien definidos, lo cual resulta adecuado en escenarios donde la coherencia de los datos es un requisito prioritario, como es el caso de sistemas clínicos o de registro estructurado de eventos.
+
+Sin embargo, este tipo de sistemas puede presentar limitaciones en contextos donde se requiere una alta flexibilidad en la estructura de los datos o una escalabilidad horizontal intensiva, debido a la rigidez inherente del modelo relacional y a la necesidad de mantener esquemas previamente definidos.
+
+\subsubsection{Bases de datos NoSQL}
 
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.8]{Graphics/mongodb-original-wordmark.png}
-    \caption{Logo de MongoDB}
+    \caption{Sistema de gestión de bases de datos no relacionales : MongoDB}
     \label{fig:mongodb}
 \end{figure}
+
+
+Las bases de datos NoSQL surgen como alternativa a los modelos relacionales tradicionales, con el objetivo de ofrecer mayor flexibilidad en la estructura de los datos y una mejor adaptación a entornos distribuidos y de gran escala. 
+A diferencia del modelo relacional, estas bases de datos no requieren un esquema rígido, lo que permite la gestión de datos semi-estructurados o no estructurados \cite{moniruzzaman2013nosql}.
+
+MongoDB es uno de los sistemas NoSQL más representativos, basado en un modelo de documentos que almacena la información en formato BSON. 
+Este enfoque permite una evolución más dinámica del esquema de datos y facilita la escalabilidad horizontal en sistemas con grandes volúmenes de información \cite{mongodb_official}.
+
+No obstante, la flexibilidad del modelo NoSQL puede implicar desafíos en la consistencia de los datos y en la gestión de relaciones complejas entre entidades, lo cual puede resultar una limitación en sistemas donde la integridad de la información es un requisito crítico, como en aplicaciones de dominio clínico o regulado.
+
+\subsection{Conclusiones sobre los sistemas de gestión de bases de datos expuestos}
+
+A partir del análisis realizado, se evidencia que los sistemas de gestión de bases de datos relacionales y NoSQL responden a paradigmas distintos de modelado y almacenamiento de la información, los cuales se adaptan a necesidades específicas de cada tipo de sistema.
+
+Las bases de datos relacionales, representadas en este análisis por sistemas como MySQL, se caracterizan por un modelo estructurado basado en tablas y relaciones explícitas, lo cual permite garantizar propiedades como la integridad referencial, la consistencia de los datos y el soporte de transacciones ACID. 
+Estas características resultan especialmente relevantes en sistemas que requieren alta confiabilidad en la gestión de información estructurada, como es el caso de aplicaciones en el dominio clínico.
+
+Por otra parte, las bases de datos NoSQL, representadas por sistemas como MongoDB, ofrecen un modelo de almacenamiento más flexible, orientado a documentos, lo cual facilita la evolución dinámica del esquema de datos y la escalabilidad horizontal en entornos distribuidos. 
+Sin embargo, esta flexibilidad puede implicar compromisos en términos de consistencia fuerte y en la gestión de relaciones complejas entre entidades.
+
+En función del contexto del sistema propuesto, donde la integridad de los datos, la trazabilidad de eventos y la consistencia de la información constituyen requisitos fundamentales, se considera que los sistemas relacionales presentan ventajas significativas para la implementación de la solución.
 
 %-------------------------------------------------
 
 \subsection{Síntesis comparativa de las tecnologías analizadas}
 \label{subsection:sintesis}
 
-\subsection{Selección tecnológica del sistema}
-\label{subsection:seleccion}
+A partir del análisis realizado en las secciones anteriores, se evidencia que las tecnologías evaluadas presentan características diferenciadas en función del componente del sistema al que están orientadas, así como de los paradigmas de diseño que promueven.
 
+En el ámbito del backend, se identifican soluciones orientadas a la construcción de sistemas robustos y mantenibles, destacándose plataformas consolidadas como .NET y Spring Boot por su madurez, soporte arquitectónico y enfoque en aplicaciones empresariales, así como alternativas más recientes como NestJS, que introducen modelos modulares y flexibles dentro del ecosistema JavaScript.
 
+En cuanto al desarrollo de interfaces de usuario, se observa una tendencia hacia arquitecturas basadas en componentes y modelos declarativos, donde tecnologías como React, Angular y Vue ofrecen distintos niveles de estructuración, flexibilidad y control sobre la complejidad de la aplicación, en función de los requerimientos de interacción y dinamismo de la interfaz.
+
+Por otra parte, en el contexto de la persistencia de datos, las tecnologías analizadas reflejan enfoques diferenciados en cuanto al modelado y gestión de la información, lo cual influye directamente en aspectos como la consistencia, la integridad y la adaptabilidad del sistema ante cambios en los datos.
+
+De manera integral, se evidencia que la selección tecnológica no debe realizarse de forma aislada por componente, sino considerando la coherencia entre las distintas capas del sistema. En particular, la combinación de tecnologías backend, frontend y de persistencia debe garantizar un equilibrio entre rendimiento, mantenibilidad y confiabilidad, aspectos especialmente críticos en sistemas orientados a la gestión de información clínica.
+
+Estos elementos constituyen la base para la selección de las tecnologías que serán empleadas en la implementación del sistema, la cual se aborda en el capítulo siguiente.
 
 
 \section{Estándares y librerías para la gestión de datos médicos}
