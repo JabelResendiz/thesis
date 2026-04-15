@@ -1,0 +1,121 @@
+\chapter{Introducción}\label{chapter:introduction}
+\addcontentsline{toc}{chapter}{Introducción}
+
+La seguridad de los productos farmacéuticos constituye un pilar fundamental de los sistemas de salud pública a nivel mundial. 
+El monitoreo constante de las reacciones adversas asociadas a medicamentos y vacunas, proceso conocido como farmacovigilancia, dentro de la que se enmarca la vacunovigilancia, especializada en la supervisión de la seguridad de las vacunas, resulta esencial para la detección temprana de riesgos que no fueron identificados durante las fases de ensayos clínicos. 
+Este proceso permite evaluar de manera continua la relación beneficio-riesgo de los productos farmacéuticos una vez que estos son administrados a grandes poblaciones en condiciones reales.
+En este contexto, los sistemas de información desempeñan un rol decisivo, al posibilitar la captura, almacenamiento, procesamiento y análisis de grandes volúmenes de datos clínicos en intervalos de tiempo reducidos. 
+La integración de tecnologías informáticas en los procesos de farmacovigilancia ha contribuido significativamente a mejorar la eficiencia en la gestión de la información, facilitando la toma de decisiones por parte de las autoridades sanitarias.
+Con el avance de las tecnologías móviles y la digitalización progresiva de los servicios de salud, ha emergido la necesidad de incorporar mecanismos que permitan una mayor participación de la población en los procesos de vigilancia. 
+En este sentido, el autorreporte de eventos adversos por parte de los ciudadanos constituye una tendencia creciente a nivel internacional, al favorecer la recolección de información en tiempo real y mejorar la cobertura de los sistemas tradicionales.
+No obstante, la implementación de estos mecanismos plantea desafíos importantes relacionados con la calidad, integridad y validación de los datos reportados, especialmente cuando estos provienen de usuarios no especializados. 
+Esto evidencia la necesidad de desarrollar soluciones computacionales que no solo faciliten la interacción del usuario, sino que también garanticen la confiabilidad de la información recopilada.
+En correspondencia con estas necesidades, la presente investigación aborda el estudio y desarrollo de una solución informática orientada al autorreporte de eventos adversos, con el propósito de contribuir a la optimización de los procesos de farmacovigilancia mediante el uso de tecnologías modernas.
+
+\section{Contexto histórico y social de la farmacovigilancia}\label{section:contextoHistoricoSocial}
+Históricamente, la seguridad de los medicamentos ha sido una preocupación creciente para las autoridades sanitarias mundiales. 
+El surgimiento de la farmacovigilancia moderna se consolidó tras desastres farmacológicos internacionales ocurridos en el siglo XX, lo que impulsó la creación de programa internacionales de monitoreo de medicamentos, entre ellos el Programa Internacional de Monitoreo de Medicamentos de la Organización Mundial de la Salud (OMS). 
+Desde entonces, la recopilación de reacciones adversas ha evolucionado de ser una actividad puramente clínica y basada en papel a convertirse en una disciplina impulsada por grandes bases de datos globales.
+Este proceso ha estado estrechamente vinculado al desarrollo de los sistemas de información, los cuales han permitido automatizar la recolección, almacenamiento y análisis de datos clínicos a gran escala.
+En el contexto social contemporáneo, la rapidez con la que se introducen nuevas terapias y vacunas en el mercado exige una respuesta informativa inmediata. La digitalización de la sociedad ha transformado la relación entre los sistemas de salud y los ciudadanos; estos últimos ya no son sujetos pasivos, sino agentes activos en la generación de datos sobre su propia salud. Fenómenos globales recientes, como las campañas masivas de vacunación, han evidenciado la necesidad de contar con canales de comunicación directos y eficientes que permitan procesar miles de reportes en tiempos reducidos, algo imposible de gestionar con métodos tradicionales.
+En este escenario, la vacunovigilancia adquiere una relevancia particular.
+A nivel internacional, sistemas como VAERS (Vaccine Adverse Event Reporting System) en Estados Unidos han sentado precedentes sobre cómo la tecnología puede democratizar el reporte de eventos adversos. Sin embargo, la implementación de estos modelos en diferentes contextos nacionales requiere de una infraestructura computacional que se adapte a las normativas locales y a las capacidades tecnológicas de la población, garantizando que la información recolectada sea oportuna, confiable y útil para los procesos de monitoreo de la seguridad clínica y la toma de decisiones en salud pública.
+
+\section{Antecedentes, Motivación y Justificación}\label{section:antecedentesMotivacionJustificacion}
+
+En la práctica clínica actual del Instituto Finlay de Vacunas, el registro de eventos adversos post-vacunación depende predominantemente de mecanismos de notificación pasiva y manual. 
+Los pacientes deben acudir físicamente a los centros de salud o realizar llamadas telefónicas para reportar sintomatologías, lo que resulta en una subnotificación significativa del fenómeno. 
+Esta situación genera una insatisfacción en el seguimiento proactivo de eventos adversos, pues la demora en la captura de datos impide la detección temprana de posibles señales de alerta sanitaria. 
+Además, el procesamiento manual de formularios impresos aumenta la probabilidad de errores en la transcripción y la pérdida de información clínica relevante.
+En este contexto, se evidencia la necesidad de transitar hacia modelos más eficientes de recolección y gestión de la información, que permitan una mayor participación de la población y una respuesta más ágil por parte de las autoridades sanitarias. 
+Asimismo, la infraestructura actual carece de mecanismos computacionales que posibiliten la centralización, validación y procesamiento eficiente de los datos en tiempo real, lo cual limita la capacidad del sistema para garantizar la integridad y disponibilidad de la información en los procesos de farmacovigilancia de vacunas.
+
+\section{Presentación de la problemática}\label{section:presentacionProblema}
+
+A partir del análisis de la situación actual, se identifica una brecha significativa entre los mecanismos existentes para la gestión de información sobre eventos adversos y las exigencias de un sistema moderno orientado a la disponibilidad, integridad y oportunidad de los datos.
+
+En el Instituto Finlay de Vacunas, el proceso de reporte se realiza fundamentalmente mediante soportes físicos y métodos convencionales, lo cual implica que la información generada no se encuentra integrada en un sistema digital que permita su gestión automatizada. Esta condición limita la capacidad de procesamiento, almacenamiento y análisis de los datos en condiciones de inmediatez.
+
+Desde una perspectiva computacional, esta situación se manifiesta en varias limitaciones fundamentales:
+
+\begin{itemize}
+    \item \textbf{Ausencia de digitalización estructurada:} La información recopilada en formato físico no sigue un esquema que permita su integración directa en sistemas informáticos, dificultando su procesamiento automatizado.
+
+    \item \textbf{Falta de validación en el punto de captura:} Al no existir una interfaz digital, los datos no pueden ser verificados en el momento de su registro, lo que incrementa la probabilidad de errores e inconsistencias.
+
+    \item \textbf{Procesamiento diferido de la información:} La necesidad de transcribir y digitalizar posteriormente los datos introduce retrasos que afectan la disponibilidad oportuna de la información.
+
+    \item \textbf{Limitada capacidad de integración y análisis:} La inexistencia de un sistema centralizado impide la consolidación de los datos y su utilización eficiente en procesos de análisis.
+\end{itemize}
+
+En consecuencia, la problemática radica en la inexistencia de un mecanismo automatizado que permita la captura, validación y gestión de los datos generados en el proceso de reporte, garantizando la calidad , consistencia y  disponibilidad de los registros para su posterior análisis.
+
+\section{Planteamiento del Problema Científico}\label{section:planteamientoProblema}
+
+A partir de la problemática identificada, el problema científico de la presente investigación se define como:
+
+\textit{La carencia de un modelo computacional que permita la captura estructurada, validación temprana y gestión eficiente de los datos generados en el proceso de reporte de eventos adversos, garantizando su integridad, consistencia y disponibilidad para el análisis en el contexto del Instituto Finlay de Vacunas.}
+
+De este problema se deriva la siguiente pregunta científica:
+
+\textbf{¿Cómo desarrollar una solución informática que permita optimizar el proceso de reporte de eventos adversos, asegurando la captura estructurada, la validación y la disponibilidad oportuna de los datos generados?}
+
+\section{Actualidad, Novedad e Importancia}\label{section:actualidadNovedadImportancia}
+
+En el contexto actual de transformación digital de los sistemas de salud, se observa una tendencia creciente hacia la descentralización en la generación de datos clínicos, donde los propios usuarios participan activamente mediante herramientas digitales. Este escenario ha impulsado el desarrollo de soluciones móviles y web orientadas a la captura distribuida de información en tiempo real.
+
+No obstante, esta evolución introduce desafíos significativos desde la perspectiva computacional, particularmente en lo relacionado con la validación de datos heterogéneos en el punto de captura, la gestión de grandes volúmenes de información distribuida y la operación en entornos con conectividad limitada o intermitente. Estas condiciones demandan el diseño de sistemas que no solo faciliten la recolección de datos, sino que también garanticen propiedades esenciales como consistencia, integridad y disponibilidad desde el momento de su generación.
+
+En este escenario, la novedad de la presente investigación radica en el diseño de un enfoque computacional orientado a la validación reactiva de datos durante el proceso de autorreporte de eventos adversos. Este mecanismo permite la detección temprana de inconsistencias en el momento de la captura, contribuyendo a la mejora de la calidad de los datos desde su origen.
+
+Adicionalmente, se propone una arquitectura de sistema capaz de operar en escenarios de conectividad intermitente mediante mecanismos de almacenamiento local y sincronización diferida. Esta estrategia permite garantizar la continuidad operativa del sistema sin comprometer la integridad de la información, incorporando principios propios de sistemas distribuidos y tolerancia a fallos.
+
+Desde esta perspectiva, la propuesta se diferencia de los sistemas tradicionales de registro al integrar validación en tiempo de captura, procesamiento distribuido y resiliencia frente a condiciones de conectividad limitada.
+
+La importancia de este trabajo se fundamenta en su contribución al diseño de soluciones computacionales más robustas para la gestión de información clínica en contextos reales. En términos prácticos, la propuesta permite mejorar la calidad, consistencia y oportunidad de los datos recopilados, optimizando los procesos de análisis y toma de decisiones en farmacovigilancia.
+
+Desde el punto de vista teórico, la investigación aporta un enfoque integrador que articula validación de datos, arquitectura de sistemas distribuidos y gestión de información en condiciones no ideales. Este enfoque puede ser extendido a otros dominios donde la confiabilidad de los datos constituye un factor crítico.
+
+En conjunto, los resultados obtenidos constituyen una base para el desarrollo de sistemas más resilientes orientados a la digitalización eficiente de procesos en el ámbito de la salud.
+
+\section{Objeto de estudio y campo de acción}\label{section:objetoCampo}
+
+El objeto de estudio de la presente investigación lo constituye el proceso de gestión de eventos adversos asociados a la vacunación en el ámbito de la farmacovigilancia, con énfasis en la recolección, procesamiento y análisis de la información clínica generada en entornos reales.
+
+El campo de acción se centra en el diseño e implementación de un sistema informático para el autorreporte de eventos adversos, incluyendo mecanismos de captura estructurada de datos, validación en el punto de entrada, almacenamiento distribuido y sincronización de información en escenarios de conectividad limitada, aplicado al contexto del Instituto Finlay de Vacunas.
+
+\section{Objetivo General y Objetivos Específicos}\label{section:objetivosPrincipalesEspecificos}
+
+El objetivo general de la presente investigación consiste en desarrollar un sistema informático, en forma de plataforma web y móvil, que permita el autorreporte de eventos adversos posteriores a la vacunación, facilitando la recolección, validación y análisis de la información en el contexto de la farmacovigilancia del Instituto Finlay de Vacunas.
+
+De este objetivo general se derivan los siguientes objetivos específicos:
+
+\begin{itemize}
+    \item Investigar el estado del arte de sistemas de farmacovigilancia y plataformas de reporte de eventos adversos.
+    
+    \item Analizar los procesos actuales de recolección y gestión de datos en el contexto del Instituto Finlay de Vacunas.
+    
+    \item Diseñar un modelo de datos que permita representar adecuadamente la información asociada a los eventos adversos.
+    
+    \item Definir la arquitectura del sistema siguiendo principios de diseño de software (los principios SOLID) que garantice escalabilidad y mantenibilidad.
+    
+    \item Implementar un prototipo funcional de la plataforma (web y/o móvil) que permita el registro, validación y consulta de reportes.
+    
+    \item Validar el funcionamiento del sistema mediante pruebas que aseguren la integridad, consistencia y utilidad de la información recolectada.
+\end{itemize}
+
+\section{Estructura del trabajo}\label{section:estructuraTrabajo}
+
+El presente trabajo de investigación se estructura en cuatro capítulos, los cuales organizan de manera progresiva los elementos teóricos, metodológicos y prácticos desarrollados:
+
+\begin{itemize}
+    \item \textbf{Capítulo 1 - Introducción:} Se presenta el diseño teórico de la investigación, incluyendo el contexto histórico y social de la farmacovigilancia, la motivación y justificación del estudio en el marco del Instituto Finlay de Vacunas, la formulación del problema científico, así como los objetivos generales y específicos que guían el desarrollo del trabajo.
+
+    \item \textbf{Capítulo 2 - Fundamentación Teórica:} Se aborda el estado del arte relacionado con el objeto de estudio. Se analizan sistemas existentes de autorreporte de eventos adversos, así como tecnologías y enfoques de desarrollo multiplataforma, permitiendo fundamentar la selección de las herramientas y tecnologías empleadas en la solución propuesta.
+
+    \item \textbf{Capítulo 3 - Análisis, Diseño e Implementación del Sistema:} Constituye el núcleo técnico de la investigación. Se describen los requerimientos del sistema, los casos de uso, la arquitectura seleccionada y el modelo de datos. Además, se detallan los principales aspectos de implementación, incluyendo los mecanismos de validación de datos en el proceso de autorreporte.
+
+    \item \textbf{Capítulo 4 - Pruebas y Resultados:} Se presentan los escenarios de prueba, las herramientas utilizadas y los resultados obtenidos. Se evalúa el cumplimiento de los requerimientos definidos, así como la calidad, integridad y disponibilidad de la información gestionada por el sistema.
+\end{itemize}
+
+Finalmente, el trabajo se complementa con las conclusiones, donde se sintetizan los principales aportes de la investigación; las recomendaciones para trabajos futuros y las referencias bibliográficas consultadas.
