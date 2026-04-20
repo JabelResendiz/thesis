@@ -1,88 +1,154 @@
 \chapter{Introducción}\label{chapter:introduction}
 \addcontentsline{toc}{chapter}{Introducción}
 
-La garantía de la seguridad en el uso de productos farmacéuticos constituye uno de los pilares fundamentales de los sistemas de salud pública a nivel mundial. 
-El monitoreo constante de las reacciones adversas asociadas a medicamentos y vacunas, proceso conocido como farmacovigilancia, dentro de la que se enmarca la vacunovigilancia, especializada en la supervisión de la seguridad de las vacunas, resulta esencial para la detección temprana de riesgos que no fueron identificados durante las fases de ensayos clínicos. 
-Este proceso permite evaluar de manera continua la relación beneficio-riesgo de los productos farmacéuticos una vez que estos son administrados a grandes poblaciones en condiciones reales.
-En este contexto, los sistemas de información desempeñan un rol decisivo, al posibilitar la captura, almacenamiento, procesamiento y análisis de grandes volúmenes de datos clínicos en intervalos de tiempo reducidos. 
-La integración de tecnologías informáticas en los procesos de farmacovigilancia ha contribuido significativamente a mejorar la eficiencia en la gestión de la información, facilitando la toma de decisiones por parte de las autoridades sanitarias.
-Con el avance de las tecnologías móviles y la digitalización progresiva de los servicios de salud, ha emergido la necesidad de incorporar mecanismos que permitan una mayor participación de la población en los procesos de vigilancia. 
-En este sentido, el autorreporte de eventos adversos por parte de los ciudadanos constituye una tendencia creciente a nivel internacional, al favorecer la recolección de información en tiempo real y mejorar la cobertura de los sistemas tradicionales.
-No obstante, la implementación de estos mecanismos plantea desafíos importantes relacionados con la calidad, integridad y validación de los datos reportados, especialmente cuando estos provienen de usuarios no especializados. 
-Esto evidencia la necesidad de desarrollar soluciones computacionales que no solo faciliten la interacción del usuario, sino que también garanticen la confiabilidad de la información recopilada.
-En correspondencia con estas necesidades, la presente investigación aborda el estudio y desarrollo de una solución informática orientada al autorreporte de eventos adversos, con el propósito de contribuir a la optimización de los procesos de farmacovigilancia mediante el uso de tecnologías modernas.
+La seguridad de los productos farmacéuticos constituye un componente esencial de los sistemas de salud pública a nivel mundial. 
+El monitoreo de eventos adversos post-vacunación (EAPV), entendidos como cualquier signo desfavorable o involuntario, hallazgo anormal de laboratorio,
+síntoma o enfermedad que siga a la vacunación, independientemente de su relación causal\cite{INS_EAPV_2021}, constituye un componente central de la farmacovigilancia.
+Este proceso permite la detección temprana de riesgos y la evaluación continua de la relación beneficio-riesgo en condiciones reales de uso.
+
+Ante la digitalización progresiva de los servicios de salud, se han desarrollado mecanismos que permiten a los usuarios reportar información de forma directa, ampliando los canales de vigilancia mediante el autorreporte ciudadano. 
+Esta estrategia permite incrementar la cobertura de los sistemas de vigilancia y disponer de información más oportuna. 
+Sin embargo, la recolección de datos por parte de usuarios no especializados introduce desafíos críticos relacionados con la calidad de la información, particularmente en su completitud y validez técnica.
+
+Estas limitaciones evidencian la necesidad de desarrollar soluciones computacionales que no solo faciliten la captura de información, sino que incorporen mecanismos de validación desde el momento del registro. 
+En este contexto, la presente investigación propone el diseño e implementación de un sistema de información para el autorreporte de eventos adversos post-vacunación, con el objetivo de mejorar la gestión y confiabilidad de la información para su uso en la toma de decisiones en salud pública.
 
 \section{Contexto histórico y social de la farmacovigilancia}\label{section:contextoHistoricoSocial}
+
 Históricamente, la seguridad de los medicamentos ha sido una preocupación creciente para las autoridades sanitarias mundiales. 
-El surgimiento de la farmacovigilancia moderna se consolidó tras desastres farmacológicos internacionales ocurridos en el siglo XX, lo que impulsó la creación de programa internacionales de monitoreo de medicamentos, entre ellos el Programa Internacional de Monitoreo de Medicamentos de la Organización Mundial de la Salud (OMS). 
-Desde entonces, la recopilación de reacciones adversas ha evolucionado de ser una actividad puramente clínica y basada en papel a convertirse en una disciplina impulsada por grandes bases de datos globales.
-Este proceso ha estado estrechamente vinculado al desarrollo de los sistemas de información, los cuales han permitido automatizar la recolección, almacenamiento y análisis de datos clínicos a gran escala.
-En el contexto social contemporáneo, la rapidez con la que se introducen nuevas terapias y vacunas en el mercado exige una respuesta informativa inmediata. La digitalización de la sociedad ha transformado la relación entre los sistemas de salud y los ciudadanos; estos últimos ya no son sujetos pasivos, sino agentes activos en la generación de datos sobre su propia salud. Fenómenos globales recientes, como las campañas masivas de vacunación, han evidenciado la necesidad de contar con canales de comunicación directos y eficientes que permitan procesar miles de reportes en tiempos reducidos, algo imposible de gestionar con métodos tradicionales.
-En este escenario, la vacunovigilancia adquiere una relevancia particular.
-A nivel internacional, sistemas como VAERS (Vaccine Adverse Event Reporting System) en Estados Unidos han sentado precedentes sobre cómo la tecnología puede democratizar el reporte de eventos adversos. Sin embargo, la implementación de estos modelos en diferentes contextos nacionales requiere de una infraestructura computacional que se adapte a las normativas locales y a las capacidades tecnológicas de la población, garantizando que la información recolectada sea oportuna, confiable y útil para los procesos de monitoreo de la seguridad clínica y la toma de decisiones en salud pública.
+El surgimiento de la farmacovigilancia moderna se consolidó tras diversos incidentes farmacológicos ocurridos durante el siglo XX, destacando el caso de la talidomida\cite{palacios2021talidomida}.
+
+Este hito evidenció que la seguridad absoluta no existe y que los medicamentos, una vez comercializados, abandonan el entorno controlado de los ensayos clínicos para enfrentarse a la complejidad de la práctica clínica real \cite{who_pharmacovigilance_2004}.
+Como se muestra en la Figura \ref{fig:desarrollo_clinico}, las fases de desarrollo clínico involucran un número limitado de participantes, que rara vez supera los 5\,000 sujetos. 
+En consecuencia, resulta difícil identificar eventos adversos poco frecuentes o interacciones medicamentosas que solo se manifiestan cuando el fármaco es utilizado en poblaciones más amplias y heterogéneas, como niños, adultos mayores o mujeres embarazadas.
+
+Como respuesta a estas limitaciones, el Programa Internacional de Monitoreo de Medicamentos de la Organización Mundial de la Salud (OMS), en colaboración con el Centro de Monitoreo de Uppsala (UMC), estableció una red global para la recopilación y análisis de reportes de eventos adversos \cite{who_umc_website_2026}. 
+Este esfuerzo dio lugar a VigiBase, una base de datos mundial diseñada para la detección temprana de señales de riesgo. En este contexto, la calidad de los datos reportados constituye un factor crítico, ya que influye directamente en la capacidad del sistema para identificar posibles problemas de seguridad. Reportes incompletos o inconsistentes pueden limitar la efectividad de los procesos de análisis y detección de señales \cite{who_umc_vigibase_2017}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.6]{Graphics/fig1_desarrollo_clinico.jpg}
+    \caption{Fases del desarrollo clínico de los medicamentos y su capacidad limitada para detectar eventos adversos poco frecuentes}
+    \label{fig:desarrollo_clinico}
+\end{figure}
+
+Esta infraestructura global sentó las bases para transformar la recopilación de reacciones adversas, que pasó de depender de reportes clínicos aislados y registros en papel a constituir un proceso estructurado, apoyado en sistemas de información y bases de datos a gran escala. 
+Esta transición ha permitido fortalecer la capacidad de análisis y facilitar la detección temprana de riesgos asociados al uso de medicamentos y vacunas en poblaciones amplias.
+
+En el contexto social contemporáneo, la introducción acelerada de nuevas terapias y vacunas exige una respuesta informativa cada vez más ágil. 
+Paralelamente, la digitalización ha modificado la relación entre los sistemas de salud y los ciudadanos, quienes dejan de ser receptores pasivos para convertirse en actores activos en la generación de información sobre su estado de salud. 
+En particular, las campañas masivas de vacunación han evidenciado la necesidad de contar con mecanismos eficientes que permitan gestionar grandes volúmenes de reportes en tiempos reducidos.
+
+A nivel internacional, sistemas como VAERS (Vaccine Adverse Event Reporting System) \cite{vaers_official} en Estados Unidos han demostrado el potencial de las plataformas digitales para ampliar la cobertura del reporte de eventos adversos. 
+No obstante, la adopción de estas soluciones en diferentes contextos nacionales plantea desafíos relacionados con la infraestructura tecnológica, los marcos regulatorios y la calidad de los datos, lo que evidencia la necesidad de desarrollar soluciones adaptadas a las condiciones específicas de cada entorno.
+
+Asimismo, el funcionamiento efectivo de estos sistemas depende no solo de la infraestructura tecnológica, sino también de la estandarización de la información. 
+Iniciativas como la Brighton Collaboration contribuyen a este propósito mediante la definición de criterios que permiten la comparabilidad de los datos a nivel internacional \cite{brighton_collaboration_2026}.
+
+En conjunto, la farmacovigilancia moderna se consolida como un componente esencial de los sistemas de salud, orientado a garantizar la seguridad de las intervenciones sanitarias mediante una gestión de la información confiable, oportuna y transparente.
 
 \section{Antecedentes, Motivación y Justificación}\label{section:antecedentesMotivacionJustificacion}
 
-En la práctica clínica actual del Instituto Finlay de Vacunas, el registro de eventos adversos post-vacunación depende predominantemente de mecanismos de notificación pasiva y manual. 
-Los pacientes deben acudir físicamente a los centros de salud o realizar llamadas telefónicas para reportar sintomatologías, lo que resulta en una subnotificación significativa del fenómeno. 
-Esta situación genera una insatisfacción en el seguimiento proactivo de eventos adversos, pues la demora en la captura de datos impide la detección temprana de posibles señales de alerta sanitaria. 
-Además, el procesamiento manual de formularios impresos aumenta la probabilidad de errores en la transcripción y la pérdida de información clínica relevante.
-En este contexto, se evidencia la necesidad de transitar hacia modelos más eficientes de recolección y gestión de la información, que permitan una mayor participación de la población y una respuesta más ágil por parte de las autoridades sanitarias. 
-Asimismo, la infraestructura actual carece de mecanismos computacionales que posibiliten la centralización, validación y procesamiento eficiente de los datos en tiempo real, lo cual limita la capacidad del sistema para garantizar la integridad y disponibilidad de la información en los procesos de farmacovigilancia de vacunas.
+El Instituto Finlay de Vacunas (IFV) es una organización científica y empresa de alta tecnología cubana, dedicada a la investigación, desarrollo, producción y comercialización de vacunas humanas \cite{finlay_instituto_2026}.
+Constituido oficialmente a finales de 2015 a partir de una fusión estratégica e integrado al Grupo de las Industrias Biotecnológica y Farmacéutica de Cuba (BIOCUBAFARMA) , opera bajo un modelo de ciclo cerrado que integra
+tdodas las etapas de la cadena de valor: desde la investigación básica y los ensayos clínicos hasta la producción masiva y el seguimiento en condiciones reales de uso \cite{finlay_instituto_2026}.
+
+En el ámbito nacional, el IFV es un pilar estratégico de la soberanía tecnológica cubana, garantizando la mayoría de los productos biológicos del sistema de salud.
+Actualmente, el instituto provee el 78 \% de las dosis del Programa Nacional de Inmunización, siendo responsable de la producción de 8 de las 11 vacunas administradas en el país \cite{carbonell_cmi_finlay_2016}.
+Esta capacidad de innovación se evidencia en hitos científicos como la creación de la VA-MENGOC-BC® —primera vacuna eficaz contra el serogrupo B de la meningitis— y el reciente desarrollo de la línea de vacunas SOBERANA contra la COVID-19 \cite{finlay_instituto_2026}.
+En esta última, el volumen de operación alcanzó escalas sin precedentes, con más de 38,7 millones de dosis administradas acumuladas al cierre de julio de 2022, logrando inmunizar al 90 \% de la población cubana.
+Internacionalmente, su impacto se extiende a más de 17 países de América Latina, Asia y África mediante exportaciones y colaboraciones estratégicas \cite{carbonell_cmi_finlay_2016}.
+
+A pesar de esta relevancia productiva, la vigilancia de la seguridad posterior a la aprobación enfrenta desafíos críticos. 
+En la práctica clínica actual del IFV, el registro de los eventos adversos post-vacunación depende predominantemente de mecanismos de notificación pasiva y manual.
+Este modelo exige que los pacientes o familiares acudan físicamente a los centros de salud para reportar síntomas, lo que deriva en una subnotificación significativa y un registro tardío del fenómeno.
+
+La magnitud del flujo informativo justifica la urgencia de una intervención tecnológica: solo en el año 2018, Cuba capturó 6,682 reportes de eventos, situándose como el tercer país con mayor volumen de notificaciones en la Región de las Américas, tal como se ilustra en la Figura \ref{fig:evento_adverso_por_paises} \cite{ops_manual_esavi_2021}.
+Gestionar este volumen mediante métodos manuales ralentiza la detección de señales de seguridad que los ensayos clínicos en Fase III —limitados habitualmente a un máximo de 5,000 sujetos— no poseen el poder estadístico para identificar.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.6]{Graphics/evento_adverso_por_paises.jpg}
+    \caption{Número de eventos adversos post-vacunación notificados por los países de la Región de las Américas}
+    \label{fig:evento_adverso_por_paises}
+\end{figure}
+
+Esta situación genera una brecha en el seguimiento proactivo de los eventos, comprometiendo la calidad de la información en términos de completitud y validez técnica.
+El procesamiento manual de formularios impresos incrementa la probabilidad de errores de trascripción y la pérdida de datos clínicos sensibles necesarios para el análisis de causalidad.
+En este contexto, resulta imperativo transitar hacia soluciones computacionales que faciliten el autorreporte ciudadano y permitan la centralización y validación de datos en tiempo real.
+La implementación de este sistema no solo optimizará los procesos de farmacovigilancia, sino que fortalecerá la confianza pública en los productos biológicos de la institución al garantizar una comunicación del riesgo transparente y oportuna.
 
 \section{Presentación de la problemática}\label{section:presentacionProblema}
 
-A partir del análisis de la situación actual, se identifica una brecha significativa entre los mecanismos existentes para la gestión de información sobre eventos adversos y las exigencias de un sistema moderno orientado a la disponibilidad, integridad y oportunidad de los datos.
+A partir del análisis de la situación actual, se identifica una brecha significativa entre los mecanismos vigentes para la gestión de información sobre eventos adversos post-vacunación y las exigencias de un sistema de farmacovigilancia moderno orientado a la disponibilidad, integridad y oportunidad de los datos.
 
-En el Instituto Finlay de Vacunas, el proceso de reporte se realiza fundamentalmente mediante soportes físicos y métodos convencionales, lo cual implica que la información generada no se encuentra integrada en un sistema digital que permita su gestión automatizada. Esta condición limita la capacidad de procesamiento, almacenamiento y análisis de los datos en condiciones de inmediatez.
+En el Instituto Finlay de Vacunas, el proceso de reporte se realiza fundamentalmente mediante soportes físicos y métodos convencionales.
+Esta condición limita la capacidad de procesamiento y análisis de datos en condiciones de inmediatez, impidiendo que el flujo informativo sea bidireccional y accesible en tiempo real para todos los actores del ciclo de vigilancia.
 
 Desde una perspectiva computacional, esta situación se manifiesta en varias limitaciones fundamentales:
 
 \begin{itemize}
-    \item \textbf{Ausencia de digitalización estructurada:} La información recopilada en formato físico no sigue un esquema que permita su integración directa en sistemas informáticos, dificultando su procesamiento automatizado.
+    \item \textbf{Limitaciones en la captura y calidad de los datos:} La ausencia de digitalización estructurada y de mecanismos de validación en el punto de registro incrementa la probabilidad de errores, inconsistencias y pérdida de información relevante, afectando la confiabilidad de los datos recolectados.
 
-    \item \textbf{Falta de validación en el punto de captura:} Al no existir una interfaz digital, los datos no pueden ser verificados en el momento de su registro, lo que incrementa la probabilidad de errores e inconsistencias.
+    \item \textbf{Retrasos en la disponibilidad de la información:} El procesamiento diferido derivado de la transcripción manual introduce demoras que limitan el acceso oportuno a los datos, afectando la capacidad de respuesta ante posibles alertas sanitarias.
 
-    \item \textbf{Procesamiento diferido de la información:} La necesidad de transcribir y digitalizar posteriormente los datos introduce retrasos que afectan la disponibilidad oportuna de la información.
+    \item \textbf{Falta de interoperabilidad y estandarización:} La inexistencia de un sistema centralizado impide la adopción de esquemas de datos normalizados y el uso de estándares internacionales, restringiendo la integración y comparación de la información con otros sistemas nacionales y mundiales de farmacovigilancia .
 
-    \item \textbf{Limitada capacidad de integración y análisis:} La inexistencia de un sistema centralizado impide la consolidación de los datos y su utilización eficiente en procesos de análisis.
+    \item \textbf{Limitada capacidad de análisis y soporte a la toma de decisiones:} La ausencia de mecanismos de almacenamiento estructurado y exportación de datos dificulta el uso de herramientas analíticas e inteligencia de negocio, restringiendo la generación de indicadores, reportes en tiempo real y estudios posteriores a la comercialización.
 \end{itemize}
 
-En consecuencia, la problemática radica en la inexistencia de un mecanismo automatizado que permita la captura, validación y gestión de los datos generados en el proceso de reporte, garantizando la calidad , consistencia y  disponibilidad de los registros para su posterior análisis.
+% En consecuencia, el problema científico radica en la inexistencia de un mecanismo automatizado y seguro que permita la captura, validación y gestión de los datos generados por el autorreporte ciudadano, garantizando la integridad de los registros clínicos para el fortalecimiento de la vigilancia poscomercialización y la confianza pública.
 
 \section{Planteamiento del Problema Científico}\label{section:planteamientoProblema}
 
-A partir de la problemática identificada, el problema científico de la presente investigación se define como:
+A partir de la problemática identificada, el problema científico se define como:
 
-\textit{La carencia de un modelo computacional que permita la captura estructurada, validación temprana y gestión eficiente de los datos generados en el proceso de reporte de eventos adversos, garantizando su integridad, consistencia y disponibilidad para el análisis en el contexto del Instituto Finlay de Vacunas.}
+\textit{La inexistencia de una plataforma automatizada para el autorreporte de eventos adversos post-vacunación (EAPV) que garantice la integridad de los datos clínicos y su gestión operativa, lo cual limita la detección temprana de señales de seguridad y compromete la toma de decisiones estratégicas en el Instituto Finlay de Vacunas.}
 
 De este problema se deriva la siguiente pregunta científica:
 
-\textbf{¿Cómo desarrollar una solución informática que permita optimizar el proceso de reporte de eventos adversos, asegurando la captura estructurada, la validación y la disponibilidad oportuna de los datos generados?}
+\textbf{¿Cómo diseñar e implementar una solución informática para el autorreporte y gestión de EAPV que asegure la integridad de los datos clínicos y brinde soporte operativo para la toma de decisiones estratégicas en el Instituto Finlay de Vacunas?}
+
 
 \section{Actualidad, Novedad e Importancia}\label{section:actualidadNovedadImportancia}
 
-En el contexto actual de transformación digital de los sistemas de salud, se observa una tendencia creciente hacia la descentralización en la generación de datos clínicos, donde los propios usuarios participan activamente mediante herramientas digitales. Este escenario ha impulsado el desarrollo de soluciones móviles y web orientadas a la captura distribuida de información en tiempo real.
+\subsection{Actualidad}
 
-No obstante, esta evolución introduce desafíos significativos desde la perspectiva computacional, particularmente en lo relacionado con la validación de datos heterogéneos en el punto de captura, la gestión de grandes volúmenes de información distribuida y la operación en entornos con conectividad limitada o intermitente. Estas condiciones demandan el diseño de sistemas que no solo faciliten la recolección de datos, sino que también garanticen propiedades esenciales como consistencia, integridad y disponibilidad desde el momento de su generación.
+La farmacovigilancia contemporánea exige una transición de los modelos de notificación pasiva hacia sistemas proactivos que integren al ciudadano en el ciclo de seguridad.
+En el contexto del Instituto Finlay de Vacunas (IFV), esta necesidad es crítica debido a la magnitud de sus campañas; con más de 38,7 millones de dosis de vacunas Soberana administradas \cite{infomed_finlay_refuerzo_covid_2022}, el seguimiento en condiciones reales de uso es la única vía para detectar eventos adversos raros que los ensayos clínicos, limitados habitualmente a 5,000 sujetos, no pueden identificar.
+La urgencia de esta investigación se fundamenta en la necesidad de dotar a una empresa de alta tecnología de herramientas digitales que superen la latencia de los métodos manuales actuales
 
-En este escenario, la novedad de la presente investigación radica en el diseño de un enfoque computacional orientado a la validación reactiva de datos durante el proceso de autorreporte de eventos adversos. Este mecanismo permite la detección temprana de inconsistencias en el momento de la captura, contribuyendo a la mejora de la calidad de los datos desde su origen.
+\subsection{Novedad Científica y Comparativa}
 
-Adicionalmente, se propone una arquitectura de sistema capaz de operar en escenarios de conectividad intermitente mediante mecanismos de almacenamiento local y sincronización diferida. Esta estrategia permite garantizar la continuidad operativa del sistema sin comprometer la integridad de la información, incorporando principios propios de sistemas distribuidos y tolerancia a fallos.
+A diferencia de sistemas de notificación espontánea como el VAERS, donde la información es registrada y posteriormente validada por especialistas, la propuesta introduce mecanismos de validación en el punto de captura. 
 
-Desde esta perspectiva, la propuesta se diferencia de los sistemas tradicionales de registro al integrar validación en tiempo de captura, procesamiento distribuido y resiliencia frente a condiciones de conectividad limitada.
+Esto permite reducir inconsistencias desde el origen del dato y mejorar su calidad antes de su almacenamiento. Asimismo, mientras que estos sistemas dependen de conectividad continua o de procesos diferidos de digitalización, la solución planteada contempla la captura de información en entornos con conectividad intermitente mediante sincronización posterior.
 
-La importancia de este trabajo se fundamenta en su contribución al diseño de soluciones computacionales más robustas para la gestión de información clínica en contextos reales. En términos prácticos, la propuesta permite mejorar la calidad, consistencia y oportunidad de los datos recopilados, optimizando los procesos de análisis y toma de decisiones en farmacovigilancia.
+De esta forma, la novedad del enfoque radica en la combinación de validación temprana y estructuración de datos desde su origen en un contexto de farmacovigilancia.
 
-Desde el punto de vista teórico, la investigación aporta un enfoque integrador que articula validación de datos, arquitectura de sistemas distribuidos y gestión de información en condiciones no ideales. Este enfoque puede ser extendido a otros dominios donde la confiabilidad de los datos constituye un factor crítico.
+\subsection{Justificación de la Solución Web y Móvil}
 
-En conjunto, los resultados obtenidos constituyen una base para el desarrollo de sistemas más resilientes orientados a la digitalización eficiente de procesos en el ámbito de la salud.
 
-\section{Objeto de estudio y campo de acción}\label{section:objetoCampo}
+\subsection{Importancia}
 
-El objeto de estudio de la presente investigación lo constituye el proceso de gestión de eventos adversos asociados a la vacunación en el ámbito de la farmacovigilancia, con énfasis en la recolección, procesamiento y análisis de la información clínica generada en entornos reales.
 
-El campo de acción se centra en el diseño e implementación de un sistema informático para el autorreporte de eventos adversos, incluyendo mecanismos de captura estructurada de datos, validación en el punto de entrada, almacenamiento distribuido y sincronización de información en escenarios de conectividad limitada, aplicado al contexto del Instituto Finlay de Vacunas.
+% En el contexto actual de transformación digital de los sistemas de salud, se observa una tendencia creciente hacia la descentralización en la generación de datos clínicos, donde los propios usuarios participan activamente mediante herramientas digitales. Este escenario ha impulsado el desarrollo de soluciones móviles y web orientadas a la captura distribuida de información en tiempo real.
+
+% No obstante, esta evolución introduce desafíos significativos desde la perspectiva computacional, particularmente en lo relacionado con la validación de datos heterogéneos en el punto de captura, la gestión de grandes volúmenes de información distribuida y la operación en entornos con conectividad limitada o intermitente. Estas condiciones demandan el diseño de sistemas que no solo faciliten la recolección de datos, sino que también garanticen propiedades esenciales como consistencia, integridad y disponibilidad desde el momento de su generación.
+
+% En este escenario, la novedad de la presente investigación radica en el diseño de un enfoque computacional orientado a la validación reactiva de datos durante el proceso de autorreporte de eventos adversos. Este mecanismo permite la detección temprana de inconsistencias en el momento de la captura, contribuyendo a la mejora de la calidad de los datos desde su origen.
+
+% Adicionalmente, se propone una arquitectura de sistema capaz de operar en escenarios de conectividad intermitente mediante mecanismos de almacenamiento local y sincronización diferida. Esta estrategia permite garantizar la continuidad operativa del sistema sin comprometer la integridad de la información, incorporando principios propios de sistemas distribuidos y tolerancia a fallos.
+
+% Desde esta perspectiva, la propuesta se diferencia de los sistemas tradicionales de registro al integrar validación en tiempo de captura, procesamiento distribuido y resiliencia frente a condiciones de conectividad limitada.
+
+% La importancia de este trabajo se fundamenta en su contribución al diseño de soluciones computacionales más robustas para la gestión de información clínica en contextos reales. En términos prácticos, la propuesta permite mejorar la calidad, consistencia y oportunidad de los datos recopilados, optimizando los procesos de análisis y toma de decisiones en farmacovigilancia.
+
+% Desde el punto de vista teórico, la investigación aporta un enfoque integrador que articula validación de datos, arquitectura de sistemas distribuidos y gestión de información en condiciones no ideales. Este enfoque puede ser extendido a otros dominios donde la confiabilidad de los datos constituye un factor crítico.
+
+% En conjunto, los resultados obtenidos constituyen una base para el desarrollo de sistemas más resilientes orientados a la digitalización eficiente de procesos en el ámbito de la salud.
+
+
 
 \section{Objetivo General y Objetivos Específicos}\label{section:objetivosPrincipalesEspecificos}
 
