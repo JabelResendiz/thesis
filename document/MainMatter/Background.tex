@@ -2,7 +2,6 @@
 
 El presente capítulo tiene como objetivo analizar los fundamentos teóricos, tecnológicos y los sistemas existentes relacionados con la farmacovigilancia digital y el desarrollo de plataformas de autorreporte clínico. 
 Se aborda el estudio de soluciones implementadas a nivel internacional, así como las tecnologías y estándares utilizados en sistemas de salud digital, con el propósito de establecer una base sólida que sustente el diseño e implementación del sistema propuesto.
-En este sentido, se examinan sistemas de vigilancia de eventos adversos posteriores a la vacunación, arquitecturas de software aplicadas al ámbito de la salud, y tecnologías empleadas en el desarrollo de aplicaciones web y móviles. 
 Asimismo, se revisan conceptos relacionados con el modelado de datos clínicos y estándares de interoperabilidad que garantizan la consistencia y calidad de la información.
 
 \section{Análisis de sistemas de autorreporte clínico existentes}
@@ -198,26 +197,27 @@ En este sentido, el presente análisis se basa en el estudio de diferentes alter
 \subsection{Criterios técnicos para la selección de tecnologías}
 \label{subsection:criterios}
 
-Con el objetivo de garantizar una selección fundamentada de las tecnologías que conformarán la solución propuesta, se establecen los siguientes criterios de evaluación:
+Con el objetivo de realizar una selección fundamentada de las tecnologías que conformarán la solución propuesta, se definen criterios de evaluación orientados a las necesidades de sistemas clínicos.
 
-En primer lugar, se considera la eficiencia y el rendimiento de las tecnologías, entendidos como la capacidad del sistema para responder de manera adecuada bajo cargas de trabajo variables y potencialmente elevadas. 
-Este aspecto resulta especialmente relevante en sistemas de autorreporte clínico, donde la disponibilidad y rapidez de respuesta impactan directamente en la calidad del servicio.
+En primer lugar, se considera la \textbf{eficiencia y el rendimiento}, entendidos como la capacidad de la tecnología para responder adecuadamente bajo cargas de trabajo variables, garantizando tiempos de respuesta adecuados en escenarios de uso intensivo.
 
-En segundo lugar, se analiza la capacidad de escalabilidad, es decir, la posibilidad de que las tecnologías seleccionadas permitan el crecimiento del sistema sin requerir cambios estructurales significativos. 
-Esto incluye tanto la escalabilidad vertical como horizontal, dependiendo del componente analizado.
+En segundo lugar, se evalúa la \textbf{escalabilidad}, referida a la capacidad del sistema para adaptarse al crecimiento en el número de usuarios y volumen de datos, tanto a nivel vertical como horizontal.
 
-Un tercer criterio corresponde a la mantenibilidad del sistema, entendida como la facilidad para realizar modificaciones, extensiones o correcciones en el software sin afectar negativamente su funcionamiento global. 
-Este aspecto está directamente relacionado con la calidad de la arquitectura y el nivel de acoplamiento entre componentes.
+Asimismo, se analiza la \textbf{mantenibilidad},  entendida como la facilidad para realizar modificaciones, extensiones o correcciones en el software sin afectar negativamente su funcionamiento global, en función del nivel de acoplamiento y la estructura arquitectónica.
 
-Asimismo, se evalúa la madurez tecnológica y el soporte de las comunidades asociadas a cada herramienta, lo cual influye en la disponibilidad de documentación, librerías, actualizaciones y soluciones a problemas comunes.
+Otro criterio considerado es la \textbf{madurez tecnológica}, entendida como el nivel de estabilidad y uso comprobado de una tecnología, reflejado en su adopción en entornos reales, la calidad de su documentación y el soporte de su comunidad.
 
-Finalmente, se considera la adecuación al dominio del problema, es decir, la capacidad de la tecnología para ajustarse a los requerimientos específicos de un sistema orientado al manejo de información clínica, donde la consistencia de los datos y la trazabilidad de la información son aspectos fundamentales.
+Finalmente, se introduce el criterio de \textbf{adecuación al dominio clínico}, el cual evalúa la capacidad de la tecnología para garantizar propiedades críticas como la consistencia de los datos, la trazabilidad de la información y el soporte de operaciones transaccionales seguras.
 
-A partir de estos criterios, en las siguientes subsecciones se realiza un análisis comparativo de las principales alternativas tecnológicas para el desarrollo del backend, el frontend y los sistemas de gestión de bases de datos.
+Estos criterios sirven como base para el análisis comparativo presentado en las secciones siguientes.
 
 
 \subsection{Tecnologías para el desarrollo del backend}
 \label{subsection:backend}
+
+En el desarrollo de aplicaciones web modernas, la selección del framework de backend constituye un elemento clave para la construcción del sistema.
+En el contexto del sistema de farmacovigilancia, se seleccionan tres tecnologías representativas del ecosistema actual: .NET, Spring Boot y NestJS. 
+Esta selección se basa en su amplia adopción en entornos de desarrollo, su uso en aplicaciones de nivel empresarial y la diversidad de paradigmas tecnológicos que representan.
 
 \subsubsection{.NET Core}
 
@@ -228,27 +228,13 @@ A partir de estos criterios, en las siguientes subsecciones se realiza un análi
     \label{fig:dotnet_core}
 \end{figure}
 
-.NET Core (actualmente integrado dentro de la plataforma unificada .NET 6+) es un framework de desarrollo multiplataforma, de código abierto, mantenido por Microsoft \cite{dotnet_official}, orientado a la construcción de aplicaciones modernas, incluyendo servicios web, APIs REST y aplicaciones de alto rendimiento. 
-Su diseño modular y su enfoque en la eficiencia lo convierten en una alternativa adecuada para el desarrollo de sistemas backend que requieren confiabilidad y escalabilidad.
+.NET (anteriormente .NET Core) es un framework multiplataforma de código abierto mantenido por Microsoft, orientado al desarrollo de aplicaciones backend modernas de alto rendimiento \cite{dotnet_official}.
 
-Una de las principales características de la plataforma .NET es su modelo de ejecución basado en el Common Language Runtime (CLR), el cual proporciona un entorno gestionado para la ejecución del código, permitiendo un manejo eficiente de la memoria, control de excepciones y seguridad en tiempo de ejecución \cite{dotnet_official}.
+Entre sus principales características se encuentra el soporte para la construcción de APIs REST \footnote{API REST es una interfaz HTTP que permite operar recursos entre cliente y el servidor mediante URI y métodos estándar como GET, POST, PUT y DELETE} mediante ASP.NET Core.
+Una particularidad de ASP.NET Core es su pipeline de solicitudes HTTP, en el cual cada petición pasa por una secuencia de componentes intermedios (middlewares) que permiten procesarla, validarla o modificarla antes de generar la respuesta \cite{ms_aspnet_architecture}.
 
-El framework proporciona soporte nativo para la construcción de servicios web mediante ASP.NET Core, facilitando el desarrollo de APIs REST con una arquitectura desacoplada y orientada a servicios \cite{ms_aspnet_architecture}. 
-Este enfoque contribuye a la separación de responsabilidades dentro del sistema, favoreciendo la mantenibilidad y la evolución del software.
-
-Asimismo, .NET integra herramientas como Entity Framework Core, que permiten interactuar con bases de datos relacionales mediante un enfoque orientado a objetos \cite{dotnet_official}. 
-Este mecanismo simplifica el acceso a datos y facilita la implementación de operaciones transaccionales, contribuyendo a la consistencia de la información en sistemas que gestionan datos críticos.
-
-Adicionalmente, la plataforma se integra con patrones de diseño ampliamente utilizados en el desarrollo de software moderno, tales como la arquitectura en capas, el patrón MVC y la inyección de dependencias, lo cual favorece la construcción de sistemas escalables y mantenibles \cite{ms_aspnet_architecture}.
-
-Desventajas:
-\begin{itemize}
-    \item Dependencia del ecosistema Microsoft, lo cual puede limitar la portabilidad en ciertos contextos tecnológicos.
-    \item Menor flexibilidad en la integración con herramientas fuera del entorno .NET en comparación con otras alternativas.
-    \item Curva de aprendizaje asociada a la comprensión del ecosistema completo (.NET, ASP.NET, Entity Framework).
-    \item Requiere una correcta estructuración inicial para aprovechar adecuadamente sus capacidades arquitectónicas.
-\end{itemize}
-
+A diferencia de otros ecosistemas, incorpora de manera nativa un contenedor de inyección de dependencias (IServiceProvider), lo que permite que el propio framework gestione el ciclo de vida y la provisión de los componentes sin recurrir a bibliotecas de terceros \cite{ms_di_doc}. 
+Para la persistencia, utiliza Entity Framework Core, un mapeador objeto-relacional (ORM)\footnote{ORM (Object-Relational Mapping) es una técnica que permite interactuar con bases de datos relacionales mediante objetos del lenguaje de programación, evitando el uso directo de consultas SQL.} que permite trabajar con bases de datos relacionales mediante objetos del dominio, simplificando el acceso a los datos \cite{ef_core_doc}.
 
 \subsubsection{Spring Boot}
 
@@ -259,28 +245,11 @@ Desventajas:
     \label{fig:spring_boot}
 \end{figure}
 
-Spring Boot es un framework de desarrollo basado en Java, de código abierto, mantenido por VMware, orientado a la construcción de aplicaciones backend modernas, incluyendo servicios web, APIs REST y aplicaciones empresariales escalables \cite{spring_official}. 
-Su enfoque en la configuración automática y la reducción de complejidad en la inicialización de proyectos lo convierten en una alternativa ampliamente utilizada en el desarrollo de sistemas robustos.
+Spring Boot es un framework basado en Java, de código abierto, orientado a la construcción de aplicaciones backend mediante un enfoque de configuración automática y convenciones predefinidas \cite{spring_official}.
 
-Una de las principales características del ecosistema Spring es su modelo basado en la Inversión de Control (IoC), implementado a través de un contenedor que gestiona el ciclo de vida de los componentes y sus dependencias \cite{spring_official}. 
-Este mecanismo permite desacoplar las distintas partes del sistema, facilitando la mantenibilidad y promoviendo buenas prácticas de diseño.
-
-El framework proporciona soporte para la construcción de servicios web mediante Spring MVC, lo cual permite el desarrollo de APIs REST siguiendo un enfoque basado en controladores y patrones bien definidos \cite{spring_in_action}.
-Este modelo favorece la separación de responsabilidades dentro del sistema y contribuye a una organización estructurada del código.
-
-Asimismo, Spring Boot integra herramientas como Spring Data, que permiten la interacción con bases de datos relacionales mediante abstracciones de alto nivel \cite{spring_official}.
-Este enfoque simplifica el acceso a datos y facilita la implementación de operaciones transaccionales, contribuyendo a la consistencia de la información en sistemas que manejan datos críticos.
-
-Adicionalmente, el modelo basado en inversión de control permite una gestión flexible de las dependencias entre componentes, facilitando la extensibilidad del sistema y su adaptación a cambios en los requisitos \cite{spring_in_action}.
-
-Desventajas:
-\begin{itemize}
-    \item Complejidad conceptual asociada al modelo de inversión de control y al uso extensivo de anotaciones, lo cual puede dificultar la comprensión del flujo de ejecución del sistema.
-    \item Mayor esfuerzo inicial requerido para estructurar correctamente la aplicación, especialmente en sistemas con múltiples módulos.
-    \item Posibilidad de introducir errores de configuración si no se gestiona adecuadamente el ciclo de vida de los componentes.
-    \item Verbosidad inherente al lenguaje Java, lo cual puede afectar la productividad en comparación con alternativas más concisas.
-\end{itemize}
-
+Entre sus principales características se encuentra el uso del paradigma de Inversión de Control (IoC), mediante el cual el framework se encarga de la creación y gestión de los componentes de la aplicación, reduciendo el acoplamiento entre ellos.
+Asimismo, proporciona soporte para el desarrollo de servicios web mediante Spring MVC, facilitando la implementación de APIs REST con una estructura organizada \cite{spring_in_action}.
+Adicionalmente, Spring Boot puede integrarse con Spring Data JPA, lo que permite la interacción con bases de datos relacionales mediante abstracciones orientadas a objetos similares a otros ORM del ecosistema.
 
 \subsubsection{NestJS}
 
@@ -291,40 +260,191 @@ Desventajas:
     \label{fig:nest_js}
 \end{figure}
 
-NestJS es un framework de desarrollo backend basado en Node.js y TypeScript, de código abierto, diseñado para la construcción de aplicaciones escalables y mantenibles \cite{nestjs_official}. 
-Su arquitectura está fuertemente inspirada en patrones como la inversión de control y la programación modular, lo cual permite estructurar aplicaciones de manera organizada y predecible.
+NestJS es un framework de desarrollo backend basado en Node.js y TypeScript, de código abierto, utilizado para la construcción de aplicaciones del lado del servidor y APIs REST \cite{nestjs_official}.
 
-Una de sus principales características es el uso intensivo de TypeScript, lo cual introduce tipado estático en el desarrollo sobre Node.js, favoreciendo la detección temprana de errores y mejorando la mantenibilidad del código.
+Su arquitectura se organiza mediante módulos, los cuales agrupan controladores y servicios que gestionan la lógica de la aplicación.
+Utiliza TypeScript como lenguaje base, lo que permite tipado estático dentro del entorno de JavaScript.
+Se ejecuta sobre el modelo de Node.js basado en un bucle de eventos (event loop), lo que facilita el manejo concurrente de múltiples solicitudes mediante operaciones no bloqueantes.
+Además, incorpora un sistema de inyección de dependencias y puede integrarse con herramientas como TypeORM o Prisma para el acceso a bases de datos relacionales.
 
-El framework implementa un sistema de inyección de dependencias similar al de otros frameworks modernos, permitiendo desacoplar componentes y facilitar la prueba y reutilización del código \cite{nestjs_official}.
-
-Asimismo, NestJS utiliza una arquitectura basada en módulos, controladores y servicios, lo cual permite organizar la lógica de negocio de manera estructurada, similar a patrones utilizados en frameworks como Spring Boot o ASP.NET Core.
-Adicionalmente, NestJS puede integrarse con bibliotecas de persistencia de datos como TypeORM o Prisma, lo cual permite la interacción con bases de datos relacionales mediante un enfoque basado en entidades o esquemas tipados, dependiendo de la implementación seleccionada.
-
-Desventajas:
-\begin{itemize}
-    \item Menor madurez en entornos empresariales críticos en comparación con frameworks como Spring Boot o .NET.
-    \item Dependencia del ecosistema Node.js, lo cual puede introducir variabilidad en la gestión de dependencias.
-    \item Rendimiento dependiente del runtime de JavaScript/Node en comparación con soluciones compiladas.
-    \item Comunidad y ecosistema aún en crecimiento en comparación con alternativas más consolidadas.
-\end{itemize}
 
 \subsection{Conclusiones sobre las plataformas de desarrollo expuestas}
 
-A partir del análisis realizado, se evidencia que las tres tecnologías estudiadas presentan enfoques válidos para el desarrollo de aplicaciones backend modernas, con características que responden a distintos paradigmas de diseño y necesidades de implementación.
+A partir de las características técnicas descritas previamente, se realiza una comparación de las tecnologías backend seleccionadas (.NET, Spring Boot y NestJS) con base en los criterios definidos en la Sección~\ref{subsection:criterios}.
 
-.NET Core destaca por su integración con el ecosistema Microsoft y su fuerte soporte para aplicaciones empresariales con altos requerimientos de confiabilidad y consistencia de datos. 
-Por su parte, Spring Boot ofrece un modelo de desarrollo basado en la inversión de control que favorece la flexibilidad y la organización modular del sistema. 
-En contraste, NestJS representa una alternativa moderna dentro del ecosistema Node.js, caracterizada por el uso de TypeScript y una arquitectura inspirada en patrones ampliamente utilizados en frameworks empresariales.
+La Tabla \ref{tab:backend_comparacion} resume la comparación realizada según los criterios establecidos.
 
-En función del contexto del sistema propuesto, orientado a la gestión de información sensible en el ámbito de la salud, se identifican como aspectos relevantes la robustez del modelo de persistencia de datos, el soporte para arquitecturas estructuradas y la madurez del ecosistema tecnológico. 
-Estos elementos serán tomados como base para la selección de las tecnologías que conformarán la solución final del sistema.
+\begin{table}[htbp]
+\centering
+\caption{Comparación de tecnologías backend según criterios de evaluación}
+\label{tab:backend_comparacion}
+\begin{tabular}{|l|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Criterio} & \textbf{.NET} & \textbf{Spring Boot} & \textbf{NestJS} \\
+\hline
+
+Eficiencia 
+& Alta (alto throughput, baja latencia, menor consumo de RAM) 
+& Alta (rendimiento estable, mayor consumo de memoria JVM) 
+& Media (eficiente en I/O, menor rendimiento en CPU intensivo) \\
+\hline
+
+Escalabilidad 
+& Alta (pipeline ligero, alto rendimiento bajo carga y despliegue eficiente en contenedores) 
+& Muy alta (ecosistema maduro para arquitecturas distribuidas y estabilidad en alta concurrencia) 
+& Alta (alta concurrencia en I/O mediante modelo no bloqueante, modelo asíncrono basado en event loop) \\
+\hline
+
+Mantenibilidad 
+& Alta (DI nativo, arquitectura estructurada y tipada) 
+& Alta (IoC consolidado, ecosistema empresarial estandarizado) 
+& Media (modularidad flexible, ecosistema heterogéneo) \\
+\hline
+
+Madurez 
+& Muy alta (plataforma enterprise, soporte LTS) 
+& Muy alta (amplia adopción empresarial consolidada) 
+& Media (ecosistema en crecimiento) \\
+\hline
+
+Adecuación clínica 
+& Alta (EF Core, transacciones ACID, seguridad integrada) 
+& Alta (JPA/Hibernate, gestión transaccional robusta) 
+& Media (menor adopción en sistemas clínicos críticos) \\
+\hline
+
+\end{tabular}
+\end{table}
+
+\subsubsection{Justificación de los criterios de evaluación}
+
+A continuación, se presentan los fundamentos técnicos que sustentan la valoración asignada a cada criterio de la comparación.
+
+\paragraph{Eficiencia y rendimiento}
+
+La evaluación de este criterio se basa en estudios de rendimiento que analizan el comportamiento de APIs bajo escenarios de carga controlados. 
+En este contexto, Godinho et al. (2024) reportan diferencias significativas en el consumo de memoria entre .NET y Java, donde la implementación en Java presenta aproximadamente el doble de uso de RAM en estado de reposo (\textit{idle}), con valores de 1.40 GiB frente a 694 MiB en .NET \cite{performance_study}.
+
+En términos de rendimiento, los resultados de throughput indican que ASP.NET Core obtiene un mayor número de respuestas por segundo en escenarios de alta concurrencia. 
+De forma consistente, los benchmarks de TechEmpower \footnote{TechEmpower Framework Benchmarks es un conjunto de pruebas estandarizadas que evalúa el rendimiento de frameworks web bajo condiciones homogéneas de carga, permitiendo comparar métricas como throughput y latencia entre diferentes tecnologías como .NET, Java y Node.js.}
+confirman que .NET se mantiene entre las tecnologías con mejor desempeño en pruebas de múltiples consultas por solicitud, como se evidencia en la Figura \ref{fig:benchmark_rendimiento} \cite{techempower_benchmarks}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.6]{Graphics/Cap2/bencharmk_definitivo.jpg}
+    \caption{Throughput (respuestas por segundo) en .NET, Spring Boot y Node.js (adaptado de TechEmpower Framework Benchmarks)}
+    \label{fig:benchmark_rendimiento}
+\end{figure}
+
+
+Asimismo, los resultados de latencia evidencian que .NET presenta tiempos de respuesta más estables bajo incremento de carga.
+
+En escenarios de estrés (\textit{POST}), la Figura \ref{fig:fg18} muestra que el consumo de memoria se mantiene consistente con pruebas previas, observándose que Java requiere aproximadamente el doble de RAM que .NET, mientras que el uso de CPU presenta diferencias mínimas entre ambos frameworks \cite{performance_study}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Graphics/Cap2/fig19-6.jpg}
+    \caption{Prueba de estrés sobre operaciones POST: uso de memoria y CPU (adaptado de \textit{Performance Comparison of RESTful Web APIs using a Test Suite: .NET vs. Java Spring Boot} \cite{performance_study})}
+    \label{fig:fg18}
+\end{figure}
+
+
+
+\paragraph{Escalabilidad}
+
+A partir de la comparación, se observa que tanto .NET como Spring Boot presentan un comportamiento escalable robusto en entornos distribuidos, siendo ampliamente utilizados en arquitecturas de microservicios. 
+
+Por su parte, NestJS ofrece una alta capacidad de concurrencia en escenarios ligeros gracias a su modelo de ejecución asíncrono. 
+Sin embargo, los resultados de benchmarks indican que .NET y Spring Boot mantienen un comportamiento más consistente bajo cargas sostenidas \cite{techempower_benchmarks}.
+
+
+\paragraph{Mantenibilidad}
+
+De acuerdo con la Tabla correspondiente, .NET y Spring Boot presentan un nivel de mantenibilidad alto, principalmente debido a la consolidación de patrones arquitectónicos como IoC y la existencia de ecosistemas maduros que favorecen la estandarización del desarrollo y facilita las pruebas unitarias. 
+
+Por otro lado, NestJS presenta una mantenibilidad media, influenciada por la mayor variabilidad de su ecosistema y la dependencia de múltiples librerías externas en evolución constante.
+
+Adicionalmente, la curva de aprendizaje también influye en la mantenibilidad del sistema, ya que tecnologías con menor complejidad inicial facilitan la incorporación de nuevos desarrolladores y reducen el tiempo de adaptación al proyecto. Esta diferencia puede observarse en la Tabla \ref{tab:curva_aprendizaje}.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparación de la curva de aprendizaje entre tecnologías backend}
+\label{tab:curva_aprendizaje}
+\begin{tabular}{|l|c|p{6cm}|}
+\hline
+\textbf{Tecnología} & \textbf{Dificultad} & \textbf{Factores determinantes} \\
+\hline
+ASP.NET Core (.NET) 
+& Media-Alta 
+& Herramientas integradas (Visual Studio), arquitectura homogénea y tipado fuerte. \\
+\hline
+Spring Boot 
+& Alta 
+& Complejidad del ecosistema Java, uso de anotaciones y auto-configuración. \\
+\hline
+NestJS 
+& Media-Baja 
+& Sintaxis accesible en TypeScript; complejidad en asincronía y concurrencia. \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Madurez tecnológica}
+
+.NET y Spring Boot presentan una madurez de grado empresarial consolidada, respaldada por su amplia adopción en sistemas productivos y su evolución sostenida a lo largo del tiempo, incluyendo soporte de largo plazo (LTS) en sus versiones actuales.
+
+.NET refuerza su estabilidad mediante su ciclo de lanzamientos LTS y su fuerte integración en entornos corporativos, mientras que Spring Boot se mantiene como el estándar de facto en el ecosistema Java para aplicaciones empresariales distribuidas.
+
+Por su parte, NestJS, aunque moderno y en crecimiento, presenta una madurez menor al estar basado en el ecosistema JavaScript/Node.js, caracterizado por ciclos de cambio más rápidos y menor estabilidad histórica en sistemas de misión crítica.
+
+\paragraph{Adecuación al dominio clínico}
+
+En sistemas de salud, la integridad, seguridad e interoperabilidad de los datos constituyen requisitos fundamentales debido a la naturaleza crítica de la información clínica.
+
+En este contexto, .NET proporciona soporte para APIs nativas de protección de datos y estándares como \textit{SMART on FHIR}\footnote{\textit{SMART on FHIR} (Substitutable Medical Applications and Reusable Technologies on Fast Healthcare Interoperability Resources) es un estándar que permite el desarrollo de aplicaciones interoperables en salud mediante acceso seguro a datos clínicos estructurados sobre FHIR.}, facilitando la integración con sistemas clínicos externos y el cumplimiento de normativas como HIPAA\footnote{HIPAA (Health Insurance Portability and Accountability Act) establece requisitos para la protección y confidencialidad de la información médica.} \cite{bhuptani_healthcare, smart_on_fhir_video}.
+
+Asimismo, su integración con Entity Framework Core permite garantizar propiedades transaccionales de tipo ACID, asegurando consistencia, integridad y trazabilidad en operaciones críticas como el registro y auditoría de eventos adversos.
+
+En el contexto del Instituto Finlay de Vacunas, esta madurez se evidencia en la adopción de plataformas como OpenClinica para la gestión de datos clínicos y el uso de herramientas de inteligencia de negocio como bambooBSC, ambas basadas en el ecosistema Java \cite{carbonell_cmi_finlay_2016}.
+
+Spring Boot presenta una alta adecuación al dominio clínico debido a su robustez transaccional y su amplio uso en sistemas empresariales del sector salud, aunque su capa de persistencia basada en JPA/Hibernate puede incrementar la complejidad en consultas avanzadas.
+
+Por su parte, NestJS presenta una adecuación moderada, debido a su menor adopción en sistemas clínicos críticos y a la dependencia de bibliotecas externas para garantizar funcionalidades de seguridad y cumplimiento normativo.
+
+
+\subsubsection{Selección de la plataforma para el sistema de farmacovigilancia}
+
+A partir del análisis realizado, se determina que \textbf{.NET} constituye la opción más adecuada para el sistema de farmacovigilancia por las siguientes razones:
+
+\begin{enumerate}
+    \item \textbf{Eficiencia de recursos:} Presenta un menor consumo de memoria y un alto rendimiento bajo carga en comparación con otras alternativas, lo que favorece su despliegue en entornos con recursos limitados \cite{performance_study}.
+    
+    \item \textbf{Fiabilidad en operación:} Mantiene un comportamiento estable bajo cargas sostenidas, garantizando la integridad de las transacciones críticas en el registro de eventos adversos \cite{performance_study}.
+    
+    \item \textbf{Seguridad y cumplimiento:} Dispone de mecanismos nativos para la protección de datos sensibles y cumplimiento de normativas del sector salud, lo que resulta esencial en sistemas clínicos \cite{bhuptani_healthcare}.
+    
+    \item \textbf{Mantenibilidad y cohesión del ecosistema:} Su arquitectura integrada, junto con herramientas unificadas y soporte de largo plazo (LTS), facilita la evolución controlada del sistema.
+    
+    \item \textbf{Adecuación al contexto de desarrollo:} La experiencia previa con el ecosistema .NET reduce la curva de aprendizaje y el riesgo de implementación, favoreciendo un desarrollo más eficiente y sostenible en el tiempo.
+\end{enumerate}
+
+
+
+
+
+
 
 
 %-------------------------------------------------
 
 \subsection{Tecnologías para el desarrollo del frontend}
 \label{subsection:frontend}
+
+En el desarrollo de aplicaciones web modernas, la selección de la tecnología de frontend constituye un elemento clave para garantizar la correcta implementación de interfaces de usuario eficientes, escalables y coherentes con las necesidades del sistema.
+
+En este contexto, no se busca identificar exhaustivamente todas las alternativas existentes, sino seleccionar un conjunto representativo de tecnologías que permitan realizar un análisis comparativo basado en criterios técnicos relevantes para aplicaciones clínicas.
+
+En este sentido, se seleccionan React, Angular y Vue por representar tres enfoques distintos en el desarrollo frontend moderno.
 
 \subsubsection{React}
 
@@ -335,13 +455,20 @@ Estos elementos serán tomados como base para la selección de las tecnologías 
     \label{fig:react}
 \end{figure}
 
-React es una biblioteca de JavaScript de código abierto desarrollada por Meta, orientada a la construcción de interfaces de usuario basadas en componentes reutilizables. Su paradigma declarativo permite describir el estado de la interfaz y delegar la actualización del DOM a un mecanismo eficiente de reconciliación \cite{react_official}.
+React es una biblioteca de JavaScript desarrollada por Meta para la construcción de interfaces basadas en componentes reutilizables. Su modelo declarativo utiliza un Virtual DOM para optimizar la actualización de la interfaz mediante un proceso de reconciliación \cite{react_official}.
 
-Una de sus principales características es el uso de un Virtual DOM, lo cual optimiza las actualizaciones de la interfaz al minimizar operaciones directas sobre el DOM real. Este enfoque resulta especialmente útil en aplicaciones con alta interacción del usuario y cambios frecuentes en la interfaz.
+Este mecanismo reduce las operaciones directas sobre el DOM real, mejorando el rendimiento en interfaces con alta frecuencia de cambios, tal como se ilustra en la Figura \ref{fig:virtual_dom}.
 
-Adicionalmente, React puede ser complementado con TypeScript, lo cual introduce tipado estático y mejora la mantenibilidad del código en sistemas de mediana y gran escala.
+Sin embargo, React requiere la integración de librerías externas para funcionalidades como enrutamiento y gestión de estado, lo que incrementa la complejidad arquitectónica del frontend.
 
-Sin embargo, React no constituye una solución completa por sí misma, ya que requiere la integración de librerías externas para aspectos como enrutamiento, gestión de estado y arquitectura de la aplicación, lo cual puede incrementar la complejidad del ecosistema.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{Graphics/Cap2/virtual_dom.png}
+    \caption{Funcionamiento del Virtual DOM en React (adaptado de \textit{Virtual DOM in React JS}, GeeksforGeeks \cite{gfg_virtual_dom_react})}
+    \label{fig:virtual_dom}
+\end{figure}
+
+
 
 \subsubsection{Angular}
 
@@ -352,11 +479,13 @@ Sin embargo, React no constituye una solución completa por sí misma, ya que re
     \label{fig:angular}
 \end{figure}
 
-Angular es un framework de desarrollo frontend basado en TypeScript, mantenido por Google, orientado a la construcción de aplicaciones web de gran escala. A diferencia de bibliotecas como React, Angular proporciona una solución integral que incluye enrutamiento, inyección de dependencias, manejo de formularios y herramientas de estructuración de aplicaciones \cite{angular_official}.
+Angular es un framework de desarrollo frontend basado en TypeScript, mantenido por Google, orientado a la construcción de aplicaciones web de gran escala mediante una arquitectura completamente integrada \cite{angular_official}.
 
-Su arquitectura basada en componentes y módulos permite organizar el código de manera estructurada, favoreciendo la escalabilidad en proyectos complejos. Además, su sistema de inyección de dependencias facilita la modularidad y la reutilización de componentes.
+Su principal característica distintiva es el uso de \textit{two-way data binding}, el cual permite la sincronización automática entre el modelo de datos y la vista, reduciendo la necesidad de manipulación manual de la interfaz.
+Asimismo, su enfoque “opinionated” define una estructura de desarrollo estandarizada desde el inicio del proyecto, lo que favorece la consistencia arquitectónica en aplicaciones de gran escala.
 
-No obstante, Angular introduce una curva de aprendizaje más pronunciada debido a la cantidad de conceptos integrados en el framework, así como una mayor complejidad inicial en comparación con alternativas más ligeras.
+Además, Angular proporciona una solución integral que incluye enrutamiento, inyección de dependencias, manejo de formularios y herramientas de estructuración de aplicaciones.
+
 
 \subsubsection{Vue}
 
@@ -367,22 +496,83 @@ No obstante, Angular introduce una curva de aprendizaje más pronunciada debido 
     \label{fig:vue}
 \end{figure}
 
-Vue.js es un framework progresivo de JavaScript diseñado para la construcción de interfaces de usuario interactivas. Su diseño incremental permite su adopción gradual, integrándose fácilmente en proyectos existentes o utilizándose como framework completo en aplicaciones modernas \cite{vue_official}.
+Vue.js es un framework progresivo de JavaScript diseñado para la construcción de interfaces de usuario interactivas. 
+Su diseño incremental permite su adopción gradual, integrándose en proyectos existentes o utilizándose como framework completo \cite{vue_official}.
 
-Vue combina características de frameworks como Angular y React, ofreciendo un sistema de reactividad eficiente y una sintaxis accesible para el desarrollo de interfaces declarativas.
+Su principal característica es un sistema de reactividad que sincroniza de forma eficiente los cambios del estado con la interfaz de usuario, facilitando el desarrollo de interfaces declarativas.
 
-Sin embargo, aunque su ecosistema ha crecido considerablemente, en entornos empresariales de gran escala su adopción es menor en comparación con Angular o React, lo cual puede influir en la disponibilidad de recursos y soporte a largo plazo.
+Vue combina principios presentes en frameworks como React y Angular, situándose como una alternativa intermedia en términos de flexibilidad y estructura.
 
 
 \subsection{Conclusiones sobre los frameworks de frontend expuestos}
 
-A partir del análisis realizado, se observa que React, Angular y Vue representan enfoques distintos para la construcción de interfaces de usuario modernas.
+Aunque los criterios definidos son aplicables de forma general al sistema, su interpretación varía según la capa tecnológica analizada.
 
-React destaca por su flexibilidad y su amplio ecosistema, permitiendo la construcción de interfaces altamente dinámicas mediante un enfoque basado en componentes. 
-Angular, por su parte, proporciona una solución más estructurada e integral, adecuada para aplicaciones de gran escala que requieren una arquitectura estricta desde el inicio. 
-Vue se posiciona como una alternativa intermedia, con una curva de aprendizaje más suave y un enfoque progresivo.
+En el frontend, la eficiencia se relaciona con el rendimiento en la actualización de la interfaz, la escalabilidad con la gestión de interfaces complejas basadas en componentes, y la adecuación al dominio clínico con la capacidad de soportar la captura, validación y visualización estructurada de datos.
 
-En el contexto del sistema propuesto, caracterizado por interfaces altamente interactivas basadas en formularios dinámicos, se considera adecuado el uso de un enfoque basado en componentes con alta reactividad, lo cual favorece la elección de React como tecnología base para el desarrollo del frontend.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparación de tecnologías frontend según criterios de evaluación}
+\label{tab:frontend_comparacion}
+\begin{tabular}{|l|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Criterio} & \textbf{React} & \textbf{Angular} & \textbf{Vue} \\
+\hline
+
+Renderizado 
+& Alto (Virtual DOM, reconciliación eficiente) 
+& Medio (change detection basado en zonas) 
+& Alto (reactividad basada en dependencias) \\
+\hline
+
+Escalabilidad (UI) 
+& Alta (componentes reutilizables) 
+& Muy alta (arquitectura modular integrada) 
+& Alta (reactividad y composición flexible) \\
+\hline
+
+Peso y Rendimiento 
+& Ligero (enfocado solo en la carga de vista, agilizando el tiempo de carga inicial) 
+& Pesado (framework pesado que incluye múltiples librerías integradas) 
+& Muy Ligero (20-30KB ideal para cargas rápidas en redes limitadas)  \\
+\hline
+
+Mantenibilidad 
+& Alta (componentes + ecosistema flexible) 
+& Muy alta (estructura integral y tipada) 
+& Alta (estructura simple y progresiva) \\
+\hline
+
+Curvas de Aprendizaje
+& Media (ecosistema flexible con integración de librerías externas y gestión del estado) 
+& Alta (framework integral con múltiples conceptos) 
+& Baja-Media (enfoque progresivo y sintaxis accesible) \\
+\hline
+
+Madurez 
+& Muy alta (amplia adopción y comunidad) 
+& Muy alta (uso empresarial consolidado) 
+& Alta (ecosistema en crecimiento) \\
+\hline
+
+Adecuación clínica (UI) 
+& Alta (gestión de estado y formularios dinámicos) 
+& Muy alta (formularios y validación integrados) 
+& Alta (reactividad y simplicidad en formularios) \\
+\hline
+
+
+\end{tabular}
+\end{table}
+
+
+
+A partir de la Tabla \ref{tab:frontend_comparacion}, se identifican diferencias en los enfoques de construcción de interfaces. React y Vue priorizan mecanismos reactivos de actualización eficiente, mientras que Angular ofrece una solución más estructurada e integrada.
+
+Considerando los criterios evaluados, React presenta un equilibrio entre eficiencia, flexibilidad y mantenibilidad, lo cual resulta adecuado para aplicaciones basadas en componentes dinámicos.
+
+Dado que el sistema propuesto requiere interfaces altamente interactivas orientadas a formularios clínicos, se selecciona React como tecnología base para el desarrollo del frontend.
 
 
 
@@ -391,53 +581,86 @@ En el contexto del sistema propuesto, caracterizado por interfaces altamente int
 \subsection{Sistemas de gestión de bases de datos}
 \label{subsection:bases_datos}
 
-\subsubsection{Bases de datos relacionales}
+En sistemas de farmacovigilancia, la gestión de datos clínicos es un elemento clave debido a la necesidad de almacenar y consultar información sensible asociada a pacientes, eventos adversos y tratamientos.
+
+Por ello, la elección del sistema de gestión de bases de datos impacta directamente en la consistencia, integridad y escalabilidad del sistema.
+
+En el estado del arte se consideran dos enfoques principales: bases de datos relacionales y bases de datos NoSQL, seleccionados por su amplia adopción en sistemas empresariales y por representar paradigmas complementarios de almacenamiento estructurado y flexible.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.8]{Graphics/mysql-original-wordmark.png}
-    \caption{Sistema de gestión de bases de datos relacionales : MySQL}
+    \includegraphics[scale=0.8]{Graphics/Cap2/sgbd.jpg}
+    \caption{Ejemplos de sistemas de gestión de bases de datos relacionales y NoSQL}
     \label{fig:mysql}
 \end{figure}
 
-Las bases de datos relacionales constituyen un modelo de almacenamiento de información basado en estructuras tabulares compuestas por filas y columnas, donde las relaciones entre entidades se establecen mediante claves primarias y foráneas. 
-Este enfoque permite garantizar propiedades fundamentales como la integridad referencial, la consistencia de los datos y el cumplimiento de transacciones ACID, aspectos críticos en sistemas que gestionan información sensible o estructurada \cite{elmasri2016fundamentals}.
+\subsubsection{Bases de datos relacionales}
 
-MySQL es uno de los sistemas de gestión de bases de datos relacionales más ampliamente utilizados en el desarrollo de aplicaciones web y empresariales, caracterizado por su madurez, rendimiento y amplio soporte comunitario \cite{mysql_official}. 
-Su modelo relacional facilita la implementación de esquemas bien definidos, lo cual resulta adecuado en escenarios donde la coherencia de los datos es un requisito prioritario, como es el caso de sistemas clínicos o de registro estructurado de eventos.
+Las bases de datos relacionales se basan en un modelo tabular donde la información se organiza en filas y columnas, estableciendo relaciones mediante claves primarias y foráneas, lo que permite garantizar propiedades como la integridad referencial, la consistencia de los datos y el cumplimiento de transacciones ACID \cite{elmasri2016fundamentals}.
 
-Sin embargo, este tipo de sistemas puede presentar limitaciones en contextos donde se requiere una alta flexibilidad en la estructura de los datos o una escalabilidad horizontal intensiva, debido a la rigidez inherente del modelo relacional y a la necesidad de mantener esquemas previamente definidos.
+No obstante, los sistemas relacionales presentan limitaciones cuando se requiere alta flexibilidad en la estructura de los datos o escalabilidad horizontal intensiva, debido a la rigidez del esquema predefinido.
 
 \subsubsection{Bases de datos NoSQL}
 
+Las bases de datos NoSQL surgen como alternativa a los modelos relacionales, orientadas a proporcionar mayor flexibilidad en la estructura de los datos y mejor adaptación a entornos distribuidos y de gran escala. A diferencia del modelo relacional, no requieren un esquema rígido, lo que permite gestionar datos semi-estructurados (como documentos JSON con campos variables) o no estructurados (como imágenes médicas, registros libres de texto o archivos clínicos) \cite{moniruzzaman2013nosql}.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/mongodb-original-wordmark.png}
-    \caption{Sistema de gestión de bases de datos no relacionales : MongoDB}
-    \label{fig:mongodb}
-\end{figure}
-
-
-Las bases de datos NoSQL surgen como alternativa a los modelos relacionales tradicionales, con el objetivo de ofrecer mayor flexibilidad en la estructura de los datos y una mejor adaptación a entornos distribuidos y de gran escala. 
-A diferencia del modelo relacional, estas bases de datos no requieren un esquema rígido, lo que permite la gestión de datos semi-estructurados o no estructurados \cite{moniruzzaman2013nosql}.
-
-MongoDB es uno de los sistemas NoSQL más representativos, basado en un modelo de documentos que almacena la información en formato BSON. 
-Este enfoque permite una evolución más dinámica del esquema de datos y facilita la escalabilidad horizontal en sistemas con grandes volúmenes de información \cite{mongodb_official}.
-
-No obstante, la flexibilidad del modelo NoSQL puede implicar desafíos en la consistencia de los datos y en la gestión de relaciones complejas entre entidades, lo cual puede resultar una limitación en sistemas donde la integridad de la información es un requisito crítico, como en aplicaciones de dominio clínico o regulado.
+Sin embargo, esta flexibilidad puede comprometer la consistencia de los datos y la gestión de relaciones complejas, lo que limita su idoneidad en sistemas donde la integridad de la información es crítica, como en el dominio clínico.
 
 \subsection{Conclusiones sobre los sistemas de gestión de bases de datos expuestos}
 
-A partir del análisis realizado, se evidencia que los sistemas de gestión de bases de datos relacionales y NoSQL responden a paradigmas distintos de modelado y almacenamiento de la información, los cuales se adaptan a necesidades específicas de cada tipo de sistema.
+Se comparan dos paradigmas de bases de datos: relacionales y NoSQL, en función de criterios técnicos relevantes para sistemas clínicos.
 
-Las bases de datos relacionales, representadas en este análisis por sistemas como MySQL, se caracterizan por un modelo estructurado basado en tablas y relaciones explícitas, lo cual permite garantizar propiedades como la integridad referencial, la consistencia de los datos y el soporte de transacciones ACID. 
-Estas características resultan especialmente relevantes en sistemas que requieren alta confiabilidad en la gestión de información estructurada, como es el caso de aplicaciones en el dominio clínico.
+\begin{table}[htbp]
+\centering
+\caption{Comparación de paradigmas de bases de datos según criterios de evaluación}
+\label{tab:db_comparacion}
+\begin{tabular}{|l|p{5.5cm}|p{5.5cm}|}
+\hline
 
-Por otra parte, las bases de datos NoSQL, representadas por sistemas como MongoDB, ofrecen un modelo de almacenamiento más flexible, orientado a documentos, lo cual facilita la evolución dinámica del esquema de datos y la escalabilidad horizontal en entornos distribuidos. 
-Sin embargo, esta flexibilidad puede implicar compromisos en términos de consistencia fuerte y en la gestión de relaciones complejas entre entidades.
+\textbf{Criterio} & \textbf{Relacional (SQL)} & \textbf{NoSQL} \\
+\hline
 
-En función del contexto del sistema propuesto, donde la integridad de los datos, la trazabilidad de eventos y la consistencia de la información constituyen requisitos fundamentales, se considera que los sistemas relacionales presentan ventajas significativas para la implementación de la solución.
+Estabilidad
+& Muy alta (madurez consolidada, transacciones ACID robustas)
+& Alta (estable, pero dependiente del motor y configuración distribuida)
+\\
+\hline
+
+Mantenibilidad
+& Alta (esquema estructurado y consistente)
+& Media (flexibilidad del esquema puede aumentar complejidad)
+\\
+\hline
+
+Adecuación clínica
+& Muy alta (integridad, trazabilidad y consistencia de datos)
+& Media (dependiente del diseño de la aplicación)
+\\
+\hline
+
+Curva de aprendizaje
+& Media (modelado relacional y SQL)
+& Media-Baja (modelos flexibles y menos estructurados)
+\\
+\hline
+
+Escalabilidad
+& Media (principalmente vertical, implica el aumento de recursos en un único servidor)
+& Muy alta (escalabilidad horizontal nativa, implica la incorporación de múltiples nodos distribuidos)
+\\
+\hline
+
+Eficiencia
+& Alta en datos estructurados
+& Alta en grandes volúmenes de datos no estructurados
+\\
+\hline
+
+\end{tabular}
+\end{table}
+
+En el contexto del sistema propuesto, se selecciona MySQL como sistema de gestión de bases de datos debido a su alta consistencia, soporte transaccional y adecuación al dominio clínico.
+
 
 %-------------------------------------------------
 
