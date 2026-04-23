@@ -7,9 +7,9 @@ Asimismo, se revisan conceptos relacionados con el modelado de datos clínicos y
 \section{Análisis de sistemas de autorreporte clínico existentes}
 % Análisis de VAERS, V-Safe, etc.
 
-En el contexto de la farmacovigilancia moderna, diversos sistemas han sido desarrollados con el objetivo de facilitar la notificación de eventos adversos posteriores a la vacunación. 
-Estos sistemas difieren en su enfoque, arquitectura y nivel de digitalización, lo que impacta directamente en la calidad y disponibilidad de la información recolectada.
-A continuación, se analizan algunas de las principales soluciones implementadas a nivel internacional.
+En la farmacovigilancia moderna, los sistemas de autorreporte clínico permiten registrar eventos adversos posteriores a la vacunación de forma estructurada. Sin embargo, estas soluciones presentan diferencias relevantes en su modelo de vigilancia, grado de digitalización y tipo de interacción con los usuarios.
+
+Este apartado examina tres sistemas representativos a nivel internacional: VAERS, NotificaRAM y V-safe. El análisis se centra en sus características funcionales, actores involucrados, fortalezas y limitaciones, con el propósito de identificar brechas que orienten el diseño del sistema propuesto.
 
 \subsection{Vaccine Adverse Event Reporting System (VAERS)}
 
@@ -49,6 +49,8 @@ En las Figuras \ref{fig:figura2} y \ref{fig:figura3} se muestran ejemplos repres
 
 Este mecanismo facilita el acceso al sistema y permite la recopilación masiva de información a nivel nacional.
 
+Para mayor referencia, en el Anexo \ref{app:vaers-form-oct2025} se adjunta una copia del formulario oficial VAERS correspondiente a octubre de 2025.
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.3]{Graphics/vaers_form.jpeg}
@@ -74,6 +76,14 @@ Entre ellas se encuentran el subregistro de eventos, la variabilidad en la calid
 Además, los reportes no permiten establecer relaciones causales directas entre la vacuna y el evento adverso, ya que muchos de estos pueden ocurrir de manera coincidente tras la inmunización \cite{fda_vaers}. 
 En este sentido \textquote{Tras realizar investigaciones, los científicos concluyen que la mayoría de los eventos notificados al VAERS no están asociados con la vacunación} (traducción propia) \cite{cdc_vaers}.
 Estas limitaciones requieren que los posibles riesgos identificados sean evaluados mediante sistemas complementarios y estudios más rigurosos, evidenciando la necesidad de enfoques más robustos en el diseño de sistemas de farmacovigilancia.
+
+\subsection{VAERS (Vaccine Adverse Event Reporting System)}
+
+VAERS es un sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la FDA y los CDC, cuyo propósito es recopilar reportes de eventos adversos posteriores a la vacunación para la detección temprana de posibles problemas de seguridad.
+
+El sistema permite la notificación por parte de profesionales de la salud, fabricantes y ciudadanos a través de formularios electrónicos disponibles en su plataforma web, así como mediante formatos descargables en PDF. Los reportes son almacenados en una base de datos centralizada y analizados por las autoridades sanitarias.
+
+Las Figuras \ref{fig:figura2} y \ref{fig:figura3} muestran ejemplos de los formularios utilizados en el proceso de notificación.
 
 \subsection{Sistema NotificaRAM de la Agencia Española de Medicamentos y Productos Sanitarios}
 
@@ -174,17 +184,17 @@ Finalmente, en términos de limitaciones, los sistemas de vigilancia pasiva pres
 
 En conjunto, estos sistemas reflejan diferentes enfoques dentro de la farmacovigilancia moderna, evidenciando un tránsito desde modelos reactivos hacia estrategias más proactivas y centradas en el usuario.
 
-\subsection{Conclusiones sobre las soluciones actuales}
+% \subsection{Conclusiones sobre las soluciones actuales}
 
-El estudio de los sistemas analizados evidencia que, si bien existen soluciones consolidadas para la notificación de eventos adversos, estas presentan limitaciones significativas desde el punto de vista funcional y tecnológico.
+% El estudio de los sistemas analizados evidencia que, si bien existen soluciones consolidadas para la notificación de eventos adversos, estas presentan limitaciones significativas desde el punto de vista funcional y tecnológico.
 
-Los sistemas basados en vigilancia pasiva, como VAERS y NotificaRAM, continúan siendo fundamentales debido a su amplia cobertura y apertura a múltiples actores. No obstante, su dependencia de la notificación voluntaria limita la completitud, oportunidad y calidad de los datos recolectados.
+% Los sistemas basados en vigilancia pasiva, como VAERS y NotificaRAM, continúan siendo fundamentales debido a su amplia cobertura y apertura a múltiples actores. No obstante, su dependencia de la notificación voluntaria limita la completitud, oportunidad y calidad de los datos recolectados.
 
-Por otro lado, soluciones más recientes como V-safe introducen enfoques innovadores basados en vigilancia activa y tecnologías móviles, mejorando la frecuencia y consistencia de la información. Sin embargo, estos sistemas presentan restricciones en términos de alcance poblacional y dependencia de la participación voluntaria de los usuarios.
+% Por otro lado, soluciones más recientes como V-safe introducen enfoques innovadores basados en vigilancia activa y tecnologías móviles, mejorando la frecuencia y consistencia de la información. Sin embargo, estos sistemas presentan restricciones en términos de alcance poblacional y dependencia de la participación voluntaria de los usuarios.
 
-De manera general, se identifica la necesidad de sistemas que integren las ventajas de ambos enfoques, combinando la accesibilidad y cobertura de la vigilancia pasiva con mecanismos automatizados que permitan una recolección más sistemática, oportuna y estructurada de los datos.
+% De manera general, se identifica la necesidad de sistemas que integren las ventajas de ambos enfoques, combinando la accesibilidad y cobertura de la vigilancia pasiva con mecanismos automatizados que permitan una recolección más sistemática, oportuna y estructurada de los datos.
 
-Estas limitaciones evidencian oportunidades para el diseño de nuevas soluciones tecnológicas orientadas a mejorar la eficiencia, calidad e interoperabilidad en la notificación de eventos adversos, lo cual constituye la base para el desarrollo del sistema propuesto en la presente investigación.
+% Estas limitaciones evidencian oportunidades para el diseño de nuevas soluciones tecnológicas orientadas a mejorar la eficiencia, calidad e interoperabilidad en la notificación de eventos adversos, lo cual constituye la base para el desarrollo del sistema propuesto en la presente investigación.
 
 
 \section{Análisis de tecnologías para la implementación del sistema propuesto}

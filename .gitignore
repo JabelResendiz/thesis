@@ -20,4 +20,5 @@
 *.bcf
 *.xml
 *.pdf_tex
+*.pdf
 build.sh
