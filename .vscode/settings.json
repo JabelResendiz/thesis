@@ -21,6 +21,14 @@
         "**/*.py": true,
         "**/*.bcf": true,
         "**/*.xml": true,
-        "**/*.pdf_tex": true
+        "**/*.pdf_tex": true,
+        "**/*.acn": true,
+        "**/*.acr": true,
+        "**/*.alg": true,
+        "**/*.glg": true,
+        "**/*.glo": true,
+        "**/*.gls": true,
+        "**/*.ist": true,
+        "**/*.glsdefs": true,
     }
 }

@@ -7,7 +7,13 @@ Asimismo, se revisan conceptos relacionados con el modelado de datos clínicos y
 \section{Análisis de sistemas de autorreporte clínico existentes}
 % Análisis de VAERS, V-Safe, etc.
 
-En la farmacovigilancia moderna, los sistemas de autorreporte clínico permiten registrar eventos adversos posteriores a la vacunación de forma estructurada. Sin embargo, estas soluciones presentan diferencias relevantes en su modelo de vigilancia, grado de digitalización y tipo de interacción con los usuarios.
+En la farmacovigilancia moderna, los sistemas de autorreporte clínico permiten registrar eventos adversos posteriores a la vacunación de forma estructurada. 
+Estos sistemas se basan principalmente en modelos de vigilancia pasiva, en los cuales la notificación de eventos depende de la iniciativa de los usuarios o profesionales de salud, sin una recolección activa sistemática de datos por parte de las instituciones.
+
+Estas herramientas operan bajo dos modelos principales: la vigilancia pasiva y la vigilancia activa. El modelo pasivo depende exclusivamente de la iniciativa voluntaria de ciudadanos o profesionales para notificar un evento.
+Por el contrario, el modelo activo o proactivo establece un contacto directo con el usuario mediante encuestas digitales para recopilar datos de salud en tiempo casi real.
+
+% Sin embargo, estas soluciones presentan diferencias relevantes en su modelo de vigilancia, grado de digitalización y tipo de interacción con los usuarios.
 
 Este apartado examina tres sistemas representativos a nivel internacional: VAERS, NotificaRAM y V-safe. El análisis se centra en sus características funcionales, actores involucrados, fortalezas y limitaciones, con el propósito de identificar brechas que orienten el diseño del sistema propuesto.
 
@@ -27,63 +33,16 @@ Este apartado examina tres sistemas representativos a nivel internacional: VAERS
     \label{fig:figura1}
 \end{figure}
 
-% Descripción general
-El \textit{Vaccine Adverse Event Reporting System} (VAERS) \cite{vaers_official} es un sistema nacional de vigilancia de seguridad de vacunas en los Estados Unidos, diseñado para el monitoreo de eventos adversos posteriores a la inmunización \cite{cdc_vaers}. 
-Este sistema se enmarca en el proceso de supervisión de vacunas tras su aprobación por la \textit{Food and Drug Administration} (FDA) \cite{fda_vaers}, y
-es administrado conjuntamente por la FDA y los \textit{Centers for Disease Control and Prevention} (CDC) \cite{cdc_vaers,fda_vaers}, y funciona como un repositorio centralizado para la recolección y análisis de reportes de eventos adversos asociados a la vacunación.
+\textbf{VAERS} es el sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la \textit{Food and Drug Administration} (FDA) y los \textit{Centers for Disease Control and Prevention} (CDC) \cite{fda_vaers}. 
+Su objetivo principal es detectar señales de seguridad, definidas como patrones inusuales o un volumen elevado de reportes que no fueron identificados durante los ensayos clínicos \cite{cdc_vaers}.
 
-% Tipo de vigilancia
-VAERS se clasifica como un sistema de vigilancia pasiva, ya que depende de la notificación voluntaria de eventos adversos por parte de los usuarios, en lugar de la recolección activa de datos por parte de las instituciones de salud \cite{cdc_vaers}. 
-Este enfoque permite una amplia cobertura poblacional, aunque introduce limitaciones asociadas a la calidad y completitud de los reportes.
+El sistema permite la notificación por parte de profesionales de la salud, fabricantes y ciudadanos a través de formularios electrónicos disponibles en su plataforma web, así como mediante formatos descargables en PDF (véase Anexo \ref{app:vaers-form-oct2025}) \cite{vaers_official}.
 
-% Actores que reportan
-El sistema permite la notificación de eventos adversos por parte de diversos actores, incluyendo profesionales de la salud, fabricantes de vacunas, pacientes y familiares \cite{cdc_vaers,fda_vaers}. 
-En determinados casos, la legislación estadounidense establece la obligatoriedad de reportar ciertos eventos adversos, particularmente para proveedores de salud y fabricantes.
-Asimismo, con el objetivo de garantizar la veracidad y confiabilidad de los datos, el sistema contempla disposiciones legales que sancionan el envío intencional de información falsa, considerándose una violación de la legislación federal de los Estados Unidos \cite{vaers_official}.
+Para garantizar la integridad del repositorio, la legislación estadounidense contempla sanciones civiles y penales ante el suministro intencional de información falsa en los reportes \cite{vaers_official}. 
+Esto contribuye a reducir la introducción de datos malintencionados en un sistema de acceso público.
 
-% Canal de notificación
-El reporte de eventos adversos se realiza principalmente a través de plataformas digitales accesibles vía web \cite{vaers_official}, donde los usuarios pueden completar formularios estructurados que son posteriormente almacenados en una base de datos centralizada. 
-Adicionalmente, el sistema contempla la posibilidad de notificación mediante formularios en formato PDF descargable, los cuales pueden ser completados de manera manual y posteriormente remitidos a través de la plataforma oficial. 
-
-En las Figuras \ref{fig:figura2} y \ref{fig:figura3} se muestran ejemplos representativos de ambos mecanismos de notificación, correspondientes al formulario en PDF y al formulario web respectivamente.
-
-Este mecanismo facilita el acceso al sistema y permite la recopilación masiva de información a nivel nacional.
-
-Para mayor referencia, en el Anexo \ref{app:vaers-form-oct2025} se adjunta una copia del formulario oficial VAERS correspondiente a octubre de 2025.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.3]{Graphics/vaers_form.jpeg}
-    \caption{Ejemplo del formulario en formato PDF editable utilizado para el reporte de eventos adversos en el sistema VAERS}
-    \label{fig:figura2}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.5]{Graphics/vaers_web_form.png}
-    \caption{Ejemplo del formulario web utilizado para el reporte de eventos adversos en el sistema VAERS}
-    \label{fig:figura3}
-\end{figure}
-
-% Fortalezas del sistema
-Entre las principales fortalezas de VAERS se encuentra su capacidad para actuar como un sistema de alerta temprana en la detección de eventos adversos poco frecuentes o inesperados. 
-Asimismo, su carácter abierto permite la participación de múltiples actores, incrementando la cantidad de información disponible para el análisis \cite{cdc_vaers}. 
-Adicionalmente, los datos recopilados son accesibles públicamente, lo que contribuye a la transparencia en la vigilancia de la seguridad vacunal.
-
-% Limitaciones del sistema
-No obstante, VAERS presenta limitaciones inherentes a los sistemas de vigilancia pasiva. 
-Entre ellas se encuentran el subregistro de eventos, la variabilidad en la calidad de los datos reportados y la posible existencia de sesgos de notificación \cite{cdc_vaers}. 
-Además, los reportes no permiten establecer relaciones causales directas entre la vacuna y el evento adverso, ya que muchos de estos pueden ocurrir de manera coincidente tras la inmunización \cite{fda_vaers}. 
-En este sentido \textquote{Tras realizar investigaciones, los científicos concluyen que la mayoría de los eventos notificados al VAERS no están asociados con la vacunación} (traducción propia) \cite{cdc_vaers}.
-Estas limitaciones requieren que los posibles riesgos identificados sean evaluados mediante sistemas complementarios y estudios más rigurosos, evidenciando la necesidad de enfoques más robustos en el diseño de sistemas de farmacovigilancia.
-
-\subsection{VAERS (Vaccine Adverse Event Reporting System)}
-
-VAERS es un sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la FDA y los CDC, cuyo propósito es recopilar reportes de eventos adversos posteriores a la vacunación para la detección temprana de posibles problemas de seguridad.
-
-El sistema permite la notificación por parte de profesionales de la salud, fabricantes y ciudadanos a través de formularios electrónicos disponibles en su plataforma web, así como mediante formatos descargables en PDF. Los reportes son almacenados en una base de datos centralizada y analizados por las autoridades sanitarias.
-
-Las Figuras \ref{fig:figura2} y \ref{fig:figura3} muestran ejemplos de los formularios utilizados en el proceso de notificación.
+Los reportes alimentan la base de datos CDC WONDER, garantizando la transparencia mediante el acceso público a datos anonimizados \cite{vaers_official}.
+Ante una señal de alerta, el monitoreo escala hacia sistemas de vigilancia activa y evaluación clínica como el \textit{Vaccine Safety Datalink} (VSD) y el proyecto \textit{Clinical Immunization Safety Assessment} (CISA) para confirmar posibles riesgos asociados a la vacunación \cite{cdc_vaers}.
 
 \subsection{Sistema NotificaRAM de la Agencia Española de Medicamentos y Productos Sanitarios}
 
@@ -94,40 +53,16 @@ Las Figuras \ref{fig:figura2} y \ref{fig:figura3} muestran ejemplos de los formu
     \label{fig:figura4}
 \end{figure}
 
-% Descripción general
-El sistema \textbf{notificaRAM} constituye el formulario electrónico oficial de notificación de sospechas de reacciones adversas a medicamentos en España, permitiendo la comunicación de posibles efectos adversos por parte de ciudadanos y profesionales sanitarios \cite{aemps_manual_2025}. 
-Este formulario se integra en el Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H), una red nacional coordinada por la Agencia Española de Medicamentos y Productos Sanitarios (AEMPS) para la recogida, registro y evaluación de sospechas de reacciones adversas \cite{aemps_sefv_2025}.
+\textbf{NotificaRAM} es la plataforma oficial de farmacovigilancia en España para la notificación de sospechas de reacciones adversas a medicamentos \cite{aemps_manual_2025}.
+La Agencia Española de Medicamentos y Productos Sanitarios (AEMPS) gestiona este portal en el marco del Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H) \cite{aemps_sefv_2025}.
 
-% Tipo de notificación
-El sistema se basa en un modelo de notificación espontánea, en el que las sospechas de reacciones adversas pueden ser comunicadas tanto por profesionales sanitarios como por la ciudadanía \cite{aemps_notificacion_2026}. 
-Los profesionales sanitarios deben notificar estas sospechas cuando las detectan, mientras que la ciudadanía puede hacerlo cuando sospecha una posible reacción adversa \cite{aemps_notificacion_2026}.
 
-% Actores que reportan
-Los actores implicados en la notificación incluyen profesionales sanitarios (como médicos, farmacéuticos y personal de enfermería) y ciudadanos o pacientes. 
-Ambos grupos pueden comunicar sospechas de reacciones adversas mediante los formularios disponibles en la plataforma \cite{aemps_manual_2025, aemps_notificacion_2026}.
+El sistema funciona de forma descentralizada, remitiendo los reportes a los Centros Autonómicos de Farmacovigilancia para su validación técnica inicial \cite{aemps_manual_2025}. 
 
-% Canal de notificación
-La notificación se realiza a través de formularios electrónicos disponibles en la plataforma oficial \url{https://www.notificaram.es}, donde el usuario selecciona el tipo de formulario según sea ciudadano o profesional sanitario. 
-Las notificaciones son remitidas a los centros autonómicos de farmacovigilancia para su evaluación e incorporación al sistema \cite{aemps_manual_2025, aemps_sefv_2025}.
+Tras esta evaluación, la base de datos FEDRA(Farmacovigilancia Española, Datos de Reacciones Adversas) centraliza todos los registros nacionales \cite{aemps_fedra_2026}.
 
-% Infraestructura del sistema
-El SEFV-H es una red descentralizada en la que los centros autonómicos de farmacovigilancia registran y evalúan las sospechas de reacciones adversas en una base de datos común denominada \textbf{FEDRA} (Farmacovigilancia Española, Datos de Reacciones Adversas) \cite{aemps_fedra_2026}. 
-Este sistema permite la recogida y análisis coordinado de las notificaciones dentro del sistema nacional de farmacovigilancia \cite{aemps_sefv_2025}.
-
-Asimismo, los casos registrados en FEDRA son transmitidos a la base de datos europea de sospechas de reacciones adversas \textbf{EudraVigilance}, utilizada por las agencias reguladoras de la Unión Europea para la detección de señales de seguridad \cite{aemps_notificacion_2026}.
-
-% Limitaciones
-El sistema presenta limitaciones propias del modelo de notificación espontánea, ya que la información depende de las sospechas comunicadas por los notificadores y de la calidad de los datos registrados \cite{aemps_notificacion_2026}. 
-En este sentido, pueden existir problemas de infranotificación, especialmente en casos leves o no reconocidos como reacciones adversas, así como variabilidad en la completitud y precisión de la información reportada. 
-Asimismo, la dependencia de la iniciativa del notificador introduce posibles sesgos, condicionados por factores como la experiencia clínica, el nivel de conocimiento del sistema o la percepción de gravedad del evento adverso.
-Adicionalmente, al no tratarse de un sistema de vigilancia activa, la capacidad para identificar de manera oportuna eventos poco frecuentes o establecer relaciones causales directas entre el medicamento y la reacción adversa puede verse limitada, requiriendo la realización de estudios complementarios más rigurosos.
-
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[scale=1.8]{Graphics/logo_aemps.jpg}
-%     \caption{Logotipo del sistema NotificaRAM (notificaram.es)}
-%     \label{fig:figura4}
-% \end{figure}
+Estos registros alimentan la plataforma europea EudraVigilance, la cual utilizan las agencias reguladoras de la Unión Europea para la detección de señales de seguridad.
+Finalmente, la red global VigiBase de la OMS incorpora estos hallazgos para el monitoreo internacional \cite{aemps_notificacion_2026}.
 
 \subsection{Sistema V-safe del Centers for Disease Control and Prevention}
 
@@ -139,17 +74,15 @@ Adicionalmente, al no tratarse de un sistema de vigilancia activa, la capacidad 
     \label{fig:figura5}
 \end{figure}
 
+Los Centers for Disease Control and Prevention (CDC) diseñaron V-safe como una herramienta digital para monitorear la seguridad vacunal en los Estados Unidos.
+Tras su lanzamiento inicial en diciembre de 2020 para supervisar las vacunas contra la COVID-19, el sistema extendió su alcance a otras inmunizaciones, incluyendo aquellas contra el virus respiratorio sincitial (VRS) \cite{cdc_vsafe_portal}.
 
-El sistema \textbf{V-safe} es una herramienta digital de monitoreo de seguridad vacunal desarrollada por el \textit{Centers for Disease Control and Prevention} (CDC), orientada al seguimiento de personas vacunadas en los Estados Unidos.
-Se lanzó originalmente en diciembre de 2020 para monitorear la seguridad de las vacunas contra el \textbf{COVID-19}. 
-Ahora, V-safe permite rastrear a sujetos vacunados después de recibir una vacuna contra el COVID-19 o contra el \textbf{Virus Respiratorio Sincitial} (VRS)\cite{cdc_about_vsafe}. 
+A diferencia de los modelos de notificación espontánea, V-safe emplea un enfoque de vigilancia activa mediante el contacto proactivo con los usuarios. 
+El sistema envía encuestas digitales por mensajes de texto o correo electrónico para recopilar información directamente del paciente \cite{cdc_about_vsafe}.
 
-A diferencia de los sistemas tradicionales de farmacovigilancia basados en notificación espontánea, V-safe implementa un enfoque de \textbf{vigilancia activa}, en el cual el sistema contacta de manera proactiva a los usuarios mediante encuestas periódicas enviadas tras la vacunación. 
-Después de inscribirse y seleccionar la vacuna que recibió, V-safe hace preguntas por mensajes de texto (SMS) o correo electrónico sobre cómo se siente el sujeto después de la vacunación, incluso si no presenta efectos secundarios. 
-De este modo, el sistema está dirigido principalmente a personas vacunadas que participan de forma voluntaria, permitiendo la recopilación sistemática de información directamente desde el usuario.
-Recibe un chequeo diario durante la primera semana, y luego un chequeo semanal durante seis semanas adicionales \cite{cdc_vsafe_portal}.
+El seguimiento se realiza mediante encuestas diarias durante la primera semana posterior a la vacunación y posteriormente de forma semanal durante seis semanas adicionales \cite{cdc_vsafe_portal,vsafe_monitoring_article}.
 
-La Figura \ref{fig:vsafe_flujo} muestra un ejemplo del flujo de interacción del sistema V-safe, donde se ilustra el proceso de envío de encuestas y la recolección de información por parte de los usuarios \cite{vsafe_monitoring_article}.
+La Figura \ref{fig:vsafe_flujo} ilustra el flujo general de interacción del sistema, basado en el envío periódico de encuestas y la recopilación estructurada de datos reportados por los usuarios \cite{vsafe_monitoring_article}.
 
 \begin{figure}[htbp]
     \centering
@@ -158,43 +91,92 @@ La Figura \ref{fig:vsafe_flujo} muestra un ejemplo del flujo de interacción del
     \label{fig:vsafe_flujo}
 \end{figure}
 
-
-Desde una perspectiva funcional, una de las principales fortalezas de V-safe radica en su capacidad para implementar un modelo de vigilancia activa a gran escala, permitiendo la recopilación de datos en tiempo casi real sobre la seguridad de las vacunas. Durante su implementación inicial, el sistema demostró un alcance masivo: "más de 10 millones de personas se registraron y completaron más de 151 millones de encuestas" \cite{vsafe_monitoring_article}. Este enfoque permite al CDC comprender mejor los efectos secundarios experimentados poco después de la inmunización, aportando datos que a menudo superan los obtenidos en ensayos clínicos tradicionales.
-El diseño del sistema facilita un seguimiento longitudinal riguroso de los individuos vacunados. Esto se logra mediante un esquema de comunicación automatizado donde el usuario recibe un "chequeo de salud diario durante la primera semana después de la vacunación y luego un chequeo semanal por seis semanas adicionales". Esta periodicidad mejora la detección temprana de posibles eventos adversos y permite una observación continuada de la salud del paciente.
-Asimismo, la estandarización de las encuestas y el uso de tecnologías móviles (mensajes de texto y correos electrónicos) garantizan la obtención de datos estructurados y comparables. Al emplear herramientas digitales para realizar "chequeos que típicamente toman menos de dos minutos", el sistema optimiza la recolección de información técnica que ya ha sido utilizada en más de 25 publicaciones científicas para validar la seguridad de las vacunas \cite{vsafe_monitoring_article}
-
-No obstante, el sistema presenta limitaciones asociadas a su diseño y funcionamiento. 
-Entre ellas se encuentra la dependencia del acceso a dispositivos móviles y conectividad, lo cual puede generar sesgos en la población participante. 
-Asimismo, al tratarse de un sistema basado en autodeclaración, la información reportada puede carecer de validación clínica directa. 
-Adicionalmente, la participación voluntaria y longitudinal (que dura 6 semanas o más) fatiga al participante, un fenómeno documentado donde la respuesta suele decaer tras los primeros días. 
-Finalmente, aunque el sistema permite identificar patrones y señales de seguridad, no es suficiente por sí solo para establecer relaciones causales entre la vacunación y los eventos adversos reportados.
+V-safe se integra con sistemas de vigilancia pasiva: cuando un usuario reporta la necesidad de atención médica, el sistema facilita la generación de un reporte en VAERS mediante la precarga de datos \cite{cdc_about_vsafe}.
+Adicionalmente, los datos recopilados se publican en formato anonimizado para su consulta en portales de acceso público.
 
 
 \subsection{Análisis comparativo de los sistemas estudiados}
 
-El análisis de los sistemas VAERS, V-safe y NotificaRAM permite identificar diferencias significativas en cuanto a su enfoque metodológico, nivel de digitalización y mecanismos de captura de información.
 
-En primer lugar, se observa una distinción clara en el modelo de vigilancia implementado. VAERS y NotificaRAM se basan en esquemas de vigilancia pasiva, donde la calidad y cantidad de los datos dependen de la iniciativa de los notificadores. En contraste, V-safe adopta un enfoque de vigilancia activa, permitiendo la recolección sistemática y periódica de información directamente desde los usuarios vacunados.
+Este análisis compara los sistemas VAERS, V-safe y NotificaRAM en términos de su enfoque metodológico, grado de digitalización y mecanismos de captura de datos. 
+La Tabla \ref{tab:sistemas_comparacion} sintetiza estos criterios con el objetivo de evidenciar diferencias estructurales y brechas en los modelos actuales de farmacovigilancia.
 
-Desde la perspectiva tecnológica, V-safe presenta un mayor grado de digitalización al integrar mecanismos automatizados de seguimiento mediante dispositivos móviles, lo que facilita la interacción continua con el usuario. Por su parte, VAERS y NotificaRAM, aunque disponen de plataformas web, dependen en mayor medida de la acción voluntaria del usuario para el envío de reportes.
 
-En cuanto a los actores involucrados, los sistemas pasivos permiten una mayor diversidad de notificadores, incluyendo profesionales de la salud, fabricantes y ciudadanos. Sin embargo, esta apertura introduce variabilidad en la calidad de los datos. En contraste, V-safe se centra en usuarios previamente registrados, lo que permite una mayor consistencia en la información recolectada.
+\begin{table}[htbp]
+\centering
+\caption{Comparación de sistemas de autorreporte de eventos adversos}
+\label{tab:sistemas_comparacion}
+\begin{tabular}{|l|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Criterio} & \textbf{VAERS} & \textbf{NotificaRAM} & \textbf{V-safe} \\
+\hline
 
-Finalmente, en términos de limitaciones, los sistemas de vigilancia pasiva presentan problemas de subregistro, sesgos de notificación y dificultades para establecer relaciones causales. Por otro lado, aunque V-safe mejora la calidad y frecuencia de los datos, su alcance se limita a los usuarios que participan voluntariamente en el sistema.
+Tipo de vigilancia
+& Pasiva (Espontánea)
+& Pasiva (Espontánea)
+& Activa (Proactiva) \\
+\hline
 
-En conjunto, estos sistemas reflejan diferentes enfoques dentro de la farmacovigilancia moderna, evidenciando un tránsito desde modelos reactivos hacia estrategias más proactivas y centradas en el usuario.
+Actores
+& Profesionales de la salud, fabricantes, ciudadanos
+& Profesionales de la salud y ciudadanos 
+& Usuarios vacunados registrados  \\
+\hline
 
-% \subsection{Conclusiones sobre las soluciones actuales}
+Canal de notificación
+& Formularios web estructurados y archivos PDF descargables para envío manual  
+& Formulario electrónico único gestionado por la AEMPS para todo el país
+& Encuestas digitales (SMS y correo electrónico con chequeo de menos de dos minutos)  \\
+\hline
 
-% El estudio de los sistemas analizados evidencia que, si bien existen soluciones consolidadas para la notificación de eventos adversos, estas presentan limitaciones significativas desde el punto de vista funcional y tecnológico.
+Protección de datos
+& Datos anonimizados disponible a través de CDC WONDER; control federal de acceso a información
+& Datos gestionados bajo marco europeo de protección de datos \cite{aemps_fedra_2026}
+& Datos \gls{desidentificados} bajo políticas de protección de datos del sistema federal de salud pública
+\\
+\hline
 
-% Los sistemas basados en vigilancia pasiva, como VAERS y NotificaRAM, continúan siendo fundamentales debido a su amplia cobertura y apertura a múltiples actores. No obstante, su dependencia de la notificación voluntaria limita la completitud, oportunidad y calidad de los datos recolectados.
+Estructuración del dato
+& Baja estructuración; reportes heterogéneos y en gran parte narrativos
+& Estructuración intermedia mediante formularios estandarizados
+& Alta estructuración basada en encuestas digitales predefinidas
+\\
+\hline
 
-% Por otro lado, soluciones más recientes como V-safe introducen enfoques innovadores basados en vigilancia activa y tecnologías móviles, mejorando la frecuencia y consistencia de la información. Sin embargo, estos sistemas presentan restricciones en términos de alcance poblacional y dependencia de la participación voluntaria de los usuarios.
+Fortalezas
+& Alta cobertura poblacional; acceso público a los datos; detección temprana de señales  
+& Integración en red nacional de farmacovigilancia; análisis coordinado; interoperabilidad con sistemas europeos  
+& Recolección sistemática y periódica; datos en tiempo casi real; seguimiento longitudinal  \\
+\hline
 
-% De manera general, se identifica la necesidad de sistemas que integren las ventajas de ambos enfoques, combinando la accesibilidad y cobertura de la vigilancia pasiva con mecanismos automatizados que permitan una recolección más sistemática, oportuna y estructurada de los datos.
+Limitaciones
+& Subregistro; sesgos de notificación; calidad variable de los datos; no permite establecer causalidad directa
+& Subregistro; dependencia de la iniciativa del notificador; variabilidad en la calidad de los datos
+& Dependencia de acceso a tecnología; participación voluntaria; posible fatiga del usuario; limitada representatividad \\
+\hline
 
-% Estas limitaciones evidencian oportunidades para el diseño de nuevas soluciones tecnológicas orientadas a mejorar la eficiencia, calidad e interoperabilidad en la notificación de eventos adversos, lo cual constituye la base para el desarrollo del sistema propuesto en la presente investigación.
+\end{tabular}
+\end{table}
+
+
+Este análisis evidencia diferencias entre los modelos de notificación espontánea y las estrategias de vigilancia activa centradas en el usuario. 
+Mientras que VAERS y NotificaRAM permiten detectar señales mediante la participación voluntaria, V-safe demuestra la escalabilidad de la vigilancia activa al recolectar 151 millones de encuestas de 10 millones de usuarios registrados \cite{vsafe_monitoring_article}. 
+Este enfoque, junto con la aplicación de marcos legales de protección de datos, contribuye a la calidad y utilidad científica de la información recolectada.
+
+La interoperabilidad entre plataformas permite la transferencia automatizada de información, como la generación de reportes desde V-safe hacia VAERS y la integración de FEDRA con EudraVigilance. 
+Esto reduce la latencia y facilita el análisis de señales de seguridad.
+
+A pesar de los avances, los sistemas actuales presentan limitaciones estructurales relevantes, como el subregistro en modelos pasivos, la fatiga del participante en esquemas activos y la imposibilidad de establecer relaciones causales directas sin estudios clínicos complementarios. 
+Asimismo, la dependencia del acceso a tecnologías digitales introduce sesgos en la representatividad de los datos, especialmente en poblaciones con menor conectividad.
+
+Para el desarrollo de plataformas de autorreporte, resultan clave los siguientes aspectos:
+
+\begin{itemize}
+   \item \textbf{Interoperabilidad:} Garantizar la integración con sistemas nacionales e internacionales de farmacovigilancia.
+    \item \textbf{Protección de datos:} Implementar mecanismos de anonimización o desidentificación que aseguren la confidencialidad de la información, en cumplimiento con los marcos regulatorios de protección de datos vigentes en cada país o región (por ejemplo, normativas nacionales aplicables en el contexto cubano).
+    \item \textbf{Calidad del dato:} Implementar esquemas de captura estructurada que garanticen la consistencia del formato de los datos y minimicen la pérdida de información relevante en los reportes.
+    \item \textbf{Interacción centrada en el usuario:} Diseñar flujos de contacto proactivo (SMS o correo electrónico) que requieran menos de dos minutos, facilitando el seguimiento longitudinal sin generar fatiga en el usuario.
+\end{itemize}
 
 
 \section{Análisis de tecnologías para la implementación del sistema propuesto}

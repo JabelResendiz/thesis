@@ -22,3 +22,12 @@
 *.pdf_tex
 *.pdf
 build.sh
+
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.glsdefs
