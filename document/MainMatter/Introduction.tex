@@ -40,21 +40,134 @@ Antes de la digitalización, la vigilancia se basaba en sistemas de notificació
 La gestión de datos evolucionó desde el reporte manual en tarjetas amarillas hacia repositorios mundiales como VigiBase, que hoy centraliza más de 20 millones de registros. 
 Semejante volumen de información hizo indispensable la automatización mediante sistemas como FAERS y ecosistemas inteligentes como AEMS, capaces de procesar flujos masivos de datos con una agilidad inalcanzable para los métodos tradicionales.
 
+% \begin{itemize}
+%     \item Cuándo Cuba se inserta en el programa de la UMS
+%     \item Cómo se ha comportado los números
+%     \item Cómo funciona el sistema completo de Farmacovigilancia en Cuba
+%     \item Cuáles son los retos actuales en el contexto cubano
+% \end{itemize}
+
+\paragraph{La farmacovigilancia en Cuba}
+
+Cuba posee una sólida trayectoria institucional en materia de seguridad de medicamentos, integrándose formalmente al Programa Internacional de Monitoreo de Medicamentos de la \gls{oms} en 1994 \cite{paho_vigilancia_medicamentos_cuba}.
+
+Posteriormente, en 1999, se consolidó el actual Sistema Cubano de Farmacovigilancia (\gls{scfv}), bajo la rectoría de la Unidad Coordinadora Nacional de Farmacovigilancia (\gls{ucnfv}), con el objetivo de unificar los métodos de validación e identificación de riesgos en todo el territorio nacional \cite{tarrago_farmacovigilancia_cuba_2019}.
+
+En cuanto al comportamiento de los indicadores, el sistema cubano presenta niveles de desempeño superiores a los estándares internacionales. 
+Mientras que la tasa de reporte considerada eficiente a nivel mundial oscila entre 250 y 300 notificaciones por millón de habitantes al año, Cuba ha mantenido históricamente cifras muy por encima de este umbral \cite{cecmed_farmacovigilancia_cuba_2020}. 
+Por ejemplo, en el año 2020, se recibieron un total de 13,025 reportes, lo que representa una tasa de 1,163 por millón de habitantes, como se muestra en la Figura \ref{fig:ram_eventos_adversos_cuba_2020} .
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1.2]{Graphics/Cap1/ram_en_cuba_2020.jpg}
+    \caption{Reporte de \gls{reacción adversa a medicamentos (RAM)}. Fuente: \gls{cecmed} en su informe anual del año 2020 \cite{cecmed_farmacovigilancia_cuba_2020}.}
+    \label{fig:ram_eventos_adversos_cuba_2020}
+\end{figure}
+
+Sin embargo, al analizar la distribución de estos reportes por grupo farmacológico, se observa que la mayoría se concentra en medicamentos de uso frecuente como antibacterianos, antihipertensivos y analgésicos. En contraste, los eventos asociados a vacunas representan una proporción considerablemente menor dentro del total de notificaciones, con alrededor de 700 reportes, como se evidencia en la Figura \ref{fig:RAM_por_grupo_farmacologico_cuba_2020}. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1.2]{Graphics/Cap1/grupo_farmacologico.jpg}
+    \caption{Reporte de \gls{reacción adversa a medicamentos (RAM)} según grupo farmacológico. Farmacovigilancia pasiva 2020.}
+    \label{fig:RAM_por_grupo_farmacologico_cuba_2020}
+\end{figure}
+
+Durante la primera década del siglo XXI y los primeros años de la segunda, Cuba alcanzó un desempeño destacado en farmacovigilancia, situándose entre los 20 países con mayores tasas de notificación de \gls{reacción adversa a medicamentos (RAM)} por millón de habitantes a nivel mundial \cite{normas_farmacovigilancia_cuba_2012}. 
+En el ámbito específico de la inmunización, mediante su sistema de vigilancia de \gls{esavi} (activo desde 1999), Cuba ocupó en 2018 el tercer lugar en la Región de las Américas por volumen de notificaciones, con 6,682 reportes \cite{ops_manual_esavi_2021}. 
+Esto la sitúa solo por detrás de países como Estados Unidos y Brasil, como se muestra en la Figura \ref{fig:esavi_por_paises}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.6]{Graphics/Cap1/evento_adverso_por_paises.jpg}
+    \caption{Número de \gls{esavi} notificados por los países de la región de las Américas}
+    \label{fig:esavi_por_paises}
+\end{figure}
+
+
+\paragraph{Funcionamiento del sistema de farmacovigilancia en Cuba}
+
+El \gls{scfv} funciona de manera descentralizada y se sustenta en la notificación espontánea, permitiendo un flujo de información que abarca desde el consultorio médico hasta los organismos internacionales. 
+Bajo la rectoría de la \gls{ucnfv} del \gls{minsap}, el sistema se organiza en los siguientes niveles jerárquicos \cite{normas_farmacovigilancia_cuba_2012}:
+
 \begin{itemize}
-    \item Cuándo Cuba se inserta en el programa de la UMS
-    \item Cómo se ha comportado los números
-    \item Cómo funciona el sistema completo de Farmacovigilancia en Cuba
-    \item Cuáles son los retos actuales en el contexto cubano
+    \item \textbf{Nivel de Base y Atención Primaria (Nivel Municipal):} El proceso se origina cuando un profesional sanitario (médico, enfermero, farmacéutico) o un paciente sospecha de una \gls{reacción adversa a medicamentos (RAM)}.
+        \begin{itemize}
+            \item Los profesionales utilizan el modelo oficial \textbf{33-36-02} (véase Anexo \ref{app:modelo_33-36-02}) y los pacientes el \textbf{33-36-03} (véase Anexo \ref{app:modelo_33-36-03}) para el registro de la sospecha \cite{normas_farmacovigilancia_cuba_2012}.
+            \item En la comunidad, el reporte se entrega al jefe del grupo básico o al director técnico de la farmacia comunitaria, quienes lo remiten al farmacoepidemiológico municipal \cite{tarrago_farmacovigilancia_cuba_2019}.
+        \end{itemize}
+    \item \textbf{Nivel Provincial:} Las 16 unidades coordinadoras provinciales reciben las notificaciones de sus municipios \cite{normas_farmacovigilancia_cuba_2012}.
+        \begin{itemize}
+            \item Los especialistas provinciales evalúan la calidad del dato, codifican la información e introducen los reportes en su base de datos local \cite{normas_farmacovigilancia_cuba_2012}.
+            \item En casos de \gls{ram} \textbf{mortales o graves}, la notificación debe realizarse de forma inmediata (en menos de 24 horas) por vía telefónica o electrónica hacia el nivel nacional, procediendo a la custodias de muestras del fármaco para su investigación \cite{normas_farmacovigilancia_cuba_2012}.
+            \item El flujo regular de datos hacia la nación se realiza de manera quincenal (los días 15 y 30 de cada mes) \cite{normas_farmacovigilancia_cuba_2012}.
+        \end{itemize}
+    \item \textbf{Nivel Nacional y Gestión en FarmaVigiC:} La \gls{ucnfv}, ubicada en el Departamento de Farmacoepidemiología del \gls{minsap}, actúa como el órgano técnico-científico central \cite{tarrago_farmacovigilancia_cuba_2019}.
+        \begin{itemize}
+            \item Administra la base de datos nacional \gls{FarmaVigiC}, una herramienta informática que integra \textbf{75 variables} o campos críticos para el procesamiento de las notificaciones y el análisis clínico-epidemiológico \cite{normas_farmacovigilancia_cuba_2012}.
+            \item Este nivel depura, valida y asigna puntajes de calidad a la información enviada por las provincias, consolidando el panorama nacional de seguridad farmacéutica \cite{normas_farmacovigilancia_cuba_2012}.
+            \item La \gls{ucnfv} coordina directamente con el \gls{cecmed} (Autoridad Reguladora Nacional) para la toma de medidas preventivas o alertas farmacológicas \cite{normas_farmacovigilancia_cuba_2012}.
+        \end{itemize}
+    \item \textbf{Vinculación Internacional (VigiBase):} Cuba es miembro del Programa Internacional de Monitoreo de Medicamentos de la OMS desde 1994.
+        \begin{itemize}
+            \item Los datos validados en la base nacional son extrapolados al formato internacional requerido, utilizando el diccionario \textbf{\gls{WHO-ART}} para la terminología de reacciones y el \textbf{\gls{ICD-10}} para la codificación de enfermedades \cite{normas_farmacovigilancia_cuba_2012}.
+            \item La \gls{ucnfv} remite trimestralmente todas las reacciones adversas importantes al \gls{umc} en Suecia \cite{normas_farmacovigilancia_cuba_2012}.
+            \item Esta información alimenta a \gls{VigiBase}, permitiendo que los datos cubanos contribuyan a la detección global de señales de riesgo y al intercambio de alertas de seguridad con más de 150 países \cite{barrero2022notificacion,who_pharmacovigilance_2004}.
+        \end{itemize}
 \end{itemize}
 
-\paragaph{La farmacovigilancia en Cuba}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.12]{Graphics/Cap1/flujo_final_farma_cuba.png}
+    \caption{Flujo de la farmacovigilancia en Cuba para el reporte de \gls{esavi} }
+    \label{fig:flujo_farmacovigilancia_cuba}
+\end{figure}
 
+
+De forma transversal a estos niveles, los fabricantes (como el \gls{ifv}) y titulares de registro sanitario participan activamente en el sistema mediante un flujo bidireccional de información con la autoridad reguladora. 
+A través de convenios de trabajo con la \gls{ucnfv}, tienen acceso a la base de datos nacional y reciben retroalimentación sobre la seguridad de sus productos \cite{normas_farmacovigilancia_cuba_2012}. 
+Asimismo, están obligados a notificar \gls{ips} y comunicar cualquier sospecha de reacción adversa detectada por otras vías \cite{normas_farmacovigilancia_cuba_2012}. 
+
+Por su parte, la autoridad nacional les transmite alertas de forma ágil —especialmente en casos graves o mortales— y comparte señales de riesgo identificadas a partir del análisis de los datos \cite{normas_farmacovigilancia_cuba_2012}. 
+Este intercambio continuo permite a los fabricantes actualizar la información de seguridad de sus medicamentos y aplicar estrategias de minimización de riesgos basadas en la evidencia del uso real en la población.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.12]{Graphics/Cap1/sinergia_feedback_farma_cuba.png}
+    \caption{Flujo de la información que genera la sinergia entre la autoridad reguladora y los fabricantes en el sistema de farmacovigilancia cubano.}
+    \label{fig:sinergia_feedback_farma_cuba}
+\end{figure}
+
+
+Si bien la \gls{ucnfv} administra la base de datos clínica nacional, esta actividad se integra en un marco superior de control estatal. 
+Como se observa en la estructura general del sistema (ver Figura \ref{fig:estructura_vigilancia_medicamentos_cuba}), la vigilancia en Cuba involucra una red multisectorial donde fabricantes (QUIMEFA), distribuidores (EMCOMED), farmacias y centros especializados (CENATOX, SV PAI) tributan de forma conjunta al CECMED para garantizar un control integral del arsenal terapéutico.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.9]{Graphics/Cap1/estructura_vigilancia_medicamentos_cuba.jpg}
+    \caption{Estructura del sistema de farmacovigilancia en Cuba.}
+    \label{fig:estructura_vigilancia_medicamentos_cuba}
+\end{figure}
+
+
+\paragraph{Instituto Finlay de Vacunas como fabricante líder}
+
+
+sdfsdfds
 
 
 
 \section{Antecedentes, Motivación y Justificación}\label{section:antecedentesMotivacionJustificacion}
 
-El Instituto Finlay de Vacunas (IFV) es una organización científica y empresa de alta tecnología cubana, dedicada a la investigación, desarrollo, producción y comercialización de vacunas humanas \cite{finlay_instituto_2026}.
+
+\begin{itemize}
+    \item Describir la situación actual: el reporte en modelos físicos
+    \item Señalar el fenómeno real: osea que casos ha habido de problemas trae eso 
+\end{itemize}
+
+
+El \gls{ifv} es una organización científica y empresa de alta tecnología cubana, dedicada a la investigación, desarrollo, producción y comercialización de vacunas humanas \cite{finlay_instituto_2026}.
 Constituido oficialmente a finales de 2015 a partir de una fusión estratégica e integrado al Grupo de las Industrias Biotecnológica y Farmacéutica de Cuba (BIOCUBAFARMA) , opera bajo un modelo de ciclo cerrado que integra
 tdodas las etapas de la cadena de valor: desde la investigación básica y los ensayos clínicos hasta la producción masiva y el seguimiento en condiciones reales de uso \cite{finlay_instituto_2026}.
 
@@ -64,24 +177,24 @@ Esta capacidad de innovación se evidencia en hitos científicos como la creaci�
 En esta última, el volumen de operación alcanzó escalas sin precedentes, con más de 38,7 millones de dosis administradas acumuladas al cierre de julio de 2022, logrando inmunizar al 90 \% de la población cubana.
 Internacionalmente, su impacto se extiende a más de 17 países de América Latina, Asia y África mediante exportaciones y colaboraciones estratégicas \cite{carbonell_cmi_finlay_2016}.
 
-A pesar de esta relevancia productiva, la vigilancia de la seguridad posterior a la aprobación enfrenta desafíos críticos. 
-En la práctica clínica actual del IFV, el registro de los eventos adversos post-vacunación depende predominantemente de mecanismos de notificación pasiva y manual.
-Este modelo exige que los pacientes o familiares acudan físicamente a los centros de salud para reportar síntomas, lo que deriva en una subnotificación significativa y un registro tardío del fenómeno.
+% A pesar de esta relevancia productiva, la vigilancia de la seguridad posterior a la aprobación enfrenta desafíos críticos. 
+% En la práctica clínica actual del IFV, el registro de los eventos adversos post-vacunación depende predominantemente de mecanismos de notificación pasiva y manual.
+% Este modelo exige que los pacientes o familiares acudan físicamente a los centros de salud para reportar síntomas, lo que deriva en una subnotificación significativa y un registro tardío del fenómeno.
 
-La magnitud del flujo informativo justifica la urgencia de una intervención tecnológica: solo en el año 2018, Cuba capturó 6,682 reportes de eventos, situándose como el tercer país con mayor volumen de notificaciones en la Región de las Américas, tal como se ilustra en la Figura \ref{fig:evento_adverso_por_paises} \cite{ops_manual_esavi_2021}.
-Gestionar este volumen mediante métodos manuales ralentiza la detección de señales de seguridad que los ensayos clínicos en Fase III —limitados habitualmente a un máximo de 5,000 sujetos— no poseen el poder estadístico para identificar.
+% La magnitud del flujo informativo justifica la urgencia de una intervención tecnológica: solo en el año 2018, Cuba capturó 6,682 reportes de eventos, situándose como el tercer país con mayor volumen de notificaciones en la Región de las Américas, tal como se ilustra en la Figura \ref{fig:evento_adverso_por_paises} \cite{ops_manual_esavi_2021}.
+% Gestionar este volumen mediante métodos manuales ralentiza la detección de señales de seguridad que los ensayos clínicos en Fase III —limitados habitualmente a un máximo de 5,000 sujetos— no poseen el poder estadístico para identificar.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.6]{Graphics/evento_adverso_por_paises.jpg}
-    \caption{Número de eventos adversos post-vacunación notificados por los países de la Región de las Américas}
-    \label{fig:evento_adverso_por_paises}
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=0.6]{Graphics/evento_adverso_por_paises.jpg}
+%     \caption{Número de eventos adversos post-vacunación notificados por los países de la Región de las Américas}
+%     \label{fig:evento_adverso_por_paises}
+% \end{figure}
 
-Esta situación genera una brecha en el seguimiento proactivo de los eventos, comprometiendo la calidad de la información en términos de completitud y validez técnica.
-El procesamiento manual de formularios impresos incrementa la probabilidad de errores de trascripción y la pérdida de datos clínicos sensibles necesarios para el análisis de causalidad.
-En este contexto, resulta imperativo transitar hacia soluciones computacionales que faciliten el autorreporte ciudadano y permitan la centralización y validación de datos en tiempo real.
-La implementación de este sistema no solo optimizará los procesos de farmacovigilancia, sino que fortalecerá la confianza pública en los productos biológicos de la institución al garantizar una comunicación del riesgo transparente y oportuna.
+% Esta situación genera una brecha en el seguimiento proactivo de los eventos, comprometiendo la calidad de la información en términos de completitud y validez técnica.
+% El procesamiento manual de formularios impresos incrementa la probabilidad de errores de trascripción y la pérdida de datos clínicos sensibles necesarios para el análisis de causalidad.
+% En este contexto, resulta imperativo transitar hacia soluciones computacionales que faciliten el autorreporte ciudadano y permitan la centralización y validación de datos en tiempo real.
+% La implementación de este sistema no solo optimizará los procesos de farmacovigilancia, sino que fortalecerá la confianza pública en los productos biológicos de la institución al garantizar una comunicación del riesgo transparente y oportuna.
 
 \section{Presentación de la problemática}\label{section:presentacionProblema}
 
