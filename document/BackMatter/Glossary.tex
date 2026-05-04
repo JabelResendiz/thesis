@@ -3,10 +3,79 @@
     description={Proceso mediante el cual se eliminan o transforman datos que permiten identificar a una persona de forma directa o indirecta (nombres, números de identificación, datos de ubicación, fechas) para proteger la privacidad de los individuos}
 }
 
-\newglossaryentry{vigilancia_pasiva}{
-    name={vigilancia pasiva},
-    description={Sistema en el que los reportes dependen de la iniciativa del usuario o profesional sanitario}
+
+\newglossaryentry{esquema}{
+    name={esquema},
+    description={Conjunto de reglas y estructuras que definen cómo se organiza el dato en la base de datos}
 }
 
-\section*{Glosario}
+\newglossaryentry{datos no estructurados}{
+    name={datos no estructurados},
+    description={ Información que carece de un formato predefinido, como fotos (.JPG), audios (MP3) o videos}
+}
+
+
+\newglossaryentry{normalización}{
+    name={normalización},
+    description={Proceso de diseño en SQL para organizar datos, eliminar duplicados y asegurar relaciones lógicas}
+}
+
+
+\newglossaryentry{Sharding}{
+    name={Sharding},
+    description={Técnica de fragmentación de datos que consiste en dividir una base de datos en partes más pequeñas (fragmentos) distribuidas entre múltiples servidores \cite{uva_nosql_sql_2019}}
+}
+
+
+\newglossaryentry{ACID}{
+    name={ACID},
+    description={Conjunto de propiedades que garantizan la fiabilidad de las transacciones en bases de datos relacionales: Atomicidad (todo o nada), Consistencia (estados válidos), Aislamiento (ejecución independiente de transacciones) y Durabilidad (persistencia de los datos ante fallos del sistema)}
+}
+
+
+\newglossaryentry{BASE}{
+    name={BASE},
+    description={Modelo que prioriza la disponibilidad y el rendimiento. El estado del sistema puede cambiar con el tiempo y la consistencia se alcanza de forma eventual}
+}
+
+\newglossaryentry{CAP}{
+    name={CAP},
+    description={Teorema que establece que en un sistema distribuido no es posible garantizar simultáneamente Consistencia, Disponibilidad y Tolerancia a Particiones. 
+    La Consistencia implica que todos los nodos ven los mismos datos al mismo tiempo; 
+    la Disponibilidad garantiza que cada solicitud recibe una respuesta, incluso en presencia de fallos; 
+    y la Tolerancia a Particiones se refiere a la capacidad del sistema para continuar operando a pesar de fallos de comunicación o desconexiones entre nodos de la red. 
+    Por lo tanto, se deben priorizar dos de estas propiedades según el diseño del sistema}
+}
+
+\newglossaryentry{cluster}{
+    name={cluster},
+    description={Conjunto de servidores interconectados que trabajan de forma coordinada para actuar como un único sistema, distribuyendo la carga de trabajo y aumentando la disponibilidad}
+}
+
+\newglossaryentry{medicamento}{
+    name={medicamento},
+    description={sustancia o combinación de sustancias (fármaco + excipiente) con propiedades para prevenir, diagnosticar, tratar, aliviar o curar enfermedades en humanos o animales}
+}
+
+\newglossaryentry{vacuna}{
+    name={vacuna},
+    description={Sustancia o grupo de sustancias destinadas a estimular la respuesta del sistema inmunitario ante un tumor o ante microorganismos, como bacterias o virus}
+}
+
+\newglossaryentry{reacción adversa a medicamentos (RAM)}{
+    name={reacción adversa},
+    description={Según la OMS, "reacción nociva y no
+                deseada que se presenta tras la administración de un medicamento, a dosis
+                utilizadas habitualmente en la especie humana, para prevenir, diagnosticar o tratar
+                una enfermedad, o para modificar cualquier función biológica". Nótese que esta
+                definición implica una relación de causalidad entre la administración del
+                medicamento y la aparición de la reacción.
+                }
+}
+
+\newglossaryentry{farmacovigilancia}{
+    name={farmacovigilancia},
+    description={Conjunto de actividades relacionadas con la detección, evaluación, comprensión y prevención de los efectos adversos o cualquier otro problema relacionado con los medicamentos}
+}
+
 \printglossaries
