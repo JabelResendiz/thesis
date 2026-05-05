@@ -27,18 +27,18 @@ Esta disciplina es vital para mantener la confianza del público en los programa
 \section{Contexto histórico y social de la farmacovigilancia}\label{section:contextoHistoricoSocial}
 
 
-\paragraph{Evolución de la farmacovigilancia}
+% \subsection{Evolución de la farmacovigilancia}
 
-La evolución de la farmacovigilancia ha estado marcada por eventos históricos en los que las herramientas clínicas disponibles resultaron insuficientes para detectar oportunamente riesgos asociados al uso de medicamentos. Entre los principales hitos se encuentran el caso de Hannah Greener en 1848, cuya muerte bajo anestesia con cloroformo originó los primeros intentos de notificación voluntaria de reacciones adversas \cite{historia_farmacovigilancia_2023}; la tragedia del Elíxir de Sulfanilamida en 1937, que provocó más de 100 muertes infantiles y llevó al refuerzo de la regulación de la FDA \cite{historia_farmacovigilancia_2023}; y el desastre de la talidomida en 1961, una epidemia de focomelia que causó más de 10,000 casos de malformaciones congénitas y consolidó la necesidad de sistemas formales de vigilancia \cite{tarrago_farmacovigilancia_cuba_2019,palacios2021talidomida}.
+La evolución de la farmacovigilancia ha estado marcada por eventos históricos en los que las herramientas clínicas disponibles resultaron insuficientes para detectar oportunamente riesgos asociados al uso de medicamentos. Entre los principales hitos se encuentran el caso de Hannah Greener en 1848, cuya muerte bajo anestesia con cloroformo originó los primeros intentos de notificación voluntaria de reacciones adversas \cite{historia_farmacovigilancia_2023}; la tragedia del Elíxir de Sulfanilamida en 1937, que provocó más de 100 muertes infantiles y llevó al refuerzo de la regulación de la \gls{fda} \cite{historia_farmacovigilancia_2023}; y el desastre de la talidomida en 1961, una epidemia de focomelia que causó más de 10,000 casos de malformaciones congénitas y consolidó la necesidad de sistemas formales de vigilancia \cite{tarrago_farmacovigilancia_cuba_2019,palacios2021talidomida}.
 
-Como respuesta a esta última catástrofe, la Organización Mundial de la Salud (\gls{oms}) impulsó en 1963 la creación de mecanismos internacionales para la comunicación rápida de reacciones adversas \cite{historia_farmacovigilancia_2023}, lo que dio origen en 1968 al Programa Internacional de Monitoreo de Medicamentos (PIMM). 
+Como respuesta a esta última catástrofe, la Organización Mundial de la Salud (\gls{oms}) impulsó en 1963 la creación de mecanismos internacionales para la comunicación rápida de reacciones adversas \cite{historia_farmacovigilancia_2023}, lo que dio origen en 1968 al Programa Internacional de Monitoreo de Medicamentos (\gls{pimm}). 
 Este programa permitió la recolección y análisis conjunto de notificaciones a nivel global para la detección de señales de riesgo \cite{who_pharmacovigilance_2004}. 
-Posteriormente, en 1978 se estableció el Centro de Monitoreo de Uppsala (UMC), encargado de proporcionar liderazgo científico y apoyo operativo al programa de la OMS \cite{barrero2022notificacion}.
+Posteriormente, en 1978 se estableció el Centro de Monitoreo de Uppsala (\gls{umc}), encargado de proporcionar liderazgo científico y apoyo operativo al programa de la \gls{oms} \cite{barrero2022notificacion}.
 
-Antes de la digitalización, la vigilancia se basaba en sistemas de notificación espontánea en papel, destacando la “Tarjeta Amarilla” implementada en el Reino Unido en 1964, que permitía a los profesionales sanitarios reportar sospechas de reacciones adversas mediante formularios estandarizados \cite{historia_farmacovigilancia_2023,normas_farmacovigilancia_cuba_2012}. Este modelo fue adoptado internacionalmente como base de los sistemas de notificación.
+Antes de la digitalización, la vigilancia se basaba en sistemas de notificación en papel, destacando la “Tarjeta Amarilla” implementada en el Reino Unido en 1964, que permitía a los profesionales sanitarios reportar sospechas de reacciones adversas mediante \gls{formularios} estandarizados \cite{historia_farmacovigilancia_2023,normas_farmacovigilancia_cuba_2012}. Este modelo fue adoptado internacionalmente como base de los sistemas de notificación.
 
-La gestión de datos evolucionó desde el reporte manual en tarjetas amarillas hacia repositorios mundiales como VigiBase, que hoy centraliza más de 20 millones de registros. 
-Semejante volumen de información hizo indispensable la automatización mediante sistemas como FAERS y ecosistemas inteligentes como AEMS, capaces de procesar flujos masivos de datos con una agilidad inalcanzable para los métodos tradicionales.
+La gestión de datos evolucionó desde el reporte manual en tarjetas amarillas hacia \gls{repositorios} mundiales como \gls{VigiBase}, que hoy centraliza más de 20 millones de registros. 
+Semejante volumen de información hizo indispensable la automatización mediante sistemas como \gls{faers} y ecosistemas inteligentes como \gls{aems}, capaces de procesar flujos masivos de datos con una agilidad inalcanzable para los métodos tradicionales.
 
 % \begin{itemize}
 %     \item Cuándo Cuba se inserta en el programa de la UMS
@@ -47,7 +47,7 @@ Semejante volumen de información hizo indispensable la automatización mediante
 %     \item Cuáles son los retos actuales en el contexto cubano
 % \end{itemize}
 
-\paragraph{La farmacovigilancia en Cuba}
+\subsubsection*{La farmacovigilancia en Cuba}
 
 Cuba posee una sólida trayectoria institucional en materia de seguridad de medicamentos, integrándose formalmente al Programa Internacional de Monitoreo de Medicamentos de la \gls{oms} en 1994 \cite{paho_vigilancia_medicamentos_cuba}.
 
@@ -64,7 +64,8 @@ Por ejemplo, en el año 2020, se recibieron un total de 13,025 reportes, lo que 
     \label{fig:ram_eventos_adversos_cuba_2020}
 \end{figure}
 
-Sin embargo, al analizar la distribución de estos reportes por grupo farmacológico, se observa que la mayoría se concentra en medicamentos de uso frecuente como antibacterianos, antihipertensivos y analgésicos. En contraste, los eventos asociados a vacunas representan una proporción considerablemente menor dentro del total de notificaciones, con alrededor de 700 reportes, como se evidencia en la Figura \ref{fig:RAM_por_grupo_farmacologico_cuba_2020}. 
+Sin embargo, al analizar la distribución de estos reportes por grupo farmacológico, se observa que la mayoría se concentra en medicamentos de uso frecuente como antibacterianos, antihipertensivos y analgésicos. 
+En contraste, los eventos asociados a vacunas representan una proporción considerablemente menor dentro del total de notificaciones, con alrededor de 700 reportes, como se evidencia en la Figura \ref{fig:RAM_por_grupo_farmacologico_cuba_2020}. 
 
 \begin{figure}[htbp]
     \centering
@@ -74,26 +75,65 @@ Sin embargo, al analizar la distribución de estos reportes por grupo farmacoló
 \end{figure}
 
 Durante la primera década del siglo XXI y los primeros años de la segunda, Cuba alcanzó un desempeño destacado en farmacovigilancia, situándose entre los 20 países con mayores tasas de notificación de \gls{reacción adversa a medicamentos (RAM)} por millón de habitantes a nivel mundial \cite{normas_farmacovigilancia_cuba_2012}. 
-En el ámbito específico de la inmunización, mediante su sistema de vigilancia de \gls{esavi} (activo desde 1999), Cuba ocupó en 2018 el tercer lugar en la Región de las Américas por volumen de notificaciones, con 6,682 reportes \cite{ops_manual_esavi_2021}. 
+En el ámbito específico de la inmunización, mediante su sistema de vigilancia de \gls{esavi}, Cuba ocupó en 2018 el tercer lugar en la región de las Américas por volumen de notificaciones, con 6,682 reportes \cite{ops_manual_esavi_2021}. 
 Esto la sitúa solo por detrás de países como Estados Unidos y Brasil, como se muestra en la Figura \ref{fig:esavi_por_paises}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[scale=0.6]{Graphics/Cap1/evento_adverso_por_paises.jpg}
+    \includegraphics[scale=0.6]{Graphics/Cap1/copia_paises_ram.jpg}
     \caption{Número de \gls{esavi} notificados por los países de la región de las Américas}
     \label{fig:esavi_por_paises}
 \end{figure}
 
+\subsubsection*{Estructura del sistema de vigilancia de medicamentos}
 
-\paragraph{Funcionamiento del sistema de farmacovigilancia en Cuba}
+El sistema de vigilancia de medicamentos en Cuba se estructura bajo la rectoría del \gls{cecmed}, autoridad reguladora nacional encargada de la evaluación, control y toma de decisiones sobre la seguridad de los medicamentos a partir de la información generada en el sistema.
 
-El \gls{scfv} funciona de manera descentralizada y se sustenta en la notificación espontánea, permitiendo un flujo de información que abarca desde el consultorio médico hasta los organismos internacionales. 
-Bajo la rectoría de la \gls{ucnfv} del \gls{minsap}, el sistema se organiza en los siguientes niveles jerárquicos \cite{normas_farmacovigilancia_cuba_2012}:
+Para el cumplimiento de estas funciones, se articula una red de vigilancia integrada por diversos componentes que interactúan de manera coordinada (ver Figura \ref{fig:estructura_vigilancia_medicamentos_cuba}) \cite{paho_vigilancia_medicamentos_cuba}:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1.1]{Graphics/Cap1/estructura_vigilancia_medicamentos_cuba2.jpg}
+    \caption{Estructura del Sistema de Vigilancia de Medicamentos en Cuba.}
+    \label{fig:estructura_vigilancia_medicamentos_cuba}
+\end{figure}
+
+\begin{itemize} 
+    \item \textbf{\gls{ucnfv} (\gls{minsap}):} Cohesiona la Red de Farmacoepidemiología en los 169 municipios del país y actúa como el canal central para la \gls{notificación espontánea} de profesionales y pacientes, siendo las vacunas la excepción gestionada de forma especializada por el \gls{pai} \cite{paho_vigilancia_medicamentos_cuba,normas_farmacovigilancia_cuba_2012}. 
+    \item \textbf{Fabricantes y Titulares de Registro (QUIMEFA):} Involucra a las 24 empresas farmacéuticas nacionales, donde cada una cuenta con personal designado para la vigilancia y reporta directamente sobre la seguridad y calidad de sus productos \cite{paho_vigilancia_medicamentos_cuba}. 
+    \item \textbf{Distribución Mayorista (EMCOMED):} Coordina la vigilancia en las 24 droguerías del país, detectando problemas de calidad durante el almacenamiento y transportación \cite{paho_vigilancia_medicamentos_cuba}. 
+    \item \textbf{Distribución Minorista (Departamento de Farmacia):} Supervisa la vigilancia en las más de 2,000 farmacias comunitarias y hospitalarias del Sistema Nacional de Salud \cite{paho_vigilancia_medicamentos_cuba}.  
+    \item \textbf{\gls{cenatox}:} Lidera la red de toxicovigilancia, supervisando las intoxicaciones y reacciones adversas de naturaleza \gls{toxica} \cite{paho_vigilancia_medicamentos_cuba}. 
+    \item \textbf{SV \gls{pai}:} Realiza la vigilancia especializada de vacunas mediante el monitoreo de los \gls{esavi}, bajo la supervisión del Viceministerio de Higiene y Epidemiología \cite{paho_vigilancia_medicamentos_cuba}. 
+\end{itemize}
+
+Toda la información captada por estos efectores fluye hacia el Observatorio de Vigilancia Postcomercialización del \gls{cecmed}, donde se evalúa la relación beneficio-riesgo para emitir alertas farmacológicas, retirar lotes o modificar registros sanitarios en tiempo real \cite{paho_vigilancia_medicamentos_cuba}. 
+
+
+\subsubsection*{Instituto Finlay de Vacunas, fabricante líder del país}
+
+El Instituto Finlay de Vacunas (\gls{ifv}) es una organización científica y empresa de alta tecnología cubana, integrada al Grupo \gls{biocubafarma}, que opera bajo un modelo de ciclo cerrado que abarca desde la investigación básica hasta la comercialización y el seguimiento postcomercialización \cite{finlay_instituto_2026}.
+
+Como pilar estratégico de la soberanía tecnológica del país, el instituto garantiza la producción de 8 de las 11 vacunas administradas por el Programa Nacional de Inmunización, proveyendo el 78\% de las dosis totales del sistema de salud \cite{carbonell_cmi_finlay_2016}.
+
+Su trayectoria de innovación incluye hitos científicos mundiales como la VA-MENGOC-BC® —primera vacuna eficaz contra el serogrupo B de la meningitis— y la Quimi-Hib, la primera vacuna conjugada con un antígeno totalmente sintético. 
+Durante la crisis sanitaria global, el \gls{ifv} reafirmó su liderazgo al desarrollar la línea de vacunas SOBERANA contra la COVID-19, logrando una escala de operación sin precedentes con más de 38,7 millones de dosis administradas al cierre de julio de 2022 \cite{finlay_instituto_2026}. 
+Internacionalmente, su prestigio se sustenta en exportaciones y colaboraciones estratégicas que impactan en más de 17 países de América Latina, Asia y África \cite{carbonell_cmi_finlay_2016}.
+
+
+
+\section{Antecedentes, Motivación y Justificación}\label{section:antecedentesMotivacionJustificacion}
+
+
+Para la recogida y recolección de las sospechas de una respuesta nociva, el sistema emplea \gls{formularios} oficiales estandarizados que permiten captar la información mínima necesaria para el análisis clínico-epidemiológico y la detección precoz de riesgos.
+La Figura \ref{fig:flujo_farmacovigilancia_cuba} ilustra el flujo de la farmacovigilancia en Cuba que a continuación será descrito:
+
 
 \begin{itemize}
-    \item \textbf{Nivel de Base y Atención Primaria (Nivel Municipal):} El proceso se origina cuando un profesional sanitario (médico, enfermero, farmacéutico) o un paciente sospecha de una \gls{reacción adversa a medicamentos (RAM)}.
+    \item \textbf{Nivel de Base y Atención Primaria (Nivel Municipal):} El proceso se origina cuando un profesional sanitario (médico, enfermero, farmacéutico) o un paciente sospecha de una respuesta nociva o evento adverso tras la administración de un producto. 
         \begin{itemize}
-            \item Los profesionales utilizan el modelo oficial \textbf{33-36-02} (véase Anexo \ref{app:modelo_33-36-02}) y los pacientes el \textbf{33-36-03} (véase Anexo \ref{app:modelo_33-36-03}) para el registro de la sospecha \cite{normas_farmacovigilancia_cuba_2012}.
+            \item Para el registro de la sospecha de \gls{reacción adversa a medicamentos (RAM)}, los profesionales emplean el modelo oficial \textbf{33-36-02} (Anexo \ref{app:modelo_33-36-02}) y los pacientes el \textbf{33-36-03} (Anexo \ref{app:modelo_33-36-03}) \cite{normas_farmacovigilancia_cuba_2012}. 
+            \item En el caso específico de las vacunas, los profesionales deben utilizar obligatoriamente el modelo \textbf{84-30-2} (Anexo \ref{app:modelo_84-30-2}) para recopilar los datos técnicos del evento  \cite{normas_farmacovigilancia_cuba_2012, paho_vigilancia_medicamentos_cuba}.
             \item En la comunidad, el reporte se entrega al jefe del grupo básico o al director técnico de la farmacia comunitaria, quienes lo remiten al farmacoepidemiológico municipal \cite{tarrago_farmacovigilancia_cuba_2019}.
         \end{itemize}
     \item \textbf{Nivel Provincial:} Las 16 unidades coordinadoras provinciales reciben las notificaciones de sus municipios \cite{normas_farmacovigilancia_cuba_2012}.
@@ -104,173 +144,123 @@ Bajo la rectoría de la \gls{ucnfv} del \gls{minsap}, el sistema se organiza en 
         \end{itemize}
     \item \textbf{Nivel Nacional y Gestión en FarmaVigiC:} La \gls{ucnfv}, ubicada en el Departamento de Farmacoepidemiología del \gls{minsap}, actúa como el órgano técnico-científico central \cite{tarrago_farmacovigilancia_cuba_2019}.
         \begin{itemize}
-            \item Administra la base de datos nacional \gls{FarmaVigiC}, una herramienta informática que integra \textbf{75 variables} o campos críticos para el procesamiento de las notificaciones y el análisis clínico-epidemiológico \cite{normas_farmacovigilancia_cuba_2012}.
+            \item Administra la base de datos nacional \gls{FarmaVigiC}, una herramienta informática que integra \textbf{75 variables} o campos críticos para el procesamiento de las notificaciones y el análisis clínico-epidemiológico (véase Anexo \ref{app:base_datos_farmavigic}) \cite{normas_farmacovigilancia_cuba_2012}.
             \item Este nivel depura, valida y asigna puntajes de calidad a la información enviada por las provincias, consolidando el panorama nacional de seguridad farmacéutica \cite{normas_farmacovigilancia_cuba_2012}.
             \item La \gls{ucnfv} coordina directamente con el \gls{cecmed} (Autoridad Reguladora Nacional) para la toma de medidas preventivas o alertas farmacológicas \cite{normas_farmacovigilancia_cuba_2012}.
         \end{itemize}
-    \item \textbf{Vinculación Internacional (VigiBase):} Cuba es miembro del Programa Internacional de Monitoreo de Medicamentos de la OMS desde 1994.
+    \item \textbf{Vinculación Internacional (VigiBase):} Como miembro del Programa Internacional de Monitoreo de Medicamentos (\gls{pimm}):
         \begin{itemize}
             \item Los datos validados en la base nacional son extrapolados al formato internacional requerido, utilizando el diccionario \textbf{\gls{WHO-ART}} para la terminología de reacciones y el \textbf{\gls{ICD-10}} para la codificación de enfermedades \cite{normas_farmacovigilancia_cuba_2012}.
-            \item La \gls{ucnfv} remite trimestralmente todas las reacciones adversas importantes al \gls{umc} en Suecia \cite{normas_farmacovigilancia_cuba_2012}.
-            \item Esta información alimenta a \gls{VigiBase}, permitiendo que los datos cubanos contribuyan a la detección global de señales de riesgo y al intercambio de alertas de seguridad con más de 150 países \cite{barrero2022notificacion,who_pharmacovigilance_2004}.
+            \item La \gls{ucnfv} remite trimestralmente todas las reacciones adversas importantes al \gls{umc} en Suecia, la cual alimenta a la base de datos \gls{VigiBase} \cite{normas_farmacovigilancia_cuba_2012}.
         \end{itemize}
 \end{itemize}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.12]{Graphics/Cap1/flujo_final_farma_cuba.png}
+    \includegraphics[scale=0.20]{Graphics/Cap1/flujo_final_farma_cuba.png}
     \caption{Flujo de la farmacovigilancia en Cuba para el reporte de \gls{esavi} }
     \label{fig:flujo_farmacovigilancia_cuba}
 \end{figure}
 
-
 De forma transversal a estos niveles, los fabricantes (como el \gls{ifv}) y titulares de registro sanitario participan activamente en el sistema mediante un flujo bidireccional de información con la autoridad reguladora. 
 A través de convenios de trabajo con la \gls{ucnfv}, tienen acceso a la base de datos nacional y reciben retroalimentación sobre la seguridad de sus productos \cite{normas_farmacovigilancia_cuba_2012}. 
-Asimismo, están obligados a notificar \gls{ips} y comunicar cualquier sospecha de reacción adversa detectada por otras vías \cite{normas_farmacovigilancia_cuba_2012}. 
+Asimismo, están obligados a notificar \gls{ips} y comunicar cualquier sospecha de reacción adversa detectada por otras vías (véase Figura \ref{fig:sinergia_feedback_farma_cuba}) \cite{normas_farmacovigilancia_cuba_2012}. 
 
 Por su parte, la autoridad nacional les transmite alertas de forma ágil —especialmente en casos graves o mortales— y comparte señales de riesgo identificadas a partir del análisis de los datos \cite{normas_farmacovigilancia_cuba_2012}. 
-Este intercambio continuo permite a los fabricantes actualizar la información de seguridad de sus medicamentos y aplicar estrategias de minimización de riesgos basadas en la evidencia del uso real en la población.
-
+Este intercambio continuo permite a los fabricantes actualizar la información de seguridad de sus medicamentos y aplicar estrategias de minimización de riesgos.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.12]{Graphics/Cap1/sinergia_feedback_farma_cuba.png}
+    \includegraphics[scale=0.20]{Graphics/Cap1/sinergia_feedback_farma_cuba.png}
     \caption{Flujo de la información que genera la sinergia entre la autoridad reguladora y los fabricantes en el sistema de farmacovigilancia cubano.}
     \label{fig:sinergia_feedback_farma_cuba}
 \end{figure}
 
+A pesar de la solidez estructural del Sistema Cubano de Farmacovigilancia, su operatividad técnica actual enfrenta retos que comprometen la vigilancia en tiempo real. 
+Un dato alarmante es que, aunque Cuba posee altas tasas de reporte, se estima que solo se notifica entre el 5\% y el 10\% de las reacciones adversas que realmente ocurren en la población, fenómeno conocido como \gls{infranotificacion}\cite{tarrago_farmacovigilancia_cuba_2019}.
+Esta brecha se ve acentuada por un flujo de información que aún depende de modelos impresos como el 33-36-02 y el 84-30-2, los cuales deben ser llenados manualmente en la base por profesionales sanitarios.
 
-Si bien la \gls{ucnfv} administra la base de datos clínica nacional, esta actividad se integra en un marco superior de control estatal. 
-Como se observa en la estructura general del sistema (ver Figura \ref{fig:estructura_vigilancia_medicamentos_cuba}), la vigilancia en Cuba involucra una red multisectorial donde fabricantes (QUIMEFA), distribuidores (EMCOMED), farmacias y centros especializados (CENATOX, SV PAI) tributan de forma conjunta al CECMED para garantizar un control integral del arsenal terapéutico.
+La gestión de esta información a nivel nacional se centraliza en la base de datos \gls{FarmaVigiC}, la cual, aunque procesa 75 variables clínicas y epidemiológicas por cada caso, se sustenta técnicamente en el uso de hojas de cálculo (Excel) \cite{normas_farmacovigilancia_cuba_2012}. 
+Mismo formato que comparte después con los fabricantes y que espera recibir de vuelta en los informes periódicos.
+El uso de este soporte digital rudimentario resulta inviable para gestionar de forma íntegra volúmenes crecientes de datos.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.9]{Graphics/Cap1/estructura_vigilancia_medicamentos_cuba.jpg}
-    \caption{Estructura del sistema de farmacovigilancia en Cuba.}
-    \label{fig:estructura_vigilancia_medicamentos_cuba}
-\end{figure}
+Asimismo, la periodicidad de actualización de los datos hacia el nivel nacional es quincenal (los días 15 y 30 de cada mes), lo que genera un retraso intrínseco en la detección de señales de seguridad. 
+Esta demora afecta directamente a los fabricantes, quienes tienen la obligación legal de presentar Informes Periódicos de Seguridad (IPS) de manera ágil y veraz. 
 
+A eso se suma , que centros líderes como el \gls{ifv} no dispone de una base de datos formal, normalizada y digitalizada que les permita capturar y procesar de forma inmediata los reportes nacionales vinculados a sus productos.
 
-\paragraph{Instituto Finlay de Vacunas como fabricante líder}
-
-
-sdfsdfds
-
-
-
-\section{Antecedentes, Motivación y Justificación}\label{section:antecedentesMotivacionJustificacion}
-
-
-\begin{itemize}
-    \item Describir la situación actual: el reporte en modelos físicos
-    \item Señalar el fenómeno real: osea que casos ha habido de problemas trae eso 
-\end{itemize}
-
-
-El \gls{ifv} es una organización científica y empresa de alta tecnología cubana, dedicada a la investigación, desarrollo, producción y comercialización de vacunas humanas \cite{finlay_instituto_2026}.
-Constituido oficialmente a finales de 2015 a partir de una fusión estratégica e integrado al Grupo de las Industrias Biotecnológica y Farmacéutica de Cuba (BIOCUBAFARMA) , opera bajo un modelo de ciclo cerrado que integra
-tdodas las etapas de la cadena de valor: desde la investigación básica y los ensayos clínicos hasta la producción masiva y el seguimiento en condiciones reales de uso \cite{finlay_instituto_2026}.
-
-En el ámbito nacional, el IFV es un pilar estratégico de la soberanía tecnológica cubana, garantizando la mayoría de los productos biológicos del sistema de salud.
-Actualmente, el instituto provee el 78 \% de las dosis del Programa Nacional de Inmunización, siendo responsable de la producción de 8 de las 11 vacunas administradas en el país \cite{carbonell_cmi_finlay_2016}.
-Esta capacidad de innovación se evidencia en hitos científicos como la creación de la VA-MENGOC-BC® —primera vacuna eficaz contra el serogrupo B de la meningitis— y el reciente desarrollo de la línea de vacunas SOBERANA contra la COVID-19 \cite{finlay_instituto_2026}.
-En esta última, el volumen de operación alcanzó escalas sin precedentes, con más de 38,7 millones de dosis administradas acumuladas al cierre de julio de 2022, logrando inmunizar al 90 \% de la población cubana.
-Internacionalmente, su impacto se extiende a más de 17 países de América Latina, Asia y África mediante exportaciones y colaboraciones estratégicas \cite{carbonell_cmi_finlay_2016}.
-
-% A pesar de esta relevancia productiva, la vigilancia de la seguridad posterior a la aprobación enfrenta desafíos críticos. 
-% En la práctica clínica actual del IFV, el registro de los eventos adversos post-vacunación depende predominantemente de mecanismos de notificación pasiva y manual.
-% Este modelo exige que los pacientes o familiares acudan físicamente a los centros de salud para reportar síntomas, lo que deriva en una subnotificación significativa y un registro tardío del fenómeno.
-
-% La magnitud del flujo informativo justifica la urgencia de una intervención tecnológica: solo en el año 2018, Cuba capturó 6,682 reportes de eventos, situándose como el tercer país con mayor volumen de notificaciones en la Región de las Américas, tal como se ilustra en la Figura \ref{fig:evento_adverso_por_paises} \cite{ops_manual_esavi_2021}.
-% Gestionar este volumen mediante métodos manuales ralentiza la detección de señales de seguridad que los ensayos clínicos en Fase III —limitados habitualmente a un máximo de 5,000 sujetos— no poseen el poder estadístico para identificar.
-
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[scale=0.6]{Graphics/evento_adverso_por_paises.jpg}
-%     \caption{Número de eventos adversos post-vacunación notificados por los países de la Región de las Américas}
-%     \label{fig:evento_adverso_por_paises}
-% \end{figure}
-
-% Esta situación genera una brecha en el seguimiento proactivo de los eventos, comprometiendo la calidad de la información en términos de completitud y validez técnica.
-% El procesamiento manual de formularios impresos incrementa la probabilidad de errores de trascripción y la pérdida de datos clínicos sensibles necesarios para el análisis de causalidad.
-% En este contexto, resulta imperativo transitar hacia soluciones computacionales que faciliten el autorreporte ciudadano y permitan la centralización y validación de datos en tiempo real.
-% La implementación de este sistema no solo optimizará los procesos de farmacovigilancia, sino que fortalecerá la confianza pública en los productos biológicos de la institución al garantizar una comunicación del riesgo transparente y oportuna.
 
 \section{Presentación de la problemática}\label{section:presentacionProblema}
 
-A partir del análisis de la situación actual, se identifica una brecha significativa entre los mecanismos vigentes para la gestión de información sobre eventos adversos post-vacunación y las exigencias de un sistema de farmacovigilancia moderno orientado a la disponibilidad, integridad y oportunidad de los datos.
+A pesar de su alto nivel tecnológico, el \gls{ifv} presenta una brecha en la gestión digital de los datos de seguridad postcomercialización, aún dependiente de procesos manuales. 
 
-En el Instituto Finlay de Vacunas, el proceso de reporte se realiza fundamentalmente mediante soportes físicos y métodos convencionales.
-Esta condición limita la capacidad de procesamiento y análisis de datos en condiciones de inmediatez, impidiendo que el flujo informativo sea bidireccional y accesible en tiempo real para todos los actores del ciclo de vigilancia.
-
-Desde una perspectiva computacional, esta situación se manifiesta en varias limitaciones fundamentales:
+Desde una perspectiva computacional, esta problemática se sintetiza en las siguientes limitaciones internas:
 
 \begin{itemize}
-    \item \textbf{Limitaciones en la captura y calidad de los datos:} La ausencia de digitalización estructurada y de mecanismos de validación en el punto de registro incrementa la probabilidad de errores, inconsistencias y pérdida de información relevante, afectando la confiabilidad de los datos recolectados.
+    \item \textbf{Ausencia de una infraestructura de datos integrada:} El instituto no dispone de un sistema centralizado y estandarizado para gestionar la información de seguridad de sus vacunas, operando con herramientas dispersas y no homogéneas.
+    
+    \item \textbf{Limitada capacidad de respuesta y análisis en tiempo real:} La dependencia de ciclos de actualización externos y la ausencia de una plataforma propia restringen la generación de señales de alerta temprana, así como la ejecución ágil de estudios de Fase IV y la actualización oportuna de la información de seguridad.
 
-    \item \textbf{Retrasos en la disponibilidad de la información:} El procesamiento diferido derivado de la transcripción manual introduce demoras que limitan el acceso oportuno a los datos, afectando la capacidad de respuesta ante posibles alertas sanitarias.
-
-    \item \textbf{Falta de interoperabilidad y estandarización:} La inexistencia de un sistema centralizado impide la adopción de esquemas de datos normalizados y el uso de estándares internacionales, restringiendo la integración y comparación de la información con otros sistemas nacionales y mundiales de farmacovigilancia .
-
-    \item \textbf{Limitada capacidad de análisis y soporte a la toma de decisiones:} La ausencia de mecanismos de almacenamiento estructurado y exportación de datos dificulta el uso de herramientas analíticas e inteligencia de negocio, restringiendo la generación de indicadores, reportes en tiempo real y estudios posteriores a la comercialización.
+    \item \textbf{Barreras en la captación de información desde la población:} El uso predominante de planillas físicas y la falta de canales digitales directos dificultan la notificación por parte de los pacientes, favoreciendo el subregistro y limitando la cobertura del sistema.
 \end{itemize}
 
-% En consecuencia, el problema científico radica en la inexistencia de un mecanismo automatizado y seguro que permita la captura, validación y gestión de los datos generados por el autorreporte ciudadano, garantizando la integridad de los registros clínicos para el fortalecimiento de la vigilancia poscomercialización y la confianza pública.
 
 \section{Planteamiento del Problema Científico}\label{section:planteamientoProblema}
 
 A partir de la problemática identificada, el problema científico se define como:
 
-\textit{La inexistencia de una plataforma automatizada para el autorreporte de eventos adversos post-vacunación (EAPV) que garantice la integridad de los datos clínicos y su gestión operativa, lo cual limita la detección temprana de señales de seguridad y compromete la toma de decisiones estratégicas en el Instituto Finlay de Vacunas.}
+\textit{La ausencia de una plataforma automatizada para el \gls{autorreporte} de \gls{esavi} en el Instituto Finlay de Vacunas, que permita la gestión estructurada y oportuna de los datos clínicos de seguridad.}
+
 
 De este problema se deriva la siguiente pregunta científica:
 
-\textbf{¿Cómo diseñar e implementar una solución informática para el autorreporte y gestión de EAPV que asegure la integridad de los datos clínicos y brinde soporte operativo para la toma de decisiones estratégicas en el Instituto Finlay de Vacunas?}
+% \textbf{¿Cómo diseñar e implementar una solución informática para el autorreporte y gestión de ESAVI que asegure la integridad de los datos clínicos y brinde soporte operativo para la toma de decisiones estratégicas en el Instituto Finlay de Vacunas?}
+
+\textbf{¿Cómo diseñar e implementar una solución informática para el \gls{autorreporte} y gestión de \gls{esavi} que permita el manejo estructurado de los datos clínicos de seguridad en el Instituto Finlay de Vacunas?}
+
 
 
 \section{Actualidad, Novedad e Importancia}\label{section:actualidadNovedadImportancia}
 
+
 \subsection{Actualidad}
 
-La farmacovigilancia contemporánea exige una transición de los modelos de notificación pasiva hacia sistemas proactivos que integren al ciudadano en el ciclo de seguridad.
-En el contexto del Instituto Finlay de Vacunas (IFV), esta necesidad es crítica debido a la magnitud de sus campañas; con más de 38,7 millones de dosis de vacunas Soberana administradas \cite{infomed_finlay_refuerzo_covid_2022}, el seguimiento en condiciones reales de uso es la única vía para detectar eventos adversos raros.
-La urgencia de esta investigación se fundamenta en la necesidad de dotar a una empresa de alta tecnología de herramientas digitales que superen la latencia de los métodos manuales actuales
+La actualidad de esta investigación se sustenta en el contexto de fortalecimiento de la soberanía tecnológica en Cuba, particularmente tras el desarrollo y uso masivo de vacunas propias como la serie SOBERANA para enfrentar la COVID-19.
 
-\subsection{Novedad Científica y Comparativa}
+En paralelo, la farmacovigilancia a nivel internacional ha evolucionado hacia un modelo basado en la digitalización, la automatización de procesos y el análisis masivo de datos clínicos en tiempo real, con una creciente tendencia hacia el \gls{autorreporte} digital y el empoderamiento del paciente como fuente primaria de información.
 
-A diferencia de sistemas de notificación espontánea como el VAERS, donde la información es registrada y posteriormente validada por especialistas, la propuesta introduce mecanismos de validación en el punto de captura. 
+En este escenario, el Instituto Finlay de Vacunas, como entidad de alta tecnología, se inserta en procesos de innovación basados en ciencia de datos y aprendizaje automático, lo que demanda la evolución progresiva hacia infraestructuras digitales para la gestión de la información de seguridad. Asimismo, los actuales enfoques de gestión en Cuba priorizan la autonomía institucional, la eficiencia y la toma de decisiones basada en datos.
 
-Esto permite reducir inconsistencias desde el origen del dato y mejorar su calidad antes de su almacenamiento. Asimismo, mientras que estos sistemas dependen de conectividad continua o de procesos diferidos de digitalización, la solución planteada contempla la captura de información en entornos con conectividad intermitente mediante sincronización posterior.
 
-De esta forma, la novedad del enfoque radica en la combinación de validación temprana y estructuración de datos desde su origen en un contexto de farmacovigilancia.
 
-\subsection{Justificación de la Solución Web y Móvil}
+\subsection{Novedad Científica}
+
+La novedad de este trabajo reside en el diseño e implementación de un ecosistema digital centralizado, diseñado específicamente para que el fabricante gestione de forma soberana la seguridad de sus vacunas. A diferencia de los métodos actuales basados en registros manuales y hojas de cálculo, esta solución aporta los siguientes elementos innovadores desde una perspectiva computacional:
+
+\begin{itemize}
+    \item \textbf{Arquitectura de \gls{autorreporte} reactiva:} El diseño de un sistema web que captura el dato en la fuente, garantizando la integridad y consistencia clínica desde el momento del registro por parte de médicos o pacientes.
+    \item \textbf{Resiliencia ante conectividad limitada:} El desarrollo de un mecanismo de persistencia local y sincronización asíncrona que permite la creación de reportes en entornos de red inestables. Esta capacidad garantiza que el usuario pueda completar y validar la información técnica para su envío posterior automático, asegurando la oportunidad del dato sin pérdida de información clínica.
+    \item \textbf{Automatización de la respuesta industrial:} Implementación de una lógica de negocio que dispara alertas automáticas ante casos graves o mortales, permitiendo al fabricante reaccionar en breve tiempo.
+    \item \textbf{Industrialización del análisis:} Sustitución de procesos manuales por cuadro de mando(dashboards) dinámicos, convirtiendo datos brutos en indicadores de riesgo automáticos.
+    \item \textbf{Modelo de unificación soberana:} Capacidad de migrar y centralizar información histórica dispersa.
+\end{itemize}
 
 
 \subsection{Importancia}
 
+La importancia de este trabajo se manifiesta en tres dimensiones estratégicas:
 
-% En el contexto actual de transformación digital de los sistemas de salud, se observa una tendencia creciente hacia la descentralización en la generación de datos clínicos, donde los propios usuarios participan activamente mediante herramientas digitales. Este escenario ha impulsado el desarrollo de soluciones móviles y web orientadas a la captura distribuida de información en tiempo real.
+\textbf{Impacto en la salud pública y el bienestar social:} Al proporcionar un canal digital de \gls{autorreporte} reactivo, se eliminan las barreras físicas y burocráticas que desmotivan al paciente, permitiendo capturar datos de forma masiva.Esto favorece la detección temprana de eventos adversos, especialmente aquellos raros o subregistrados, fortaleciendo la seguridad del paciente y la confianza en los programas de inmunización.
 
-% No obstante, esta evolución introduce desafíos significativos desde la perspectiva computacional, particularmente en lo relacionado con la validación de datos heterogéneos en el punto de captura, la gestión de grandes volúmenes de información distribuida y la operación en entornos con conectividad limitada o intermitente. Estas condiciones demandan el diseño de sistemas que no solo faciliten la recolección de datos, sino que también garanticen propiedades esenciales como consistencia, integridad y disponibilidad desde el momento de su generación.
+\textbf{Fortalecimiento institucional.} La consolidación de mecanismos digitales de gestión de la información de seguridad permite al Instituto Finlay de Vacunas mejorar la capacidad de análisis y respuesta ante eventos adversos, apoyando la toma de decisiones estratégicas basadas en evidencia.
 
-% En este escenario, la novedad de la presente investigación radica en el diseño de un enfoque computacional orientado a la validación reactiva de datos durante el proceso de autorreporte de eventos adversos. Este mecanismo permite la detección temprana de inconsistencias en el momento de la captura, contribuyendo a la mejora de la calidad de los datos desde su origen.
-
-% Adicionalmente, se propone una arquitectura de sistema capaz de operar en escenarios de conectividad intermitente mediante mecanismos de almacenamiento local y sincronización diferida. Esta estrategia permite garantizar la continuidad operativa del sistema sin comprometer la integridad de la información, incorporando principios propios de sistemas distribuidos y tolerancia a fallos.
-
-% Desde esta perspectiva, la propuesta se diferencia de los sistemas tradicionales de registro al integrar validación en tiempo de captura, procesamiento distribuido y resiliencia frente a condiciones de conectividad limitada.
-
-% La importancia de este trabajo se fundamenta en su contribución al diseño de soluciones computacionales más robustas para la gestión de información clínica en contextos reales. En términos prácticos, la propuesta permite mejorar la calidad, consistencia y oportunidad de los datos recopilados, optimizando los procesos de análisis y toma de decisiones en farmacovigilancia.
-
-% Desde el punto de vista teórico, la investigación aporta un enfoque integrador que articula validación de datos, arquitectura de sistemas distribuidos y gestión de información en condiciones no ideales. Este enfoque puede ser extendido a otros dominios donde la confiabilidad de los datos constituye un factor crítico.
-
-% En conjunto, los resultados obtenidos constituyen una base para el desarrollo de sistemas más resilientes orientados a la digitalización eficiente de procesos en el ámbito de la salud.
+\textbf{Base para la innovación científica y la Industria.} Desde la perspectiva de las Ciencias de la Computación, este trabajo constituye el cimiento para la industrialización de los datos en el centro. La estructuración de la información clínica bajo estándares de integridad y consistencia es el habilitador esencial y requisito previo indispensable para que el instituto pueda aplicar técnicas avanzadas de ciencia de datos y aprendizaje automático. De este modo, la plataforma no solo gestiona el presente, sino que prepara la infraestructura técnica para futuros modelos analíticos de predicción de riesgos y reconocimiento de patrones.
 
 
 
 \section{Objetivo General y Objetivos Específicos}\label{section:objetivosPrincipalesEspecificos}
 
-El objetivo general de la presente investigación consiste en desarrollar un sistema informático, en forma de plataforma web y móvil, que permita el autorreporte de eventos adversos posteriores a la vacunación, facilitando la recolección, validación y análisis de la información en el contexto de la farmacovigilancia del Instituto Finlay de Vacunas.
+El objetivo general de la presente investigación consiste en desarrollar un sistema informático, en forma de plataforma web, que permita la notificación ciudadana de \gls{esavi}, en el contexto de la farmacovigilancia del Instituto Finlay de Vacunas.
 
 De este objetivo general se derivan los siguientes objetivos específicos:
 
@@ -283,7 +273,7 @@ De este objetivo general se derivan los siguientes objetivos específicos:
     
     \item Definir la arquitectura del sistema siguiendo principios de diseño de software (los principios SOLID) que garantice escalabilidad y mantenibilidad.
     
-    \item Implementar un prototipo funcional de la plataforma (web y/o móvil) que permita el registro, validación y consulta de reportes.
+    \item Implementar un prototipo funcional de la plataforma web que permita el registro, validación y consulta de reportes.
     
     \item Validar el funcionamiento del sistema mediante pruebas que aseguren la integridad, consistencia y utilidad de la información recolectada.
 \end{itemize}

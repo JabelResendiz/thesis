@@ -1,78 +1,143 @@
 \appendix
 
-\chapter{Formularios de Referencia}
+\chapter{Modelos oficiales de notificación en Cuba}
 
 \section{Modelo 33-36-02}
 \label{app:modelo_33-36-02}
 
 En el Anexo \ref{app:modelo_33-36-02} se incluye el \textbf{Modelo 33-36-02}, el formulario oficial utilizado por los profesionales de la salud en Cuba para la notificación de sospechas de reacciones adversas a medicamentos dentro del sistema nacional de farmacovigilancia.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Graphics/Cap1/modelo_cubano_33_36_02.jpg}
     \caption{Modelo 33-36-02: Notificación de sospechas de Reacciones Adversas a Medicamentos por el Profesional Sanitario}
 \end{figure}
 
 % El formulario incluye instrucciones detalladas para la notificación de reacciones adversas, abarcando desde la identificación del medicamento sospechoso hasta la descripción clínica del evento, con el objetivo de garantizar la completitud y calidad de los reportes dentro del sistema de farmacovigilancia.
+\newpage
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Graphics/Cap1/dorso_modelo_33_36_02.jpg}
     \caption{Instructivo en el dorso del modelo 33-36-02: Notificación de sospechas de Reacciones Adversas a Medicamentos por el Profesional Sanitario}
 \end{figure}
 
+\newpage
 
 \section{Modelo 33-36-03}
 \label{app:modelo_33-36-03}
 
 En el Anexo \ref{app:modelo_33-36-03} se incluye el \textbf{Modelo 33-36-03}, el formulario oficial utilizado por los pacientes en Cuba para la notificación de sospechas de reacciones adversas a medicamentos dentro del sistema nacional de farmacovigilancia.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Graphics/Cap1/modelo_33_36_03.jpg}
     \caption{Modelo 33-36-03: Notificación de sospechas de Reacciones Adversas a Medicamentos por el Paciente}
 \end{figure}
 
-% El formulario incluye instrucciones detalladas para la notificación de reacciones adversas, abarcando desde la identificación del medicamento sospechoso hasta la descripción clínica del evento, con el objetivo de garantizar la completitud y calidad de los reportes dentro del sistema de farmacovigilancia.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Graphics/Cap1/dorso_modelo_33_36_03.jpg}
     \caption{Instructivo en el dorso del modelo 33-36-03: Notificación de sospechas de Reacciones Adversas a Medicamentos por el Paciente}
 \end{figure}
 
 
+\newpage
+
+\section{Modelo 84-30-2}
+\label{app:modelo_84-30-2}
+En el Anexo \ref{app:modelo_84-30-2} se incluye el \textbf{Modelo 84-30-2}, el formulario oficial utilizado por los profesionales de la salud en Cuba para la notificación de sospechas de eventos supuestamente atribuibles a la vacunación o inmunización (ESAVI) dentro del sistema nacional de farmacovigilancia.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Graphics/Cap1/modelo_84_30_2.png}
+    \caption{Modelo 84-30-2: Notificación de sospechas de Eventos Supuestamente Atribuibles a la Vacunación o Inmunización (ESAVI)}
+\end{figure}
 
 
 
+
+\newpage
+\chapter{Base de Datos Central de Farmacovigilancia (FarmaVigiC)}
 
 \section{Campos de la base de datos central de farmacovigilancia (FarmaVigiC)}
 \label{app:base_datos_farmavigic}
 
 En el Anexo \ref{app:base_datos_farmavigic} se describen los campos de la base de datos central de farmacovigilancia (FarmaVigiC) utilizada en Cuba.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{Graphics/Cap1/tabla_campo_2.jpg}
-    \caption{Campos de la base de datos central de farmacovigilancia (FarmaVigiC)}
-\end{figure}
+\renewcommand{\arraystretch}{1.3}
 
+\begin{longtable}{|p{3.2cm}|p{9.3cm}|}
+\caption{Campos de la base de datos central de farmacovigilancia (FarmaVigiC)}
+\label{tab:base_datos_farmavigic}\\
 
+\hline
+\textbf{Grupos de campos} & \textbf{Variables o campos} \\
+\hline
+\endfirsthead
 
+\hline
+\textbf{Grupos de campos} & \textbf{Variables o campos} \\
+\hline
+\endhead
+		
 
+\hline
+\endfoot
 
+		
+		Paciente & \makecell[l]{Nombre y apellidos\\Edad\\Sexo \\ Raza \\ Antecedentes patológicos personales \\ Requirió ingreso \\ Requirió atención de urgencia \\ Requirió reposo \\ Fue baja laboral o escolar \\ Peligró su vida} \\
+        \hline
 
+        Notificador & \makecell[l]{Unidad que reporta\\Provincia\\Municipio\\Nombre y apellidos \\ Especialidad} \\
+        \hline
+
+        Medicamentos & \makecell[l]{Medicamento sospechoso\\Presentación cantidad\\Presentación unidad\\Forma farmacéutica\\Fabricante\\Diluyente\\Lote\\ Vía de administración \\ Dosis cantidad \\ Dosis unidad \\ Dosis frecuencia \\ Fecha de inicio del tratamiento \\ Fecha fin del tratamiento \\ Continuación \\ Motivo de prescripción \\ Otro fármaco 1 \\ Otro fármaco 2 \\ Otro fármaco 3 \\ Otro fármaco 4 \\ Otro fármaco 5 \\ Otro fármaco 6 \\ Vía, dosis, lote de otros fármacos \\ Fecha de administración de otros fármacos} \\
+        \hline
+
+        Reacciones adversas & \makecell[l]{Reacción principal\\Otra RAM 1\\Otra RAM 2\\Otra RAM 3\\Otra RAM 4\\Otra RAM 5\\Otra RAM 6 \\ Fecha de inicio RAM \\ Fecha fin de RAM \\ Continuación} \\[6pt]
+		\hline
+		
+		Clasificación & \makecell[l]{Grupo de edades\\Sexo\\Nivel de atención\\Especialidad\\Grupo farmacológico\\Sistema de órgano afectado\\Severidad\\Causalidad\\Importancia\\Frecuencia} \\[6pt]
+		\hline
+		
+		Desenlace & \makecell[l]{Suspendió la medicación\\Supresión positiva\\Re exposición\\Recurrencia de síntomas\\Desenlace\\Recuperado\\No recuperado \\ Recuperado con secuela} \\[6pt]
+		\hline
+
+        Organización e información adicional & \makecell[l]{Mes de entrada a la base\\Sucuencia temporal\\Observaciones\\Comentarios\\Resultados de necropsia\\Fecha de notificación} \\[6pt]
+		\hline
+
+        Evaluación de la calidad & \makecell[l]{E1 (evalúa al notificador)\\E2 (evalúa al revisor) \\ E3 (evalúa calidad del llenado de la base)} \\[6pt]
+		\hline
+	
+\end{longtable}
+
+\begin{itemize}
+    \item A nivel municipal se trabajan 71 campos
+    \item A nivel provincial se trabajan 72 campos
+    \item A nivel nacional se trabajan 75 campos
+\end{itemize}
+
+\newpage
+
+\chapter{Formularios de referencia}
 
 \section{Formulario VAERS - Octubre 2025}
 \label{app:vaers-form-oct2025}
 
 En el Anexo \ref{app:vaers-form-oct2025} se incluye el formulario oficial del Vaccine Adverse Event Reporting System (VAERS) correspondiente a octubre de 2025. Este formulario constituye el instrumento estándar utilizado para la notificación de eventos adversos posteriores a la vacunación en los Estados Unidos.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Graphics/Cap2/vaers-formulario.jpg}
     \caption{Formulario VAERS - Octubre 2025}
 \end{figure}
+
+
+\newpage
+
+
 
 \section{Formulario v-safe - Enero 2021}
 \label{app:vsafe-form-ene2021}
