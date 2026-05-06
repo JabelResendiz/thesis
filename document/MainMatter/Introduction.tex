@@ -176,48 +176,47 @@ Este intercambio continuo permite a los fabricantes actualizar la información d
     \label{fig:sinergia_feedback_farma_cuba}
 \end{figure}
 
-A pesar de la solidez estructural del Sistema Cubano de Farmacovigilancia, su operatividad técnica actual enfrenta retos que comprometen la vigilancia en tiempo real. 
-Un dato alarmante es que, aunque Cuba posee altas tasas de reporte, se estima que solo se notifica entre el 5\% y el 10\% de las reacciones adversas que realmente ocurren en la población, fenómeno conocido como \gls{infranotificacion}\cite{tarrago_farmacovigilancia_cuba_2019}.
-Esta brecha se ve acentuada por un flujo de información que aún depende de modelos impresos como el 33-36-02 y el 84-30-2, los cuales deben ser llenados manualmente en la base por profesionales sanitarios.
+% A pesar de la solidez estructural del Sistema Cubano de Farmacovigilancia, su operatividad técnica actual enfrenta retos que comprometen la vigilancia en tiempo real. 
+% Un dato alarmante es que, aunque Cuba posee altas tasas de reporte, se estima que solo se notifica entre el 5\% y el 10\% de las reacciones adversas que realmente ocurren en la población, fenómeno conocido como \gls{infranotificacion}\cite{tarrago_farmacovigilancia_cuba_2019}.
+% Esta brecha se ve acentuada por un flujo de información que aún depende de modelos impresos como el 33-36-02 y el 84-30-2, los cuales deben ser llenados manualmente en la base por profesionales sanitarios.
 
-La gestión de esta información a nivel nacional se centraliza en la base de datos \gls{FarmaVigiC}, la cual, aunque procesa 75 variables clínicas y epidemiológicas por cada caso, se sustenta técnicamente en el uso de hojas de cálculo (Excel) \cite{normas_farmacovigilancia_cuba_2012}. 
-Mismo formato que comparte después con los fabricantes y que espera recibir de vuelta en los informes periódicos.
-El uso de este soporte digital rudimentario resulta inviable para gestionar de forma íntegra volúmenes crecientes de datos.
+% La gestión de esta información a nivel nacional se centraliza en la base de datos \gls{FarmaVigiC}, la cual, aunque procesa 75 variables clínicas y epidemiológicas por cada caso, se sustenta técnicamente en el uso de hojas de cálculo (Excel) \cite{normas_farmacovigilancia_cuba_2012}. 
+% Mismo formato que comparte después con los fabricantes y que espera recibir de vuelta en los informes periódicos.
+% El uso de este soporte digital rudimentario resulta inviable para gestionar de forma íntegra volúmenes crecientes de datos.
 
-Asimismo, la periodicidad de actualización de los datos hacia el nivel nacional es quincenal (los días 15 y 30 de cada mes), lo que genera un retraso intrínseco en la detección de señales de seguridad. 
-Esta demora afecta directamente a los fabricantes, quienes tienen la obligación legal de presentar Informes Periódicos de Seguridad (IPS) de manera ágil y veraz. 
+% Asimismo, la periodicidad de actualización de los datos hacia el nivel nacional es quincenal (los días 15 y 30 de cada mes), lo que genera un retraso intrínseco en la detección de señales de seguridad. 
+% Esta demora afecta directamente a los fabricantes, quienes tienen la obligación legal de presentar Informes Periódicos de Seguridad (IPS) de manera ágil y veraz. 
 
-A eso se suma , que centros líderes como el \gls{ifv} no dispone de una base de datos formal, normalizada y digitalizada que les permita capturar y procesar de forma inmediata los reportes nacionales vinculados a sus productos.
+% A eso se suma , que centros líderes como el \gls{ifv} no dispone de una base de datos formal, normalizada y digitalizada que les permita capturar y procesar de forma inmediata los reportes nacionales vinculados a sus productos.
 
 
-\section{Presentación de la problemática}\label{section:presentacionProblema}
+\section{Presentación del problema científico}\label{section:presentacionProblema}
 
 A pesar de su alto nivel tecnológico, el \gls{ifv} presenta una brecha en la gestión digital de los datos de seguridad postcomercialización, aún dependiente de procesos manuales. 
 
-Desde una perspectiva computacional, esta problemática se sintetiza en las siguientes limitaciones internas:
+Desde una perspectiva computacional, esta situación se sintetiza en las siguientes limitaciones internas, cuantificadas a partir de los indicadores históricos del sistema cubano de farmacovigilancia:
+
 
 \begin{itemize}
-    \item \textbf{Ausencia de una infraestructura de datos integrada:} El instituto no dispone de un sistema centralizado y estandarizado para gestionar la información de seguridad de sus vacunas, operando con herramientas dispersas y no homogéneas.
-    
-    \item \textbf{Limitada capacidad de respuesta y análisis en tiempo real:} La dependencia de ciclos de actualización externos y la ausencia de una plataforma propia restringen la generación de señales de alerta temprana, así como la ejecución ágil de estudios de Fase IV y la actualización oportuna de la información de seguridad.
+\item \textbf{Fragmentación de la infraestructura de datos:} La información de seguridad de las vacunas se gestiona mediante herramientas heterogéneas y no estandarizadas (hojas de cálculo, archivos sueltos, reportes en papel), lo que dificulta la integridad referencial de las 75 variables clínicas definidas por el estándar \gls{FarmaVigiC} y su explotación sistemática.
 
-    \item \textbf{Barreras en la captación de información desde la población:} El uso predominante de planillas físicas y la falta de canales digitales directos dificultan la notificación por parte de los pacientes, favoreciendo el subregistro y limitando la cobertura del sistema.
+\item \textbf{Retrasos en el procesamiento y análisis de la información:} El flujo actual de notificación y consolidación de \gls{esavi} se basa en un ciclo de reporteo quincenal (los días 15 y 30 de cada mes), lo que introduce una latencia mínima de \textbf{15 días} entre la ocurrencia del evento y su disponibilidad para el análisis por parte del \gls{ifv}. Esta demora limita la detección oportuna de señales de riesgo, especialmente para eventos graves que requerirían notificación en menos de 24 horas según estándares internacionales \cite{who_pharmacovigilance_2004}.Adicionalmente, esta latencia afecta directamente la capacidad del fabricante para cumplir con su obligación legal de presentar \textbf{Informes Periódicos de Seguridad (IPS)} de manera ágil y veraz ante la autoridad reguladora \cite{normas_farmacovigilancia_cuba_2012}.
+ 
+\item \textbf{Subregistro en la notificación de eventos:} La dependencia de planillas físicas (modelos 33-36-02 y 84-30-2) y la ausencia de mecanismos digitales directos para la población generan barreras en la captura de información. Considerando que la tasa de infranotificación en Cuba se estima entre el 90\% y el 95\% \cite{tarrago_farmacovigilancia_cuba_2019}, se estima una pérdida potencial de miles de reportes de eventos adversos anualmente.
+
+\item \textbf{Aislamiento del ciudadano en el seguimiento de su reporte:} El sistema actual no proporciona al paciente o ciudadano ningún canal ágil para conocer el estado de su reporte una vez entregado. Esta falta de retroalimentación genera desconfianza en el proceso de farmacovigilancia, desmotiva futuras notificaciones y contribuye a la percepción de que el reporte "no sirve para nada" o "se pierde en el sistema".
+ 
 \end{itemize}
 
 
-\section{Planteamiento del Problema Científico}\label{section:planteamientoProblema}
+A partir de las limitaciones identificadas, el problema científico se define como:
 
-A partir de la problemática identificada, el problema científico se define como:
-
-\textit{La ausencia de una plataforma automatizada para el \gls{autorreporte} de \gls{esavi} en el Instituto Finlay de Vacunas, que permita la gestión estructurada y oportuna de los datos clínicos de seguridad.}
+\textit{El proceso actual de notificación y gestión de \gls{esavi} en el Instituto Finlay de Vacunas opera con una latencia de 15 días, no garantiza la integridad referencial de las 75 variables clínicas del estándar \gls{FarmaVigiC} y presenta una tasa de infranotificación estimada >90\%. Esta situación compromete la capacidad del instituto para elaborar Informes Periódicos de Seguridad (IPS) actualizados y veraces, genera desconfianza en el proceso de farmacovigilancia y limita la oportunidad, integridad y disponibilidad de los datos clínicos de seguridad.}
 
 
 De este problema se deriva la siguiente pregunta científica:
 
-% \textbf{¿Cómo diseñar e implementar una solución informática para el autorreporte y gestión de ESAVI que asegure la integridad de los datos clínicos y brinde soporte operativo para la toma de decisiones estratégicas en el Instituto Finlay de Vacunas?}
-
-\textbf{¿Cómo diseñar e implementar una solución informática para el \gls{autorreporte} y gestión de \gls{esavi} que permita el manejo estructurado de los datos clínicos de seguridad en el Instituto Finlay de Vacunas?}
-
+\textbf{¿Cómo diseñar un sistema web de autorreporte de \gls{esavi}, basado en arquitectura cliente-servidor y un modelo de datos relacional normalizado (3NF), que capture la información clínica relevante del evento adverso, garantice su integridad referencial y permita la exportación de los reportes a formatos compatibles con el estándar \gls{FarmaVigiC} (Excel), facilitando así la interoperabilidad con el flujo de información vigente?}
 
 
 \section{Actualidad, Novedad e Importancia}\label{section:actualidadNovedadImportancia}
@@ -225,36 +224,100 @@ De este problema se deriva la siguiente pregunta científica:
 
 \subsection{Actualidad}
 
+
 La actualidad de esta investigación se sustenta en el contexto de fortalecimiento de la soberanía tecnológica en Cuba, particularmente tras el desarrollo y uso masivo de vacunas propias como la serie SOBERANA para enfrentar la COVID-19.
 
 En paralelo, la farmacovigilancia a nivel internacional ha evolucionado hacia un modelo basado en la digitalización, la automatización de procesos y el análisis masivo de datos clínicos en tiempo real, con una creciente tendencia hacia el \gls{autorreporte} digital y el empoderamiento del paciente como fuente primaria de información.
 
-En este escenario, el Instituto Finlay de Vacunas, como entidad de alta tecnología, se inserta en procesos de innovación basados en ciencia de datos y aprendizaje automático, lo que demanda la evolución progresiva hacia infraestructuras digitales para la gestión de la información de seguridad. Asimismo, los actuales enfoques de gestión en Cuba priorizan la autonomía institucional, la eficiencia y la toma de decisiones basada en datos.
-
+En este escenario, el Instituto Finlay de Vacunas, como entidad de alta tecnología, demanda la evolución progresiva hacia infraestructuras digitales para la gestión de la información de seguridad. Asimismo, los actuales enfoques de gestión empresarial en Cuba priorizan la autonomía institucional, la eficiencia y la toma de decisiones basada en datos.
 
 
 \subsection{Novedad Científica}
 
-La novedad de este trabajo reside en el diseño e implementación de un ecosistema digital centralizado, diseñado específicamente para que el fabricante gestione de forma soberana la seguridad de sus vacunas. A diferencia de los métodos actuales basados en registros manuales y hojas de cálculo, esta solución aporta los siguientes elementos innovadores desde una perspectiva computacional:
+% La novedad de este trabajo reside en el diseño e implementación de un ecosistema digital centralizado, diseñado específicamente para que el fabricante gestione de forma soberana la seguridad de sus vacunas. A diferencia de los métodos actuales basados en registros manuales y hojas de cálculo, esta solución aporta los siguientes elementos innovadores desde una perspectiva computacional:
+
+% \begin{itemize}
+%     \item \textbf{Arquitectura de \gls{autorreporte} reactiva:} El diseño de un sistema web que captura el dato en la fuente, garantizando la integridad y consistencia clínica desde el momento del registro por parte de médicos o pacientes.
+%     \item \textbf{Resiliencia ante conectividad limitada:} El desarrollo de un mecanismo de persistencia local y sincronización asíncrona que permite la creación de reportes en entornos de red inestables. Esta capacidad garantiza que el usuario pueda completar y validar la información técnica para su envío posterior automático, asegurando la oportunidad del dato sin pérdida de información clínica.
+%     \item \textbf{Automatización de la respuesta industrial:} Implementación de una lógica de negocio que dispara alertas automáticas ante casos graves o mortales, permitiendo al fabricante reaccionar en breve tiempo.
+%     \item \textbf{Industrialización del análisis:} Sustitución de procesos manuales por cuadro de mando(dashboards) dinámicos, convirtiendo datos brutos en indicadores de riesgo automáticos.
+%     \item \textbf{Modelo de unificación soberana:} Capacidad de migrar y centralizar información histórica dispersa.
+% \end{itemize}
+
+
+
+
+
+
+La novedad de este trabajo reside en el diseño e implementación de un sistema web centralizado, diseñado específicamente para que el fabricante gestione de forma soberana la seguridad de sus vacunas. A diferencia de los métodos actuales basados en registros manuales y hojas de cálculo, esta solución aporta los siguientes elementos innovadores desde una perspectiva computacional:
 
 \begin{itemize}
-    \item \textbf{Arquitectura de \gls{autorreporte} reactiva:} El diseño de un sistema web que captura el dato en la fuente, garantizando la integridad y consistencia clínica desde el momento del registro por parte de médicos o pacientes.
-    \item \textbf{Resiliencia ante conectividad limitada:} El desarrollo de un mecanismo de persistencia local y sincronización asíncrona que permite la creación de reportes en entornos de red inestables. Esta capacidad garantiza que el usuario pueda completar y validar la información técnica para su envío posterior automático, asegurando la oportunidad del dato sin pérdida de información clínica.
-    \item \textbf{Automatización de la respuesta industrial:} Implementación de una lógica de negocio que dispara alertas automáticas ante casos graves o mortales, permitiendo al fabricante reaccionar en breve tiempo.
-    \item \textbf{Industrialización del análisis:} Sustitución de procesos manuales por cuadro de mando(dashboards) dinámicos, convirtiendo datos brutos en indicadores de riesgo automáticos.
-    \item \textbf{Modelo de unificación soberana:} Capacidad de migrar y centralizar información histórica dispersa.
+    \item \textbf{Arquitectura de \gls{autorreporte} con validación en origen:} El diseño de un sistema web que captura el dato en la fuente, garantizando la integridad y consistencia clínica desde el momento del registro por parte de médicos o pacientes, mediante validaciones sintácticas y semánticas en tiempo real.
+    
+    \item \textbf{Automatización de alertas por eventos graves:} Implementación de un motor de reglas de negocio que detecta automáticamente casos graves (p. ej., muerte, hospitalización) y dispara notificaciones al equipo de farmacovigilancia del \gls{ifv} con latencia inferior a 1 minuto, eliminando el retardo quincenal del sistema actual.
+    
+    \item \textbf{Industrialización del análisis:} Sustitución de procesos manuales de consolidación por cuadros de mando (dashboards) dinámicos, que actualizan indicadores de riesgo en tiempo real a partir de los reportes almacenados.
+    
+    \item \textbf{Mensajería asíncrona para notificaciones:} Incorporación de un sistema de colas de mensajes basado en RabbitMQ que desacopla la generación de reportes del envío de notificaciones por correo electrónico, garantizando la entrega confiable y no bloqueante. 
+    %Adicionalmente, el sistema implementa notificaciones push (alertas en tiempo real en el navegador mediante Web Push API) para eventos urgentes, sin necesidad de pasar por la cola de mensajes.
+    
+   \item \textbf{Seguimiento y trazabilidad del reporte:} El sistema permite al usuario (paciente o médico) consultar en cualquier momento el estado de su reporte (recibido, en validación, procesado, cerrado), proporcionando transparencia y confianza en el proceso de farmacovigilancia.
+    
+   \item \textbf{Mecanismo de seguridad informática anti-spam:} Implementación de herramientas de protección para prevenir el envío masivo y automatizado de información (\textit{\gls{spam}}) en el sistema, mediante el uso de \gls{captcha} de Google y técnicas de control de frecuencia de solicitudes (\gls{rate limiting} / \gls{rate timing}).
+    
+   \item \textbf{Unificación de fuentes de información:} Capacidad de migrar y centralizar información histórica dispersa en hojas de cálculo y archivos sueltos hacia una base de datos relacional normalizada (3NF).
+
 \end{itemize}
+
+Para comprender el alcance de la novedad, la Tabla \ref{tab:comparativa_novedad} contrasta la solución propuesta con el sistema actual en Cuba (FarmaVigiC) y referentes internacionales\footnote{Los referentes internacionales considerados (VAERS, VigiBase, entre otros) se analizan en profundidad en el Capítulo \ref{chapter:state-of-the-art} (Sección \ref{section:analisis_sistemas_autorreporte}).}. 
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Comparativa entre la solución propuesta y los sistemas existentes}
+    \label{tab:comparativa_novedad}
+    \begin{tabular}{|p{3.8cm}|p{3cm}|p{3cm}|p{3.5cm}|}
+        \hline
+        \textbf{Característica / Novedad} & \textbf{FarmaVigiC (actual)} & \textbf{Referentes internacionales\footnotemark} & \textbf{Solución propuesta (IFV)} \\
+        \hline
+        Validación de datos en origen & No (transcripción manual posterior) & Parcial & Sí (validación sintáctica y semántica en tiempo real) \\
+        \hline
+        Automatización de alertas por eventos graves & No (revisión manual) & Parcial & Sí (motor de reglas, alertas <1 minuto) \\
+        \hline
+        Industrialización del análisis (dashboards) & No (procesos manuales en Excel) & Parcial & Sí (cuadros de mando dinámicos en tiempo real) \\
+        \hline
+        Mensajería asíncrona para correos & No aplica & Limitado & Sí (RabbitMQ, entrega confiable y no bloqueante) \\
+        \hline
+        Seguimiento y trazabilidad del reporte & No (usuario aislado) & Parcial & Sí (consulta de estado: recibido, validación, procesado, cerrado) \\
+        \hline
+        Seguridad anti-spam & No aplica & Sí (requisito en algunos sistemas) & Sí (CAPTCHA + rate limiting / rate timing) \\
+        \hline
+        Canal de autorreporte ciudadano & No (solo profesional sanitario) & Sí (web pública) & Sí (web con validaciones) \\
+        \hline
+        Tiempo de disponibilidad para fabricante & 15 días (ciclo quincenal) & 24-48 horas & Inmediato (aplicación para fabricante, <5min) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
 
 
 \subsection{Importancia}
 
 La importancia de este trabajo se manifiesta en tres dimensiones estratégicas:
 
-\textbf{Impacto en la salud pública y el bienestar social:} Al proporcionar un canal digital de \gls{autorreporte} reactivo, se eliminan las barreras físicas y burocráticas que desmotivan al paciente, permitiendo capturar datos de forma masiva.Esto favorece la detección temprana de eventos adversos, especialmente aquellos raros o subregistrados, fortaleciendo la seguridad del paciente y la confianza en los programas de inmunización.
+\textbf{Impacto en la salud pública y el bienestar social:} Al proporcionar un canal digital de \gls{autorreporte}, se eliminan las barreras físicas y burocráticas que desmotivan al paciente, permitiendo capturar datos de forma masiva. Esto favorece la detección temprana de eventos adversos, especialmente aquellos raros o subregistrados, fortaleciendo la seguridad del paciente y la confianza en los programas de inmunización.
 
-\textbf{Fortalecimiento institucional.} La consolidación de mecanismos digitales de gestión de la información de seguridad permite al Instituto Finlay de Vacunas mejorar la capacidad de análisis y respuesta ante eventos adversos, apoyando la toma de decisiones estratégicas basadas en evidencia.
+\textbf{Fortalecimiento institucional y cumplimiento regulatorio:} La consolidación de mecanismos digitales de gestión de la información de seguridad permite al Instituto Finlay de Vacunas mejorar su capacidad de análisis y respuesta ante eventos adversos, así como cumplir con su obligación legal de elaborar Informes Periódicos de Seguridad (IPS) de manera ágil y veraz, basados en datos actualizados y trazables.
 
-\textbf{Base para la innovación científica y la Industria.} Desde la perspectiva de las Ciencias de la Computación, este trabajo constituye el cimiento para la industrialización de los datos en el centro. La estructuración de la información clínica bajo estándares de integridad y consistencia es el habilitador esencial y requisito previo indispensable para que el instituto pueda aplicar técnicas avanzadas de ciencia de datos y aprendizaje automático. De este modo, la plataforma no solo gestiona el presente, sino que prepara la infraestructura técnica para futuros modelos analíticos de predicción de riesgos y reconocimiento de patrones.
+\textbf{Base para futuras innovaciones:} Desde la perspectiva de las Ciencias de la Computación, este trabajo constituye el cimiento para la industrialización de los datos en el centro. La estructuración de la información clínica bajo estándares de integridad y consistencia (BD relacional en 3NF, 75 variables validadas) es un habilitador necesario para que, en trabajos futuros, el instituto pueda aplicar técnicas de minería de datos (ej. detección de señales mediante PRR) o análisis de patrones temporales. El presente trabajo no aborda dichos modelos analíticos, pero sienta las bases técnicas para su implementación posterior.
+
+\textbf{Cumplimiento del marco legal de protección de datos:} El sistema se rige por la Ley No. 149/2022, que otorga máxima protección a los "datos médicos o de salud" por su carácter sensible \cite{cuba_ley_149_2022}. 
+En correspondencia con los principios de protección, la plataforma garantiza: (a) la especificación de los fines mediante un flujo de consentimiento informado digital; (b) la salvaguarda de la seguridad mediante medidas tecnológicas de cifrado de la información en tránsito (HTTPS/TLS) y en reposo \cite{cuba_ley_149_2022}.
+
+
+
+
 
 
 
@@ -265,18 +328,25 @@ El objetivo general de la presente investigación consiste en desarrollar un sis
 De este objetivo general se derivan los siguientes objetivos específicos:
 
 \begin{itemize}
-    \item Investigar el estado del arte de sistemas de farmacovigilancia y plataformas de reporte de eventos adversos.
+    \item \textbf{Investigar el estado del arte} de sistemas de farmacovigilancia, analizando comparativamente al menos tres sistemas (VAERS, VigiBase y v-safe) en términos de sus modelos de datos, flujos de notificación, mecanismos de interoperabilidad (estándares \gls{hl7fhir}) y estrategias de privacidad.
     
-    \item Analizar los procesos actuales de recolección y gestión de datos en el contexto del Instituto Finlay de Vacunas.
+    \item \textbf{Diseñar un modelo de datos relacional} que normalice (tercera forma normal, 3NF) la totalidad de las variables clínicas documentadas y requeridas por el centro, garantizando la compatibilidad de exportación al formato CSV requerido por la entidad regulatoria.
     
-    \item Diseñar un modelo de datos que permita representar adecuadamente la información asociada a los eventos adversos.
+    \item \textbf{Definir la arquitectura del sistema} en capas (presentación, lógica de negocio, persistencia), aplicando los principios \gls{SOLID} en la capa de dominio para garantizar escalabilidad y mantenibilidad, y utilizando el patrón \gls{Repository} para abstraer el acceso a datos.
     
-    \item Definir la arquitectura del sistema siguiendo principios de diseño de software (los principios SOLID) que garantice escalabilidad y mantenibilidad.
-    
-    \item Implementar un prototipo funcional de la plataforma web que permita el registro, validación y consulta de reportes.
-    
-    \item Validar el funcionamiento del sistema mediante pruebas que aseguren la integridad, consistencia y utilidad de la información recolectada.
+    \item \textbf{Implementar un Mínimo Producto Viable (MVP)} de la plataforma web que permita: (a) el registro asíncrono de un \gls{esavi}, (b) la validación sintáctica en tiempo real mediante \gls{JSON Schema}, y (c) un panel de consulta de reportes filtrados por fecha, producto y severidad.
+   
+    \item \textbf{Validar el funcionamiento del sistema} mediante: (a) pruebas de integridad referencial que verifiquen el 100\% de los campos obligatorios, (b) pruebas de usabilidad con el método \gls{SUS} (System Usability Scale) aplicado a al menos 5 usuarios finales (epidemiólogos, personal del \gls{ifv} y ciudadanos), y (c) pruebas de sincronización offline que simulen escenarios de conectividad intermitente.
 \end{itemize}
+
+
+
+
+
+
+
+
+
 
 \section{Estructura del trabajo}\label{section:estructuraTrabajo}
 
