@@ -164,9 +164,24 @@
     description={Proceso mediante el cual los pacientes o usuarios de medicamentos informan directamente sobre sus experiencias con reacciones adversas a medicamentos, sin intermediación de profesionales de la salud}
 }
 
-\newglossaryentry{SOLID}{
-    name={SOLID},
-    description={Los principios SOLID son cinco reglas de disepo de software orientado a objetos que buscan crear código más comprensible, flexible, mantenible y escalable.Estos son principio de responsabilidad única; principio de abierto/cerrado; principio de sustitución de Liskov; principio de segregación de interfaz; principio de inversión de dependencias}
+\newglossaryentry{SOLID}
+{
+  name={SOLID},
+  description={Acrónimo de cinco principios de diseño orientado a objetos: 
+  \begin{itemize}
+  \item \textbf{Responsabilidad Única} (una clase debe tener una sola razón para cambiar), 
+  \item \textbf{Abierto/Cerrado} (abierta a extensión, cerrada a modificación), 
+  \item \textbf{Sustitución de Liskov} (los objetos de una subclase deben poder sustituir a los de su clase base sin alterar el sistema), 
+  \item \textbf{Segregación de Interfaces} (interfaces pequeñas y específicas en lugar de una interfaz grande y genérica), 
+  \item \textbf{Inversión de Dependencias} (depender de abstracciones, no de implementaciones concretas). 
+  \end{itemize}
+  Estos principios fueron recopilados por Robert C. Martin \cite{martin2000} y el acrónimo fue acuñado por Michael Feathers \cite{feathers2004}}
+}
+
+\newglossaryentry{DRY}
+{
+  name={DRY (Don't Repeat Yourself)},
+  description={Principio formulado por Andrew Hunt y David Thomas que establece que cada pieza de conocimiento debe tener una representación única, inequívoca y autoritativa dentro del sistema. La duplicación de lógica aumenta el riesgo de inconsistencias cuando se requiere un cambio \cite{hunt1999}}
 }
 
 \newglossaryentry{Repository}{
