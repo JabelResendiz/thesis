@@ -420,9 +420,20 @@ En el proyecto se emplea para convertir entidades de dominio en DTOs y viceversa
 
 \section{Diseño de base de datos}
 
+En este capítulo se aborda el marco teórico-computacional referente a la persistencia de la información. Siguiendo la metodología de diseño de sistemas de salud, se describe la estructura del modelo de datos necesario para soportar la gestión de vacunación municipal y el seguimiento de eventos adversos (ESAVI).
+
 \subsection{Modelo Entidad-Relación Extendido (MERX)}
-% Aquí presentas el diagrama MERX completo con entidades, atributos, 
-% claves primarias/foráneas, cardinalidad y herencia (si aplica).
+El modelado de los datos se basa en un enfoque relacional, diseñado para garantizar la integridad referencial y la trazabilidad de cada reporte desde su creación hasta su evaluación clínica clínica. 
+En la Figura \ref{fig:merx} se detalla el diagrama MERX, donde se destacan jerarquías de herencia para los roles de usuario y dependencias de identificación para los procesos de revisión.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{center, width=0.28\textwidth}
+        \includegraphics{Graphics/Cap3/merx3.jpg}
+    \end{adjustbox}
+    \caption{Diagrama de modelo entidad-relación extendido (MERX). Fuente: elaboración propia.}
+    \label{fig:merx}
+\end{figure}
 
 \subsection{Diccionario de datos}
 % Descripción detallada de cada tabla: nombre, atributos, tipo de dato, 
