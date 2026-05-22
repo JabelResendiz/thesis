@@ -10,3 +10,65 @@ Sugerencia: Variar las expresiones de transición y preferir voz activa cuando e
 - Las descripciones individuales de VAERS, NotificaRAM y V-safe (páginas 2-8) son muy extensas y descriptivas; el lector debe leer más de 6 páginas para luego encontrar el análisis comparativo.
 5.  Sugerencia en la seccion 2.1.4 incluir Tabla 2.1: Comparación de sistemas de autorreporte con columnas: Sistema, Modelo de vigilancia, Nivel de digitalización, Actores, Fortalezas principales, Limitaciones principales, Grado de adecuación al sistema propuesto.
 Después llegas a una conclusión parcial resumida  porque en la tabla se sintetiza
+
+
+
+
+# Corregir en el CAP3
+
+
+## Generales 
+
+- [ ] Oraciones excesvimante largas de + 40 palabras
+- [ ] Uso de "se" impersonal excesvio, alternar con voz activa cuando el sujeto es claro
+
+## Metodología
+
+- [X] Definición de Scrum incompleta (no se menciona artefactos, product blacklog, srping backlog, increment)
+- [X] Anonimización de datos(sprint 2): sin especificar técnicas ni algoritmos, solo se menciona que se hizo
+
+## Requerimientos
+
+- [X] Incosistencias en numeración de requisitos
+- [X] Ambigüedad  en usuarios familiazarizados RNF-01 establece menor a 2 mintuos por parte de un uusario familizarizado (qué es un familiarizado)
+- [X] RNF-04 menor a 3 segundos sin especfiicar percentil ni condiciones de red
+
+
+## Diagramas de casos de uso
+
+- [X]Ambiguedad en catalogs predefinidos, se menciona pero nunca se dice cuales son ni quien los administra
+
+
+## Arquitectura 
+
+- [X] Definción técnica incompleta de arquitectura
+- [X] Uso de anglicismo innecesario (Time-to-market, poner la traducción)
+- [X] Cambiar el título de "Filosofías candidatas" a "Alternativas Arquitectonicas evaluadas" o "candidatos arquitectornicos"
+- [X] Sustituir "favorece la aplicación de los principios SOLID" por "facilita la aplicación" o "propicia el cumplimiento"
+- [ ] Falta de transiciones entre secciones : Salto abrupto de 1.4.3 y 1.4.4
+
+- [X] Término de "anillo" para Clean sin precisión (donde los anillo internos es el más estable y el exterior es más volátil)
+
+- [ ] Patrón de CQRS sin definción previa
+- [X] Analizar la transición entre monolito y microservicios
+- [X] Incosistcnai en descripcion de capas: La capa de infraestruca dpende de domainy de aplicacion , pero en clean solo de depende de apliacion
+- [X] JWT mencionado sin profundidad
+- [X] EntityFrameworkCOre como UnitOfWork : se afrima que DbCOntext.SaveChangeAsync ya actpua como unidad de trabajo sin advertir sus limitaciones.
+- [X] CORS y Swagger mencionados sin contexto: mencionadas como coniguración tecnica sin mencionar por qué son necesarias.
+
+
+
+
+## Diseño de base de datos
+
+- [ ]Falta especificar algoritmo de hashing unidireccional sin nombrar cuál es.
+- [ ] Perfeccionar sección de normalización con los nuevos datos de las tablas
+
+
+
+
+
+
+
+
+

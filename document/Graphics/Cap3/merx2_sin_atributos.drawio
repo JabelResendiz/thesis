@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Página-1" id="q4GVCO8UXD6FJ1Z85d76">
-    <mxGraphModel dx="7470" dy="2215" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
+    <mxGraphModel dx="4940" dy="567" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -538,10 +538,10 @@
           <mxGeometry height="38" width="63" x="864.5" y="185" as="geometry" />
         </mxCell>
         <mxCell id="4O6CcrpGBc0LWCCIvtP0-30" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;fontSize=22;fontColor=light-dark(#000000,#1A1A1A);fontStyle=1;rounded=1;" value="(1,*)" vertex="1">
-          <mxGeometry height="38" width="60" x="456.5" y="185" as="geometry" />
+          <mxGeometry height="38" width="60" x="470" y="181" as="geometry" />
         </mxCell>
-        <mxCell id="4O6CcrpGBc0LWCCIvtP0-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#6A00FF,#99FFFF);strokeColor=light-dark(#3700CC,#1A1A1A);strokeWidth=2;fontStyle=1;fontSize=22;" value="&lt;font style=&quot;color: light-dark(rgb(26, 26, 26), rgb(26, 26, 26));&quot;&gt;Usuario&lt;/font&gt;" vertex="1">
-          <mxGeometry height="30" width="108" x="343.5" y="202" as="geometry" />
+        <mxCell id="4O6CcrpGBc0LWCCIvtP0-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#6A00FF,#99FFFF);strokeColor=light-dark(#3700CC,#1A1A1A);strokeWidth=2;fontStyle=1;fontSize=22;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(26, 26, 26));&quot;&gt;Usuario&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(26, 26, 26));&quot;&gt;Autenticado&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="68" width="152.5" x="321.5" y="181" as="geometry" />
         </mxCell>
         <mxCell id="4O6CcrpGBc0LWCCIvtP0-32" edge="1" parent="1" source="4O6CcrpGBc0LWCCIvtP0-31" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;startSize=8;endSize=8;endArrow=none;endFill=0;strokeColor=light-dark(#3700CC,#1A1A1A);fillColor=#6a00ff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.04;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="4O6CcrpGBc0LWCCIvtP0-28">
           <mxGeometry relative="1" as="geometry">
