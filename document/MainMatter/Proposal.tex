@@ -852,7 +852,7 @@ La tabla asignación contiene:
 La tabla evaluación contiene el dictamen clínico emitido por el médico evaluador. Contiene los siguientes atributos:
 
 \begin{itemize}
-    \item \textbf{Id\_Evaluación (PK):} identificador único de tipo GUID generado automáticamente.
+    \item \textbf{Id\_Evaluación (PK):} identificador único generado automáticamente.
     \item \textbf{Id\_Asignación (FK):} llave foránea que referencia a la tabla asignación. Definida como única para garantizar la relación uno a uno, impidiendo evaluaciones múltiples sobre una misma asignación.
     \item \textbf{Causalidad:} grado de relación entre la vacuna administrada y el evento adverso, determinado por el médico evaluador según criterios de temporalidad y exclusión de otras causas. El sistema emplea una adaptación de la escala de la Organización Mundial de la Salud y el Uppsala Monitoring Centre (WHO-UMC) \cite{who-umc-causality}, reduciendo sus categorías de seis a cinco para alinearse con los criterios de registro empleados por el Instituto Finlay de Vacunas (IFV). Los posibles valores son:
     \begin{itemize}
@@ -912,7 +912,7 @@ Todos los atributos definidos en el esquema contienen valores atómicos.
 El análisis no identificó grupos repetidos ni atributos multivaluados que requirieran transformación.
 
 \textbf{Segunda Forma Normal (2FN).} La 2FN añade la condición de que todos los atributos que no forman parte de la clave primaria deben depender de todas las columnas de dicha clave  \cite{ibm-admin-guide}. 
-Dado que todas las tablas del esquema utilizan claves primarias simples (GUID en las tablas transaccionales y CI en la jerarquía de Sujeto), no existen condiciones para la aparición de dependencias parciales respecto a un subconjunto propio de la clave. 
+Dado que todas las tablas del esquema utilizan claves primarias simples (IDs en las tablas transaccionales y CI en la jerarquía de Sujeto), no existen condiciones para la aparición de dependencias parciales respecto a un subconjunto propio de la clave. 
 Por tanto, el cumplimiento de esta forma normal es inherente a la estructura del modelo.
 
 \textbf{Tercera Forma Normal (3FN).}  El tercer nivel exige que cada columna no clave proporcione un hecho independiente de otras columnas no clave y dependa únicamente de la clave primaria \cite{ibm-admin-guide}. 

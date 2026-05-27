@@ -257,5 +257,9 @@
     description={Hypertext Transfer Protocol / Representational State Transfer (HTTP/REST): Estilo arquitectónico para el diseño de servicios web que opera sobre el protocolo HTTP. Se basa en principios como la ausencia de estado en el servidor, la identificación única de recursos mediante URLs y el uso de los métodos estándar de HTTP (GET, POST, PUT, DELETE) para realizar operaciones. Los datos se intercambian típicamente en formatos ligeros como JSON o XML}
 }
 
+\newglossaryentry{hmac-sha256}{
+    name={HMAC-SHA256},
+    description={Hash-based Message Authentication Code con SHA-256. Mecanismo de criptografía simétrica que verifica simultáneamente la integridad y autenticidad de un mensaje. Combina una clave secreta compartida con el algoritmo de hash SHA-256 para producir un código de autenticación de longitud fija. Cualquier alteración del mensaje o uso de una clave incorrecta genera un código distinto, lo que permite detectar modificaciones no autorizadas. A diferencia de la criptografía asimétrica, emplea una única clave, lo que lo hace computacionalmente eficiente para operaciones como el hashing de contraseñas y la firma de tokens \cite{rfc2104}. SHA-256, estandarizado por el NIST, transforma cualquier entrada en una cadena de 256 bits de la cual resulta computacionalmente inviable reconstruir el dato original \cite{nist_sha256}}
+}
 
 \printglossaries

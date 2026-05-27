@@ -984,3 +984,298 @@
   url     = {https://andrewlock.net/exploring-the-asp-net-core-identity-passwordhasher/},
   urldate = {2026-05-21}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% CAPITULO 4 DE IMPLEMENTACIÓN
+
+@online{docker-overview,
+  title   = {Docker overview},
+  author  = {{Docker Inc.}},
+  year    = {2024},
+  url     = {https://docs.docker.com/get-started/overview/},
+  urldate = {2026-05-24}
+}
+
+@online{railway-docs,
+  title   = {Railway Docs},
+  author  = {{Railway Corp.}},
+  year    = {2024},
+  url     = {https://docs.railway.com/},
+  urldate = {2026-05-24}
+}
+
+@online{railway-deployments,
+  title   = {Deployments},
+  author  = {{Railway Corp.}},
+  year    = {2024},
+  url     = {https://docs.railway.com/deployments/},
+  urldate = {2026-05-24}
+}
+
+@online{vercel-docs,
+  title   = {Vercel Documentation},
+  author  = {{Vercel Inc.}},
+  year    = {2024},
+  url     = {https://vercel.com/docs},
+  urldate = {2026-05-24}
+}
+
+@online{vscode-dotnet,
+  title   = {Using .NET in Visual Studio Code},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://code.visualstudio.com/docs/languages/dotnet},
+  urldate = {2026-05-24}
+}
+
+@online{vscode-csharp,
+  title   = {C\# for Visual Studio Code},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp},
+  urldate = {2026-05-24}
+}
+
+@online{github-commits,
+  title   = {About commits},
+  author  = {{GitHub, Inc.}},
+  year    = {2024},
+  url     = {https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits},
+  urldate = {2026-05-24}
+}
+
+@book{pro-git-distributed,
+  title     = {Pro Git},
+  author    = {Scott Chacon and Ben Straub},
+  year      = {2014},
+  publisher = {Apress},
+  chapter   = {Getting Started - About Version Control},
+  url       = {https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control},
+  urldate   = {2026-05-24}
+}
+
+@online{swagger-ui,
+  title   = {Swagger UI},
+  author  = {{SmartBear Software}},
+  year    = {2024},
+  url     = {https://swagger.io/tools/swagger-ui/},
+  urldate = {2026-05-24}
+}
+
+
+@online{microsoft_guid,
+  title  = {Guid.NewGuid Method},
+  author = {{Microsoft}},
+  year   = {2026},
+  url    = {https://learn.microsoft.com/en-us/dotnet/api/system.guid.newguid},
+  note   = {Documentación oficial de .NET. Describe la generación de GUIDs Versión 4 con 122 bits de entropía fuerte.}
+}
+
+
+
+
+
+
+@online{microsoft_identity_model,
+  title   = {IdentityUser<TKey> Class},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.identityuser-1},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial de .NET. Representa un usuario en el sistema Identity con propiedades como Email, PasswordHash, SecurityStamp y LockoutEnd.}
+}
+
+@online{microsoft_password_hasher,
+  title   = {PasswordHasher<TUser> Class},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.passwordhasher-1},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial de ASP.NET Core Identity. Implementa PBKDF2 con HMAC-SHA256, salt de 128 bits y 100,000 iteraciones por defecto para el hashing de contraseñas.}
+}
+
+@online{microsoft_hash_format,
+  title   = {ASP.NET Core Identity PasswordHasher},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://github.com/aspnet/AspNetIdentity/blob/main/src/Microsoft.AspNet.Identity.Core/PasswordHasher.cs},
+  urldate = {2026-05-25},
+  note    = {Repositorio oficial en GitHub. Contiene la implementación del formato de hash: Base64(salt).Base64(subkey).}
+}
+
+@online{owasp_password_storage,
+  title   = {Password Storage Cheat Sheet},
+  author  = {{OWASP Foundation}},
+  year    = {2024},
+  url     = {https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html},
+  urldate = {2026-05-25},
+  note    = {Guía oficial de OWASP para almacenamiento seguro de contraseñas. Recomienda PBKDF2-SHA256 con 600,000 iteraciones para aplicaciones en producción.}
+}
+
+@online{microsoft_security_stamp,
+  title   = {SecurityStamp Validation in ASP.NET Core Identity},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial. Explica que el SecurityStamp se regenera al cambiar credenciales e invalida sesiones y tokens anteriores.}
+}
+
+@online{microsoft_token_providers,
+  title   = {Token providers in ASP.NET Core Identity},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial. Describe los proveedores de tokens para confirmación de correo, restablecimiento de contraseña y autenticación de dos factores.}
+}
+
+@online{microsoft_identity_config,
+  title   = {Configure ASP.NET Core Identity},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial. Cubre la configuración de IdentityOptions: bloqueo, contraseñas, tokens, cookies y validación de SecurityStamp.}
+}
+
+@online{microsoft_data_protection,
+  title   = {ASP.NET Core Data Protection Overview},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/introduction},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial. Describe la API de protección de datos usada para cifrar y firmar tokens, con gestión automática de claves y rotación.}
+}
+
+@techreport{rfc2104,
+  title       = {HMAC: Keyed-Hashing for Message Authentication},
+  author      = {H. Krawczyk and M. Bellare and R. Canetti},
+  year        = {1997},
+  number      = {2104},
+  institution = {IETF},
+  url         = {https://datatracker.ietf.org/doc/html/rfc2104},
+  urldate     = {2026-05-25},
+  note        = {Especificación oficial del mecanismo HMAC. Define el algoritmo para autenticación de mensajes mediante funciones hash criptográficas como SHA-256.}
+}
+
+
+@techreport{nist_sha256,
+  title       = {Secure Hash Standard (SHS)},
+  author      = {{National Institute of Standards and Technology}},
+  year        = {2015},
+  number      = {FIPS PUB 180-4},
+  institution = {NIST},
+  url         = {https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf},
+  urldate     = {2026-05-25},
+  note        = {Estándar oficial del NIST que define el algoritmo SHA-256. Especifica sus propiedades de resistencia a colisiones y preimagen, que garantizan la integridad de los datos procesados.}
+}
+
+@techreport{nist_aes,
+  title       = {Advanced Encryption Standard (AES)},
+  author      = {{National Institute of Standards and Technology}},
+  year        = {2001},
+  number      = {FIPS PUB 197},
+  institution = {NIST},
+  url         = {https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf},
+  urldate     = {2026-05-25},
+  note        = {Estándar oficial del NIST que define el algoritmo de cifrado simétrico AES con claves de 128, 192 y 256 bits y el modo de operación CBC.}
+}
+
+@techreport{rfc2898,
+  title       = {PKCS \#5: Password-Based Cryptography Specification Version 2.0},
+  author      = {B. Kaliski},
+  year        = {2000},
+  number      = {2898},
+  institution = {IETF},
+  url         = {https://datatracker.ietf.org/doc/html/rfc2898},
+  urldate     = {2026-05-25},
+  note        = {Estándar que define PBKDF2. Especifica la derivación de claves a partir de contraseñas mediante la aplicación iterativa de una función pseudoaleatoria (como HMAC-SHA256) combinada con un salt.}
+}
+
+
+
+% Seguridad de la aplicacion
+
+@techreport{rfc7519,
+  title       = {JSON Web Token (JWT)},
+  author      = {M. Jones and J. Bradley and N. Sakimura},
+  year        = {2015},
+  number      = {7519},
+  institution = {IETF},
+  url         = {https://datatracker.ietf.org/doc/html/rfc7519},
+  urldate     = {2026-05-25},
+  note        = {Estándar que define la estructura, claims y firma de los JSON Web Tokens.}
+}
+
+@techreport{rfc6750,
+  title       = {The OAuth 2.0 Authorization Framework: Bearer Token Usage},
+  author      = {M. Jones and D. Hardt},
+  year        = {2012},
+  number      = {6750},
+  institution = {IETF},
+  url         = {https://datatracker.ietf.org/doc/html/rfc6750},
+  urldate     = {2026-05-25},
+  note        = {Estándar que define el uso del encabezado Authorization: Bearer para enviar tokens de acceso.}
+}
+
+@online{microsoft_random,
+  title   = {RandomNumberGenerator Class},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.randomnumbergenerator},
+  urldate = {2026-05-25},
+  note    = {Documentación oficial de .NET sobre la generación de números aleatorios criptográficamente seguros.}
+}
+
+
+
+@online{owasp_cookies,
+  title   = {Secure Cookie Attribute},
+  author  = {{OWASP Foundation}},
+  year    = {2024},
+  url     = {https://owasp.org/www-community/controls/SecureCookieAttribute},
+  urldate = {2026-05-26},
+  note    = {Guía de OWASP sobre atributos de seguridad en cookies. Explica HttpOnly como defensa contra XSS, Secure para transmisión exclusiva sobre HTTPS, y SameSite para controlar el envío en solicitudes cross-site.}
+}
+
+
+@online{owasp_httponly,
+  title   = {HttpOnly},
+  author  = {{OWASP Foundation}},
+  year    = {2024},
+  url     = {https://owasp.org/www-community/HttpOnly},
+  urldate = {2026-05-26},
+  note    = {Documentación de OWASP sobre el atributo HttpOnly. Explica cómo impide que JavaScript acceda a las cookies, mitigando ataques XSS.}
+}
+
+
+
+@online{microsoft_rate_limiting,
+  title   = {Rate limiting middleware in ASP.NET Core},
+  author  = {{Microsoft}},
+  year    = {2024},
+  url     = {https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit},
+  urldate = {2026-05-27},
+  note    = {Documentación oficial sobre la configuración del middleware de rate limiting en ASP.NET Core. Describe las políticas de ventana fija, ventana deslizante y limitación por IP.}
+}

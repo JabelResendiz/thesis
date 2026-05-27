@@ -216,61 +216,121 @@ En el Anexo \ref{app:base_datos_farmavigic} se describen los campos de la base d
 
 \newpage
 
-% \chapter{Formularios de referencia}
+\chapter{Formularios de referencia}
 
-% \section{Formulario VAERS - Octubre 2025}
-% \label{app:vaers-form-oct2025}
+\section{Formulario VAERS - Octubre 2025}
+\label{app:vaers-form-oct2025}
 
-% En el Anexo \ref{app:vaers-form-oct2025} se incluye el formulario oficial del Vaccine Adverse Event Reporting System (VAERS) correspondiente a octubre de 2025. Este formulario constituye el instrumento estándar utilizado para la notificación de eventos adversos posteriores a la vacunación en los Estados Unidos.
+En el Anexo \ref{app:vaers-form-oct2025} se incluye el formulario oficial del Vaccine Adverse Event Reporting System (VAERS) correspondiente a octubre de 2025. Este formulario constituye el instrumento estándar utilizado para la notificación de eventos adversos posteriores a la vacunación en los Estados Unidos.
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{Graphics/Cap2/vaers-formulario.jpg}
-%     \caption{Formulario VAERS - Octubre 2025}
-% \end{figure}
-
-
-% \newpage
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Graphics/Cap2/vaers-formulario.jpg}
+    \caption{Formulario VAERS - Octubre 2025}
+\end{figure}
 
 
+\newpage
 
-% \section{Formulario v-safe - Enero 2021}
-% \label{app:vsafe-form-ene2021}
 
-% En el Anexo \ref{app:vsafe-form-ene2021} se incluyen capturas del sistema v-safe del CDC correspondientes a enero de 2021. 
-% Este sistema constituye una herramienta de seguimiento activo utilizada para monitorizar síntomas y eventos adversos posteriores a la vacunación.
 
-% \begin{figure}[htpb]
-%     \centering
+\section{Formulario v-safe - Enero 2021}
+\label{app:vsafe-form-ene2021}
+
+En el Anexo \ref{app:vsafe-form-ene2021} se incluyen capturas del sistema v-safe del CDC correspondientes a enero de 2021. 
+Este sistema constituye una herramienta de seguimiento activo utilizada para monitorizar síntomas y eventos adversos posteriores a la vacunación.
+
+\begin{figure}[htpb]
+    \centering
     
-%     % Fila 1
-%     \begin{minipage}[t]{0.45\textwidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{Graphics/Cap2/feeling.jpg}
-%         \caption{Estado general}
-%     \end{minipage}
-%     \hfill
-%     \begin{minipage}[t]{0.45\textwidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{Graphics/Cap2/fever.jpg}
-%         \caption{Verificación de fiebre}
-%     \end{minipage}
+    % Fila 1
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap2/feeling.jpg}
+        \caption{Estado general}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap2/fever.jpg}
+        \caption{Verificación de fiebre}
+    \end{minipage}
 
-%     \vspace{0.5cm}
+    \vspace{0.5cm}
     
-%     % Fila 2
-%     \begin{minipage}[t]{0.45\textwidth}
-%         \centering
-%         \includegraphics[width=0.5\linewidth]{Graphics/Cap2/symptom.jpg}
-%         \caption{Verificación de síntomas}
-%     \end{minipage}
-%     \hfill
-%     \begin{minipage}[t]{0.45\textwidth}
-%         \centering
-%         \includegraphics[width=\linewidth]{Graphics/Cap2/health.jpg}
-%         \caption{Impacto en la salud}
-%     \end{minipage}
+    % Fila 2
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.5\linewidth]{Graphics/Cap2/symptom.jpg}
+        \caption{Verificación de síntomas}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap2/health.jpg}
+        \caption{Impacto en la salud}
+    \end{minipage}
 
-%     \caption{Capturas del sistema v-safe para el seguimiento de síntomas posteriores a la vacunación}
-%     \label{fig:vsafe-form}
-% \end{figure}
+    \caption{Capturas del sistema v-safe para el seguimiento de síntomas posteriores a la vacunación}
+    \label{fig:vsafe-form}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Entidades de infraestructura}
+\label{anexo:entidades_infraestructura}
+
+\section{RefreshToken}
+
+La entidad \texttt{RefreshToken} permite la renovación de sesiones sin que el usuario deba iniciar sesión nuevamente. Cuando un usuario se autentica, el sistema genera un token de acceso JWT de corta duración y un token de actualización que persiste en esta tabla. Al expirar el token de acceso, el cliente presenta el token de actualización y obtiene uno nuevo.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Entidad RefreshToken}, label={lst:refreshtoken}]
+public class RefreshToken : GuidEntity
+{
+    public string Token { get; set; } = null!;
+    public DateTime ExpiresAt { get; set; }
+    public bool Revoked { get; set; }
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
+}
+\end{lstlisting}
+
+\texttt{Token} almacena el valor del token de actualización. \texttt{ExpiresAt} define su vencimiento. \texttt{Revoked} permite invalidarlo antes de esa fecha. \texttt{UserId} y \texttt{User} asocian cada token con su usuario.
+
+
+\section{AuditLog}
+
+La entidad \texttt{AuditLog} registra las operaciones realizadas sobre el sistema y constituye la base para las funcionalidades de auditoría y trazabilidad descritas en la sección \ref{section:backend} del Capítulo 4. Contempla tanto usuarios autenticados como reporteros anónimos.
+
+\begin{table}[H]
+\centering
+\caption{Campos de la entidad \texttt{AuditLog}}
+\label{tab:auditlog}
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\texttt{UserId} & \texttt{Guid?} & Usuario autenticado (nulo si es anónimo) \\
+\texttt{UserEmail} & \texttt{string?} & Correo del usuario autenticado \\
+\texttt{ReporterName} & \texttt{string?} & Nombre del reportero anónimo \\
+\texttt{ReporterEmail} & \texttt{string?} & Correo del reportero anónimo \\
+\texttt{Action} & \texttt{string} & Operación: Create, Update, Delete, View \\
+\texttt{EntityName} & \texttt{string} & Entidad afectada (ej. AefiReport) \\
+\texttt{EntityId} & \texttt{Guid?} & Identificador del registro afectado \\
+\texttt{Details} & \texttt{string?} & Descripción legible de la acción \\
+\texttt{OldValues} & \texttt{string?} & Datos antes del cambio (JSON) \\
+\texttt{NewValues} & \texttt{string?} & Datos después del cambio (JSON) \\
+\texttt{IpAddress} & \texttt{string?} & Dirección IP de origen \\
+\texttt{CreatedAt} & \texttt{DateTime} & Fecha y hora de la operación \\
+\hline
+\end{tabular}
+\end{table}

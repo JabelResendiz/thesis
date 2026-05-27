@@ -70,5 +70,5 @@ Después llegas a una conclusión parcial resumida  porque en la tabla se sintet
 
 
 
-
+```csharp
 

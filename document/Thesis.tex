@@ -13,6 +13,8 @@
 \usepackage{todonotes}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
 \usepackage{enumitem}
 \usepackage{multicol}
 \usepackage{graphicx}
@@ -71,6 +73,23 @@
     tabsize=4
 }
 
+\lstset{
+    basicstyle=\ttfamily\small\color{white},
+    breaklines=true,
+    frame=none,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4,
+    showstringspaces=false,
+    backgroundcolor=\color{darkgray},
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+             {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+             {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+}
+
+
 \lstset{style=mystyle}
 
 
@@ -115,7 +134,7 @@
 
 % \include{MainMatter/Introduction}
 % \include{MainMatter/Background}
- \include{MainMatter/Proposal}
+% \include{MainMatter/Proposal}
 \include{MainMatter/Implementation}
 \include{MainMatter/Result}
 

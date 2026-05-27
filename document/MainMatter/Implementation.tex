@@ -1,26 +1,589 @@
-\chapter{Detalles de Implementación}\label{chapter:implementation}
+\chapter{Detalles de Implementación}
+\label{chapter:implementation}
 
-\section{Tecnologías usadas}
+\section{Introducción}
 
-\section{Estructura del proyecto}
+Este capítulo describe los principales aspectos relacionados con la implementación del sistema web desarrollado para el autorreporte y la gestión operativa de \gls{esavi}. 
+El contenido aborda las tecnologías y herramientas incorporadas durante el desarrollo, la organización estructural de la solución y los mecanismos implementados tanto en el backend como en el frontend.
 
-\section{Implementación backend}
+La implementación materializa las decisiones arquitectónicas definidas en el capítulo anterior mediante una arquitectura modular basada en los principios de Clean Architecture y Domain-Driven Design. 
+La solución integra mecanismos de autenticación, comunicación asíncrona, persistencia de datos y validación de información, con el propósito de garantizar escalabilidad, mantenibilidad y seguridad.
+
+Además, el capítulo expone los principales componentes funcionales de la plataforma, incluyendo el registro de reportes de ESAVI, la gestión de revisiones médicas, la asignación de responsables y el sistema de notificaciones. 
+Finalmente, el contenido aborda elementos asociados al despliegue y la organización técnica de la aplicación.
+
+\section{Tecnologías y herramientas utilizadas}
+\label{section:technologies}
+
+% \subsection{Tecnologías del backend}
+
+% Hablar de .NET, C\#, Entity Framework Core, RabbitMQ, etc.
+
+% \subsection{Tecnologías del frontend}
+
+% Hablar de React, TypeScript, Tailwind CSS, .
+
+% \subsection{Sistema gestor de bases de datos}
+
+% Hablar de SQL y en particular de MySQL.
+
+\subsection{Herramientas de infraestructura y despliegue}
+
+\textbf{Docker.} La contenedorización de la aplicación empleó \textbf{Docker} para garantizar la consistencia entre los entornos de desarrollo, pruebas y producción. La documentación oficial de Docker establece que los contenedores empaquetan el código junto con todas sus dependencias, lo que asegura que el software funcione de manera uniforme en cualquier infraestructura \cite{docker-overview}. Esta característica elimina el clásico problema de ``en mi máquina funciona'' y facilita la distribución del proyecto.
+
+\textbf{Railway.} El despliegue de la API, la base de datos MySQL y los servicios externos como RabbitMQ recayó en \textbf{Railway}, una plataforma como servicio que permite aprovisionar infraestructura en la nube y conectar el despliegue directamente con un repositorio de GitHub \cite{railway-docs}. Railway gestiona de forma automática las variables de entorno, los volúmenes de datos y la exposición de puertos, y activa una nueva construcción y publicación con cada cambio en la rama principal, lo que reduce significativamente el esfuerzo operativo durante el desarrollo \cite{railway-deployments}.
+
+\textbf{Vercel.} Para el \textit{frontend}, el despliegue recayó en \textbf{Vercel}, una plataforma optimizada para aplicaciones web modernas que ofrece integración continua con repositorios de GitHub y distribución global mediante una red de entrega de contenido \cite{vercel-docs}.
+
+Es importante señalar que tanto Railway como Vercel constituyen soluciones de desarrollo y demostración, adoptadas exclusivamente para facilitar que el equipo de investigadores del Instituto Finlay de Vacunas (IFV) y los tutores del proyecto pudieran observar los avances de forma remota y en tiempo real. La arquitectura del sistema está diseñada para migrar y contenerizar en servidores físicos dedicados del IFV cuando el proyecto transite a la etapa de producción, garantizando así el control institucional sobre los datos y la infraestructura.
+
+\subsection{Herramientas de apoyo al desarrollo}
+
+\textbf{Visual Studio Code.} El desarrollo del proyecto transcurrió en \textbf{Visual Studio Code}, con las extensiones oficiales para C\# y Docker. 
+Microsoft recomienda este entorno para el desarrollo en .NET, ya que ofrece una integración completa con el SDK y la CLI de .NET \cite{vscode-dotnet}. 
+Dicha integración permite crear, compilar y ejecutar aplicaciones directamente desde el editor, lo que agiliza el flujo de trabajo \cite{vscode-csharp}.
+
+\textbf{Git y GitHub.} El control de versiones recayó con \textbf{Git} y el alojamiento del código en \textbf{GitHub}. 
+GitHub proporciona un historial completo de cambios donde es posible consultar qué modificaciones ocurrieron, quién las hizo y por qué \cite{github-commits}. 
+Al tratarse de un sistema distribuido, cada copia local del repositorio contiene el historial completo del proyecto, lo que permite recuperar cualquier estado anterior del código sin depender del servidor central \cite{pro-git-distributed}.
+
+\textbf{Swagger (Swashbuckle).} Para documentar y probar la API, el proyecto incorporó \textbf{Swagger} a través de la librería Swashbuckle, que genera automáticamente una interfaz web con todos los endpoints, sus parámetros y permite ejecutar peticiones de prueba directamente desde el navegador \cite{swagger-ui}.
+
+
+
+\section{Estructura general de la solución}
+\label{section:solution_structure}
+
+\subsection{Organización de proyectos}
+
+\subsection{Separación por capas y responsabilidades}
+
+\subsection{Estructura modular del sistema}
+
+
+
+
+\section{Implementación del backend}
 \label{section:backend}
 
 \subsection{Capa de Dominio}
 
-\subsection{Capa de Infraestructura}
+La capa de dominio constituye el núcleo del sistema y no depende de ningún otro proyecto de la solución ni de paquetes externos. 
+Contiene las entidades de negocio, los objetos de valor, los enumerados, los eventos de dominio y las reglas intrínsecas del dominio de farmacovigilancia. 
+Su independencia garantiza que los cambios en la infraestructura o en la presentación no afecten la lógica central del negocio.
+
+\subsubsection{Entidades y agregados}
+
+El diseño de las entidades parte del modelo de base de datos definido en el Capítulo 3. Cada tabla se modela como una clase de C\# que hereda de una jerarquía de clases base diseñada para unificar propiedades comunes y permitir la creación de interfaces genéricas en la capa de aplicación.
+
+La jerarquía de herencia parte de \texttt{BasicEntity}, una clase abstracta que define las marcas de tiempo comunes a todas las entidades del sistema:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Clase base BasicEntity con marcas de tiempo}, label={lst:basicentity}]
+public abstract class BasicEntity
+{
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+\end{lstlisting}
+
+Para contemplar entidades con distintos tipos de identificador, el dominio define la interfaz genérica \texttt{IEntity<TId>}:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Interfaz genérica para identificadores de entidad}, label={lst:ientity}]
+public interface IEntity<TId>
+{
+    TId Id { get; init; }
+}
+\end{lstlisting}
+
+A partir de esta interfaz, el dominio proporciona dos clases abstractas especializadas. La clase \texttt{GuidEntity} constituye la norma para la mayoría de las entidades del sistema y utiliza un \texttt{Guid} como identificador:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Clase GuidEntity para entidades con identificador Guid}, label={lst:guidentity}]
+public abstract class GuidEntity : BasicEntity, IEntity<Guid>
+{
+    public Guid Id { get; init; } = new Guid();
+}
+\end{lstlisting}
+
+Para entidades de catálogo que requieren un identificador entero —como las listas de provincias y municipios, cuyos registros son pocos, estables y no requieren las propiedades de seguridad de un \texttt{Guid}—, existe la clase \texttt{CatalogEntity}.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Clase CatalogEntity para entidades con identificador entero}, label={lst:catalogentity}]
+public abstract class CatalogEntity : BasicEntity, IEntity<int>
+{
+    public int Id { get; init; }
+}
+\end{lstlisting}
+
+La elección de \texttt{Guid} como tipo de identificador para las entidades principales responde a criterios de seguridad y escalabilidad. La documentación oficial de Microsoft establece que un \texttt{Guid} (Globally Unique Identifier) es un número pseudoaleatorio de 128 bits con una probabilidad de colisión tan baja que resulta estadísticamente insignificante \cite{microsoft_guid}. A diferencia de los identificadores enteros autoincrementales, un \texttt{Guid} no revela la cantidad de registros en una tabla y no es predecible, lo que refuerza la seguridad de la aplicación. Esta propiedad permite, por ejemplo, exponer el identificador en una URL sin riesgo de que un usuario malintencionado itere sobre valores consecutivos.
+
+Gracias a que \texttt{BasicEntity} unifica las propiedades comunes \texttt{CreatedAt} y \texttt{UpdatedAt}, la capa de aplicación puede definir interfaces genéricas que operan sobre cualquier entidad del sistema sin necesidad de implementaciones específicas por cada tipo. El siguiente fragmento, extraído de la capa de aplicación, ilustra esta ventaja:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Interfaz genérica que opera sobre cualquier entidad que herede de BasicEntity}, label={lst:genericinterface}]
+public interface IGenericRepository<T> where T : BasicEntity
+{
+    Task<T> GetByIdAsync<TId>(TId elementId);
+    Task DeleteByIdAsync<TId>(TId elementId);
+}
+\end{lstlisting}
+
+La restricción \texttt{where T : BasicEntity} garantiza en tiempo de compilación que la interfaz solo reciba entidades que posean las marcas de tiempo \texttt{CreatedAt} y \texttt{UpdatedAt}, independientemente del tipo de su identificador. Así, el sistema puede incorporar nuevas entidades —ya sea con \texttt{Guid} o con \texttt{int} como identificador— sin modificar las interfaces genéricas existentes, en cumplimiento del Principio de Abierto/Cerrado de \texttt{SOLID}.
+
+
+
+\paragraph{Entidades User y Role}
+
+Para la gestión de usuarios y roles, el proyecto emplea las clases \texttt{IdentityUser} y \texttt{IdentityRole} del paquete \texttt{Microsoft.AspNetCore.Identity}. Esta decisión evita implementar desde cero funcionalidades críticas como el almacenamiento seguro de contraseñas, la generación de tokens de verificación y el bloqueo de cuentas tras intentos fallidos.
+
+La entidad \texttt{User} hereda de \texttt{IdentityUser<Guid>} y extiende el modelo con los campos requeridos por el dominio:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Entidad User que hereda de IdentityUser<Guid>}, label={lst:user}]
+public class User : IdentityUser<Guid>
+{
+    public Guid RoleId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+\end{lstlisting}
+
+Aunque la clase derivada solo declara tres propiedades adicionales, la herencia de \texttt{IdentityUser<Guid>} aporta un conjunto completo de campos que cubren todas las necesidades de gestión de identidad \cite{microsoft_identity_model}. \texttt{UserName} almacena el nombre de usuario único para el inicio de sesión. \texttt{Email} contiene el correo electrónico empleado para notificaciones y verificación de cuenta. \texttt{PasswordHash} guarda el resultado del algoritmo de hashing y nunca contiene la contraseña en texto plano. \texttt{PhoneNumber} registra el teléfono para autenticación de dos factores o recuperación de cuenta. \texttt{EmailConfirmed} indica si el usuario verificó su correo electrónico. \texttt{LockoutEnd} establece la fecha y hora hasta la cual la cuenta permanece bloqueada tras superar el máximo de intentos fallidos. \texttt{AccessFailedCount} lleva el contador de intentos fallidos consecutivos. \texttt{SecurityStamp} almacena un valor aleatorio que cambia al modificar credenciales, lo que invalida automáticamente sesiones y tokens anteriores.
+
+La entidad \texttt{Role} hereda de \texttt{IdentityRole<Guid>} y mantiene la misma coherencia en el tipo de identificador:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Entidad Role que hereda de IdentityRole<Guid>}, label={lst:role}]
+public class Role : IdentityRole<Guid>{ }
+\end{lstlisting}
+
+La herencia de \texttt{IdentityRole<Guid>} proporciona las propiedades \texttt{Name} (nombre único del rol) y \texttt{NormalizedName} (versión normalizada para búsquedas). 
+La relación entre usuarios y roles sigue una restricción de uno a muchos: cada usuario posee un único rol mediante la clave foránea \texttt{RoleId} en la entidad \texttt{User}, mientras que un mismo rol puede agrupar a múltiples usuarios. 
+Esta decisión simplifica la administración de permisos y refleja los perfiles definidos en el diseño del sistema (administrador, médico evaluador y jefe de vacunación municipal).
+
+
+El uso de \texttt{Guid} como tipo de identificador en \texttt{IdentityUser} y \texttt{IdentityRole} mantiene la coherencia con la clase \texttt{GuidEntity} definida para el resto de las entidades del sistema, lo que permite que las tablas de identidad compartan el mismo tipo de clave primaria que las tablas de negocio.
+
+
+\paragraph{Mecanismo de hashing de contraseñas}
+
+La documentación oficial de Microsoft describe que el \texttt{PasswordHasher} de Identity implementa el algoritmo PBKDF2 (Password-Based Key Derivation Function 2), estándar del RFC 2898 que deriva una clave segura a partir de una contraseña \cite{rfc2898}. 
+El algoritmo toma la contraseña del usuario, la combina con un \textit{salt} criptográficamente aleatorio de 128 bits y aplica repetidamente la función HMAC-SHA256\footnote{HMAC-SHA256: código de autenticación de mensajes basado en hash \cite{rfc2104}. Funciona aplicando de forma anidada el algoritmo SHA-256 a la combinación de una clave secreta (o \textit{salt}) con el mensaje. Internamente, la clave se procesa mediante una operación XOR con una secuencia de relleno interna (\textit{ipad}) antes de aplicar el primer hash al mensaje; posteriormente, el resultado se combina mediante XOR con una secuencia externa (\textit{opad}) y se somete a un segundo hash SHA-256, garantizando simultáneamente la integridad y autenticidad del resultado.}
+durante 100,000 iteraciones como valor predeterminado \cite{microsoft_password_hasher}. Cada iteración adicional duplica el costo computacional de un ataque por fuerza bruta sin afectar perceptiblemente el tiempo de verificación para un usuario legítimo. El formato del hash generado produce una cadena con la siguiente estructura \cite{microsoft_hash_format}:
+
+\begin{center}
+\texttt{Base64(salt).Base64(subkey)}
+\end{center}
+
+Donde el \textit{salt} es un valor aleatorio único por cada contraseña y el \textit{subkey} es el resultado de aplicar PBKDF2 durante el número configurado de iteraciones.
+
+Este mecanismo garantiza tres propiedades de seguridad esenciales:
+
+\begin{itemize}
+    \item \textbf{Unicidad del hash:} dos usuarios con la misma contraseña producen hashes completamente diferentes porque el \textit{salt} generado para cada uno es distinto. Esto impide que un atacante compare hashes para identificar contraseñas idénticas dentro de una base de datos comprometida \cite{owasp_password_storage}.
+    
+    \item \textbf{Irreversibilidad computacional:} PBKDF2 es una función unidireccional. El elevado número de iteraciones convierte el cálculo del hash en un proceso deliberadamente costoso en tiempo de CPU, lo que ralentiza significativamente cualquier intento de ataque por fuerza bruta incluso si el atacante posee hardware especializado \cite{microsoft_password_hasher}.
+    
+    \item \textbf{Invalidación de sesiones previas:} la propiedad \texttt{SecurityStamp}, generada aleatoriamente y modificada cada vez que el usuario cambia su contraseña, se incluye en la generación de tokens de autenticación. Si un atacante obtiene credenciales antiguas, el cambio de \texttt{SecurityStamp} invalida inmediatamente cualquier sesión o token previo \cite{microsoft_security_stamp}.
+\end{itemize}
+
+La verificación de la contraseña durante el inicio de sesión se realiza internamente mediante el método \texttt{VerifyHashedPassword}, que recalcula el hash con el \textit{salt} almacenado y compara los resultados en tiempo constante, sin que la aplicación necesite conocer el texto plano de la contraseña en ningún momento \cite{microsoft_password_hasher}.
+
+
+
+
+
+\paragraph{Generación de tokens para verificación de identidad}
+
+El paquete Identity incluye proveedores de tokens integrados que generan cadenas criptográficamente seguras para distintos propósitos. 
+El sistema emplea estos tokens durante el proceso de registro para verificar que un usuario controla la dirección de correo electrónico declarada y para permitir el establecimiento seguro de su contraseña inicial. 
+La documentación oficial explica que el proveedor predeterminado \texttt{DataProtectorTokenProvider} utiliza internamente la API de Protección de Datos de ASP.NET Core, la cual aplica cifrado autenticado (AES-256-CBC\footnote{AES-256-CBC (Advanced Encryption Standard con modo Cipher Block Chaining y clave de 256 bits): algoritmo de cifrado simétrico estandarizado por el Instituto Nacional de Estándares y Tecnología (NIST, por sus siglas en inglés), agencia del gobierno de Estados Unidos. Transforma datos legibles en texto cifrado usando una clave secreta, y el modo CBC garantiza que mensajes idénticos produzcan resultados cifrados diferentes \cite{nist_aes}.} con HMAC-SHA256) sobre los datos del token \cite{microsoft_token_providers}. 
+Esto garantiza tres propiedades de seguridad esenciales: el token no revela información del usuario si es interceptado, cualquier modificación invalida la firma y provoca el rechazo del servidor, y un atacante no puede generar un token válido sin acceder a las claves de protección del servidor \cite{microsoft_data_protection}.
+
+El token posee una vigencia predeterminada de 24 horas, controlada por la propiedad \texttt{TokenLifespan} de \texttt{DataProtectionTokenProviderOptions}, transcurrida la cual expira automáticamente \cite{microsoft_identity_config}. 
+La validación ocurre en el servidor sin necesidad de consultar una tabla de tokens pendientes, lo que simplifica la arquitectura y elimina la necesidad de limpiar tokens expirados. 
+El caso de uso concreto que orquesta la generación y validación de estos tokens durante el registro de médicos evaluadores se detalla en la sección dedicada a la capa de aplicación.
+
+\paragraph{Configuración de seguridad adicional}
+
+Además de los valores predeterminados, el proyecto configura el número de iteraciones del algoritmo PBKDF2 a 600,000 mediante la clase \texttt{PasswordHasherOptions}:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de iteraciones de hashing en Program.cs}, label={lst:passwordoptions}]
+builder.Services.Configure<PasswordHasherOptions>(options =>
+{
+    options.IterationCount = 600_000;
+});
+\end{lstlisting}
+
+Este ajuste sigue las recomendaciones actuales de OWASP para el algoritmo PBKDF2-SHA256, que establecen un mínimo de 600,000 iteraciones para aplicaciones desplegadas en entornos de producción \cite{owasp_password_storage}. El incremento respecto al valor predeterminado de 100,000 iteraciones aumenta el costo computacional de cada intento de verificación de contraseña en un factor de seis, lo que dificulta aún más los ataques de diccionario sin afectar perceptiblemente el tiempo de inicio de sesión de un usuario legítimo.
+
+
+
+\subsubsection{Objetos de valor}
+
+El dominio incluye el objeto de valor \texttt{IdentityNumber}, que encapsula la validación del formato del carné de identidad cubano, la extracción de la fecha de nacimiento y el cálculo de la edad. Esta decisión responde a que varias entidades del sistema —\texttt{VaccinatedSubject}, \texttt{Reporter} y \texttt{MedicalReviewer}— contienen un carné de identidad y requieren las mismas operaciones sobre él. Al extraer esta lógica en un objeto de valor inmutable, se evita la duplicación de código y se garantiza que cualquier validación o cálculo sobre el carné se aplique de manera uniforme en todo el sistema.
+
+\subsubsection{Enumerados}
+
+Los enumerados representan clasificaciones propias del negocio cuyos valores no cambian durante la ejecución de la aplicación. El dominio los define mediante el tipo \texttt{enum} de C\#, lo que garantiza que toda la aplicación comparta las mismas categorías sin riesgo de discrepancias entre capas. Estos tipos no constituyen entidades ni tablas en la base de datos porque sus valores son fijos y no requieren persistencia independiente.
+
+En contraste, conceptos como \texttt{Province} y \texttt{Municipality} sí se modelan como entidades y tablas. Existe una relación entre ambos —cada municipio pertenece a una provincia— que resulta más clara de expresar mediante llaves foráneas que mediante un enumerado extenso. Además, el sistema realiza operaciones frecuentes de búsqueda y filtrado sobre estos datos, para las cuales una tabla indexada ofrece mejor rendimiento. Por último, la lista de provincias y municipios puede actualizarse ocasionalmente por cambios administrativos, y una tabla permite modificarla sin recompilar la aplicación.
+
+
+\subsubsection{Eventos de dominio}
+
+Los eventos de dominio representan sucesos relevantes del negocio que otras partes del sistema deben conocer. El proyecto los define como clases simples con propiedades que identifican los datos del suceso y los utiliza para desencadenar el envío de notificaciones por correo electrónico sin acoplar la lógica de envío a las entidades. Esta arquitectura mantiene el dominio aislado de los detalles de infraestructura y permite agregar nuevos manejadores sin modificar las entidades ni los casos de uso.
+
+Durante la implementación surgieron además dos entidades de infraestructura no previstas en el diseño inicial: \texttt{RefreshToken}, que permite la renovación de sesiones sin reautenticación, y \texttt{AuditLog}, que registra las operaciones realizadas sobre el sistema con fines de trazabilidad. Ambas heredan de \texttt{GuidEntity} y su definición detallada se presenta en el Anexo \ref{anexo:entidades_infraestructura}.
+
 
 \subsection{Capa de Aplicación}
 
+\subsubsection{Implementación del patrón CQRS}
+
+\subsubsection{Casos de uso y servicios de aplicación}
+
+\subsubsection{Validaciones y manejo de solicitudes}
+
+\subsubsection{Mapeo y transformación de datos}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Capa de Infraestructura}
+
+\subsubsection{Persistencia de datos}
+
+\subsubsection{Configuración de Entity Framework Core}
+
+\subsubsection{Migraciones y acceso a datos}
+
+\subsubsection{Integración con servicios externos}
+
+\subsubsection{Comunicación asíncrona mediante mensajería}
+
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Capa de Presentación}
+
+\subsubsection{Diseño de la API REST}
+
+\subsubsection{Controladores y endpoints}
+
+\subsubsection{Documentación de la API}
+
+\subsubsection{Manejo de excepciones y respuestas}
+
+
+
+
+
+
+
+
+
 
 \subsection{Seguridad de la aplicación}
 
 
+\subsubsection{Autenticación basada en JWT y Refresh Token}
 
-\section{Implementación frontend}
+El sistema emplea JSON Web Tokens (JWT) como mecanismo de autenticación sin estado, combinado con tokens de actualización (refresh tokens) almacenados en cookies HttpOnly. Esta combinación responde a dos objetivos contrapuestos: el token de acceso debe tener una vida útil corta para limitar el daño en caso de robo, pero el usuario no debe verse obligado a iniciar sesión repetidamente.
 
-\subsection{Formularios}
+\paragraph{JSON Web Token (JWT)}
 
-\subsection{Incorporación|}
+Un JWT es un estándar abierto definido en el RFC 7519 que permite transmitir información verificable entre dos partes mediante un token firmado digitalmente \cite{rfc7519}. El token consta de tres secciones codificadas en Base64 y separadas por puntos: encabezado, carga útil y firma. La carga útil contiene los \textit{claims} —afirmaciones sobre el usuario, como su identificador, nombre y rol—, mientras que la firma garantiza que el token no fue alterado desde su emisión.
+
+El sistema genera el JWT mediante la clase \texttt{JwtTokenGenerator}, que utiliza HMAC-SHA256 como algoritmo de firma con una clave secreta simétrica almacenada en variables de entorno. Esta clave nunca aparece en el código fuente ni se expone al cliente.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Generación del JWT en JwtTokenGenerator}, label={lst:jwttokengenerator}]
+public async Task<string> GenerateToken(User user)
+{
+    var key = new SigningCredentials(
+        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
+        SecurityAlgorithms.HmacSha256);
+
+    var role = await _userManager
+            .GetRolesAsync(user)
+            .FirstOrDefault();
+
+    var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.GivenName, user.UserName!),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.Role, role!)
+    };
+
+    var securityToken = new JwtSecurityToken(
+        signingCredentials: key,
+        issuer: _jwtSettings.Issuer,
+        audience: _jwtSettings.Audience,
+        expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+        claims: claims);
+
+    return new JwtSecurityTokenHandler().WriteToken(securityToken);
+}
+\end{lstlisting}
+
+El método define cuatro claims en el token: identificador del usuario (\texttt{Sub}), nombre de usuario (\texttt{GivenName}), identificador único del token (\texttt{Jti}) y rol del usuario (\texttt{Role}). La expiración se configura en 15 minutos mediante \texttt{JwtSettings.ExpiryMinutes}.
+
+El middleware de ASP.NET Core valida cada solicitud entrante verificando cuatro propiedades del token: que el emisor y la audiencia coincidan con los valores configurados, que la firma HMAC-SHA256 sea correcta y que el token no haya expirado. Si un atacante intercepta el JWT, puede usarlo durante un máximo de 15 minutos, transcurridos los cuales el token expira y el middleware lo rechaza automáticamente.
+
+\paragraph{Refresh Token en cookie HttpOnly}
+
+Para compensar la corta vida del JWT sin sacrificar seguridad, el sistema implementa refresh tokens. Un refresh token es un valor aleatorio generado criptográficamente que permite obtener nuevos tokens de acceso sin que el usuario vuelva a ingresar sus credenciales. El método \texttt{GenerateRefreshToken} utiliza la clase \texttt{RandomNumberGenerator} de .NET, una alternativa criptográficamente segura frente a generadores predecibles como \texttt{System.Random} \cite{microsoft_random}.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Generación criptográfica del refresh token}, label={lst:generaterefreshtoken}]
+private string GenerateRefreshToken()
+{
+    using var rng = RandomNumberGenerator.Create();
+    var randomBytes = new byte[64];
+    rng.GetBytes(randomBytes);
+    return Convert.ToBase64String(randomBytes);
+}
+\end{lstlisting}
+
+El método produce 64 bytes de entropía criptográfica y los codifica en Base64. Este valor se almacena en la base de datos junto con su fecha de vencimiento y el identificador del usuario.
+
+La seguridad de este mecanismo descansa en tres decisiones reflejadas en la configuración de la cookie que transporta el refresh token:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de la cookie del refresh token}, label={lst:cookieconfig}]
+Response.Cookies.Append("refreshToken", authResult.RefreshToken,
+    new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.None,
+        Expires = DateTime.UtcNow.AddHours(_jwtSettings.RefreshTokenExpiryHours)
+    });
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{HttpOnly = true}: impide que JavaScript acceda al valor de la cookie, lo que neutraliza los ataques de cross-site scripting (XSS), ataque que inyecta código JavaScript malicioso en una página web legítima para robar datos del usuario\cite{owasp_httponly}.
+    \item \texttt{Secure = true}: restringe la transmisión de la cookie a conexiones HTTPS, evitando su exposición en redes no cifradas.
+    \item \texttt{SameSite = None}: permite el envío de la cookie desde dominios distintos al del backend —necesario cuando frontend y backend residen en servidores separados—, pero el estándar obliga a combinarlo con \texttt{Secure = true} \cite{owasp_cookies}. Esta configuración se complementa con una política CORS (Cross-Origin Resource Sharing) que restringe los dominios autorizados a realizar solicitudes a la API.
+    \item \texttt{Expires}: establece la caducidad de la cookie en 8 horas mediante el valor definido en las variables de entorno.
+\end{itemize}
+
+En el entorno de producción previsto para el Instituto Finlay, donde ambos componentes compartirán el mismo dominio, la política CORS dejará de ser necesaria y \texttt{SameSite} podrá restringirse a \texttt{Lax}, lo que reforzará la seguridad al impedir el envío de la cookie en solicitudes cross-site.
+
+Además, cada vez que el cliente utiliza un refresh token para obtener un nuevo JWT, el sistema aplica rotación: revoca el token anterior y emite uno nuevo. Si un atacante logra robar un refresh token, la rotación limita su utilidad a una única renovación, tras la cual el token legítimo queda invalidado y el usuario deberá iniciar sesión nuevamente.
+
+\paragraph{Envío del token en cada solicitud}
+
+El cliente recibe el JWT en el cuerpo de la respuesta de inicio de sesión y lo almacena en memoria. En cada solicitud subsiguiente, lo incluye en el encabezado \texttt{Authorization: Bearer <token>}, conforme al estándar definido en el RFC 6750 \cite{rfc6750}. El refresh token, por su parte, viaja automáticamente en la cookie sin intervención del código frontend, lo que reduce la superficie de ataque al no exponerlo a lógica JavaScript.
+
+\subsubsection{Autorización basada en roles}
+
+Una vez que el middleware de autenticación valida el JWT y establece la identidad del usuario, el sistema delega el control de acceso en dos mecanismos complementarios: el atributo \texttt{[Authorize]} para restringir endpoints por rol, y un servicio de contexto de usuario para recuperar la identidad del usuario autenticado dentro de la capa de aplicación.
+
+El atributo \texttt{[Authorize(Roles = "SectionResponsible")]} indica al middleware de autorización que solo los usuarios cuyo claim \texttt{Role} coincida con ese valor pueden ejecutar el método. Si el token no contiene el rol requerido, el middleware retorna automáticamente un código 403 (Forbidden) con un mensaje JSON, según la configuración establecida en el evento \texttt{OnForbidden} del JWT Bearer.
+
+Para que la capa de aplicación pueda acceder a la identidad del usuario autenticado sin que el frontend la envíe manualmente en cada solicitud, el sistema implementa \texttt{UserContextService}. Este servicio extrae el claim \texttt{NameIdentifier} del token JWT validado —disponible en el \texttt{HttpContext} de la solicitud— y lo expone mediante el método \texttt{GetUserId()}:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Servicio de contexto de usuario autenticado}, label={lst:usercontext}]
+public class UserContextService : IUserContextService
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public UserContextService(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public Guid GetUserId()
+    {
+        var user = _httpContextAccessor.HttpContext?.User
+            ?? throw new UnauthorizedAccessException("No authenticated user.");
+
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? throw new UnauthorizedAccessException("User ID not found in token.");
+
+        return Guid.Parse(userId);
+    }
+}
+\end{lstlisting}
+
+El método \texttt{GetUserId()} obtiene el \texttt{HttpContext} de la solicitud actual mediante \texttt{IHttpContextAccessor} y recupera el claim \texttt{ClaimTypes.NameIdentifier} —cuyo valor se estableció durante la generación del JWT con \texttt{JwtRegisteredClaimNames.Sub}—.
+Este enfoque elimina la necesidad de que cada endpoint reciba explícitamente el identificador del usuario como parámetro, lo que reduce el riesgo de suplantación: el identificador no puede ser manipulado por el cliente porque proviene del token validado por el servidor.
+
+La capa de aplicación consume este servicio para personalizar las consultas según el usuario autenticado. 
+El siguiente fragmento muestra cómo un revisor médico obtiene únicamente los reportes que le fueron asignados, sin recibir como parámetro su propio identificador:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Uso de UserContextService en la capa de aplicación}, label={lst:usercontextusage}]
+public async Task<PagedResultDto<ReportMedicalReviewerDto>> GetReportAssigment(
+    PagedRequestDto paged,
+    ReportMedicalReviewerFilter filter)
+{
+    var userId = _userContextService.GetUserId();
+
+    var medicalReviewer = await _unitOfWork
+        .GetRepository<MedicalReviewer>()
+        .FirstOrDefaultAsync(sr => sr.UserId == userId)
+        ?? throw new UnauthorizedAccessException("User is not a medical reviewer");
+
+    var reportIds = _unitOfWork
+        .GetRepository<MedicalReviewAssignment>()
+        .GetAllByItems(mra =>
+            mra.MedicalReviewerId == medicalReviewer.Id &&
+            mra.Status == ReviewAssignmentStatus.Pending)
+        .Select(a => a.AefiReportId)
+        .Distinct();
+
+    var query = _unitOfWork
+        .GetRepository<AefiReport>()
+        .GetAllByItems(r => reportIds.Contains(r.Id));
+
+    // Filtrado, paginación y proyección a DTO...
+}
+\end{lstlisting}
+
+El método obtiene el identificador del usuario desde el token, lo utiliza para localizar al revisor médico asociado y filtra los reportes cuyas asignaciones coincidan con ese revisor. En ningún momento el frontend envía el identificador del usuario; este se deriva exclusivamente del token validado, lo que garantiza que un usuario autenticado solo pueda acceder a sus propios recursos.
+
+
+
+\subsubsection{Protección de credenciales y contraseñas}
+
+\subsubsection{Validación de datos y protección ante ataques comunes}
+
+\subsubsection{Limitación de velocidad}
+
+La limitación de velocidad (en inglés, \textit{rate limiting}) restringe el número de solicitudes que un cliente puede realizar a la API en un período de tiempo determinado. Su propósito es proteger el sistema contra ataques de fuerza bruta, enumeración de recursos y denegación de servicio \cite{microsoft_rate_limiting}. Además, evita que picos de tráfico legítimo o bucles accidentales en el frontend consuman todos los recursos del servidor y degraden la experiencia del resto de usuarios.
+
+Los endpoints públicos del sistema ya cuentan con CAPTCHA como primera barrera, según se describió anteriormente.
+El rate limiting actúa como segunda barrera: si un atacante resuelve el CAPTCHA para cada intento, el límite de solicitudes por minuto hace inviable cualquier ataque masivo. Para los endpoints protegidos con JWT, el rate limiting constituye la defensa principal contra el abuso por parte de usuarios autenticados o tokens comprometidos.
+
+\paragraph{Limitación por IP y por sesión}
+
+El sistema aplica un limitador global que contabiliza todas las solicitudes de un mismo cliente, independientemente del endpoint al que se dirijan. Para clientes anónimos —como un reportante que envía un formulario público—, el límite se aplica por dirección IP: 100 solicitudes por minuto. Para usuarios autenticados, el límite se aplica por identificador de sesión extraído del JWT: 200 solicitudes por minuto. Esta diferenciación evita que usuarios legítimos que comparten red —como el personal de un mismo centro de salud— resulten bloqueados por el comportamiento de un tercero, y otorga mayor margen a quienes ya superaron la barrera de autenticación. Una solicitud solo se procesa si el limitador global lo permite.
+
+\paragraph{Políticas complementarias por tipo de operación}
+
+Sobre esta base, el sistema añade políticas específicas que restringen aún más ciertos endpoints según la criticidad de la operación. 
+Cada política define un límite de solicitudes, una ventana de tiempo y un comportamiento de encolamiento. 
+La ventana fija restablece el contador al cumplirse el intervalo; la ventana deslizante distribuye el límite en segmentos para suavizar los picos de tráfico legítimo. 
+El encolamiento permite retener las solicitudes excedentes durante un breve período antes de rechazarlas, lo que evita que un pico puntual de actividad legítima genere errores inmediatos al cliente \cite{microsoft_rate_limiting}.
+
+\begin{itemize}
+    \item \texttt{Auth}: 3 solicitudes por minuto para endpoints de autenticación, sin encolamiento. Un usuario legítimo inicia sesión pocas veces al día; tres intentos por minuto bastan para la operación normal y hacen inviable un ataque de fuerza bruta incluso si el atacante resuelve el CAPTCHA en cada intento.
+    \item \texttt{Command}: 5 solicitudes por minuto para operaciones de escritura estándar, como la creación de reportes ESAVI, con cola de hasta 5 solicitudes. Equivale a un reporte cada 12 segundos, ritmo suficiente para un centro de salud con múltiples reportantes simultáneos.
+    \item \texttt{ReportDaily}: 30 solicitudes por día para la creación de reportes desde una misma IP, mediante ventana deslizante de 24 horas dividida en 24 segmentos. Cubre la actividad diaria de un centro de salud activo y acota el daño máximo de un ataque automatizado a 30 reportes falsos, los cuales pueden identificarse y eliminarse manualmente.
+    \item \texttt{CommandDaily}: 20 solicitudes por día para operaciones administrativas como la asignación de reportes o la finalización de revisiones médicas. Refleja el ritmo real de trabajo de un jefe de vacunación municipal o médico evaluador.
+    \item \texttt{Query}: 60 solicitudes por minuto para operaciones de lectura, con ventana deslizante dividida en 3 segmentos y cola de hasta 10 solicitudes. Las consultas no modifican el estado del sistema; una consulta por segundo permite una navegación fluida mientras dificulta la extracción masiva de datos.
+\end{itemize}
+
+El siguiente fragmento muestra la configuración de dos de estas políticas dentro de la clase \texttt{RateLimitingMiddleware}:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de políticas de rate limiting}, label={lst:ratelimiting}]
+// Autenticación: muy restrictivo
+options.AddFixedWindowLimiter("Auth", config =>
+{
+    config.PermitLimit = 3;
+    config.Window = TimeSpan.FromMinutes(1);
+    config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    config.QueueLimit = 0;
+});
+
+// Comandos estándar: restrictivo
+options.AddFixedWindowLimiter("Command", config =>
+{
+    config.PermitLimit = 5;
+    config.Window = TimeSpan.FromMinutes(1);
+    config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    config.QueueLimit = 5;
+});
+\end{lstlisting}
+
+
+
+
+\paragraph{Aplicación a endpoints}
+El atributo \texttt{[EnableRate\-Limiting]} aplica las políticas sobre controladores completos o endpoints específicos. Un mismo endpoint puede combinar múltiples políticas cuando requiere protección en distintas ventanas de tiempo. Por ejemplo, el controlador de autenticación declara únicamente \texttt{Auth} a nivel de clase:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Aplicación del rate limiting a controladores y endpoints}, label={lst:ratelimitingapplication}]
+[ApiController]
+[Route("api/[controller]")]
+[EnableRateLimiting("Auth")]
+public class AuthenticationController : ControllerBase { }
+\end{lstlisting}
+
+El endpoint de creación de reportes, en cambio, combina dos políticas: \texttt{Command} limita la tasa por minuto y \texttt{ReportDaily} impone un límite diario por IP. Ambas se evalúan en conjunto con el limitador global: la solicitud solo se procesa si las tres capas lo permiten.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Combinación de políticas en un mismo endpoint}, label={lst:ratelimitingcombination}]
+[HttpPost]
+[EnableRateLimiting("Command")]
+[EnableRateLimiting("ReportDaily")]
+public async Task<IActionResult> Create(CreateReportDto dto) { }
+\end{lstlisting}
+
+
+\paragraph{Bloqueo manual por administrador del servidor}
+
+Aun con las barreras descritas, persiste un escenario que las defensas automáticas no pueden resolver por sí solas: un atacante que distribuya sus solicitudes entre múltiples direcciones IP, que opere desde el extranjero sin relación legítima con el sistema cubano de farmacovigilancia, o que mantenga su actividad por debajo de los umbrales configurados para no activar ninguna alarma. 
+La detección de estas amenazas requiere criterio humano y herramientas a nivel de infraestructura.
+
+Esta responsabilidad recae en el administrador del servidor del Instituto Finlay, no en los usuarios de la aplicación. 
+Mediante el análisis de logs, reglas de firewall y filtrado por geolocalización, el equipo de TI puede identificar patrones sospechosos y denegar el acceso desde regiones no autorizadas o direcciones IP específicas. 
+Esta separación de responsabilidades mantiene la aplicación enfocada en la lógica de farmacovigilancia, mientras que la seguridad perimetral queda en manos de quienes administran el servidor físico donde el sistema se despliega en producción.
+
+
+
+
+\section{Implementación del frontend}
+\label{section:frontend}
+
+\subsection{Arquitectura del frontend}
+
+\subsection{Gestión del estado y comunicación con la API}
+
+\subsection{Construcción de interfaces de usuario}
+
+\subsection{Implementación de formularios}
+
+\subsection{Validaciones y experiencia de usuario}
+
+\subsection{Manejo de autenticación en el cliente}
+
+\subsection{Diseño responsivo}
+
+\section{Implementación de funcionalidades principales}
+\label{section:functionalities}
+
+\subsection{Registro de reportes de ESAVI}
+
+\subsection{Gestión de revisiones médicas}
+
+\subsection{Asignación de responsables}
+
+\subsection{Gestión de causalidad}
+
+\subsection{Sistema de notificaciones}
+
+\subsection{Visualización y consulta de reportes}
+
+\section{Despliegue de la solución}
+\label{section:deployment}
+
+\subsection{Contenerización de servicios}
+
+\subsection{Configuración del entorno de despliegue}
+
+\subsection{Publicación de la aplicación}
+
+\section{Conclusiones del capítulo}
+\label{section:chapter_conclusions}
+
+En este capítulo se presentaron los principales detalles relacionados con la implementación de la plataforma desarrollada, describiendo las tecnologías empleadas, la organización arquitectónica de la solución y los mecanismos utilizados en el backend y el frontend. Además, se abordaron aspectos asociados a la seguridad, la integración entre componentes y el despliegue del sistema, evidenciando la materialización práctica de la propuesta presentada en el capítulo anterior.
