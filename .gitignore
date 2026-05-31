@@ -20,6 +20,7 @@
 *.bcf
 *.xml
 *.pdf_tex
+*.synctex(busy)
 build.sh
 
 *.acn
