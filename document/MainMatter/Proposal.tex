@@ -211,16 +211,24 @@ Las reglas de negocio definen las restricciones y políticas que rigen la operac
 
     \item \textbf{RN-02. Asignación exclusiva:} Un reporte solo puede estar asignado a un único médico evaluador a la vez. Una nueva asignación inhabilita automáticamente la anterior.
     
-    \item \textbf{RN-03. Plazo de evaluación según gravedad:} Los reportes clasificados como serios deben evaluarse en un plazo máximo de 12 horas; los no serios, en un máximo de 3 días. Superado este plazo, la asignación expira y el reporte queda disponible para reasignación.
+    \item \textbf{RN-03. Unicidad de vacuna por fecha:} El sistema no permite registrar la misma vacuna más de una vez en la misma fecha para un mismo sujeto vacunado.
     
-    \item \textbf{RN-04. Unicidad de vacuna por fecha:} El sistema no permite registrar la misma vacuna más de una vez en la misma fecha para un mismo sujeto vacunado.
+    \item \textbf{RN-04. Consistencia cronológica:} Las fechas registradas en un reporte deben guardar una secuencia lógica: la fecha de nacimiento del sujeto y del reportante antecede a las fechas de vacunación, estas preceden a las fechas de inicio de los eventos adversos, y cualquier fecha de fallecimiento debe ser anterior a la fecha de reporte y a la fecha actual.
     
-    \item \textbf{RN-05. Consistencia cronológica:} Las fechas registradas en un reporte deben guardar una secuencia lógica: la fecha de nacimiento del sujeto y del reportante antecede a las fechas de vacunación, estas preceden a las fechas de inicio de los eventos adversos, y cualquier fecha de fallecimiento debe ser anterior a la fecha de reporte y a la fecha actual.
+    \item \textbf{RN-05. Integridad del reporte:} Todo reporte debe contener al menos un evento adverso y una vacuna asociada para ser enviado.
     
-    \item \textbf{RN-06. Integridad del reporte:} Todo reporte debe contener al menos un evento adverso y una vacuna asociada para ser enviado.
+    \item \textbf{RN-06. Gravedad derivada:} El sistema clasifica automáticamente un evento adverso como serio o no serio a partir de los criterios de seriedad registrados, sin intervención directa del usuario sobre este campo.
     
-    \item \textbf{RN-07. Gravedad derivada:} El sistema clasifica automáticamente un evento adverso como serio o no serio a partir de los criterios de seriedad registrados, sin intervención directa del usuario sobre este campo.
-    
+    \item \textbf{RN-07. Priorización de reportes por nivel de riesgo:} El sistema clasifica cada reporte según el evento adverso más grave que contenga. La prioridad se determina de la siguiente manera:
+    \begin{itemize}
+        \item \textbf{Prioridad alta:} el evento es serio (resultó en muerte, hospitalización, visita al doctor o a emergencias, discapacidad permanente o anomalía congénita).
+        \item \textbf{Prioridad media:} el evento no es serio pero la intensidad del síntoma es severa, o el paciente no se ha recuperado o quedó con secuelas.
+        \item \textbf{Prioridad baja:} el evento no cumple ninguna de las restricciones anteriores (evento no serio, paciente recuperado ,en recuperación, desconocido, intensidad breve)
+    \end{itemize}
+
+    \item \textbf{RN-08. Plazo de evaluación según prioridad:} Los reportes de prioridad alta deben evaluarse en un máximo de 24 horas; los de prioridad media, en un máximo de 5 días; los de prioridad baja, en un máximo de 7 días. 
+    Superado el plazo, la asignación expira, el reporte regresa a la cola de pendientes listo para que vuelva a ser asignado.
+
 \end{itemize}
 
 
@@ -527,6 +535,7 @@ Tanto la implementación concreta de cada capa —incluyendo las tecnologías y 
 
 
 \section{Diseño de base de datos}
+\label{section:db_design}
 
 Esta sección aborda el marco teórico-computacional referente a la persistencia de la información. 
 Comprende el modelo entidad-relación, el esquema relacional y las restricciones de integridad que definen el modelo de datos, así como las decisiones que fundamentaron su estructura.
