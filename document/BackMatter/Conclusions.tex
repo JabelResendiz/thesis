@@ -1,3 +1,37 @@
 \begin{conclusions}
-    Conclusiones
+   
+% El desarrollo del sistema de autorreporte de eventos adversos a vacunas para el Instituto Finlay de Vacunas permitió materializar los objetivos planteados al inicio de este trabajo. A continuación se sintetizan los principales logros alcanzados:
+
+% \begin{itemize}
+%     \item \textbf{Se diseñó e implementó una arquitectura limpia en capas} que separa el dominio, la aplicación, la infraestructura y la presentación. Esta arquitectura permitió migrar entre proveedores de correo electrónico sin modificar la lógica de negocio e incorporar nuevos mecanismos de notificación sin afectar los casos de uso existentes.
+
+%     \item \textbf{Se desarrolló una API REST segura} con autenticación basada en JWT con refresh tokens en cookies HttpOnly, autorización por roles, protección contra ataques automatizados mediante CAPTCHA y rate limiting, y validación de solicitudes en dos niveles —formato y reglas de negocio—.
+
+%     \item \textbf{Se construyó un sistema de notificaciones asíncrono} que desacopla el envío de correos de la lógica de negocio mediante RabbitMQ, lo que permitió que el usuario reciba respuesta inmediata mientras las notificaciones se procesan en segundo plano.
+
+%     \item \textbf{Se implementó una interfaz de usuario responsiva} que permite a la población reportar eventos adversos sin autenticación previa, y al personal del IFV gestionar revisiones y asignaciones según su perfil, con validación en tiempo real y almacenamiento seguro del token de acceso.
+
+%     \item \textbf{Se contenerizó la solución con Docker} y se desplegó en Railway y Vercel para facilitar las pruebas remotas por parte de los investigadores del IFV, con la misma configuración prevista para la migración a servidores físicos institucionales.
+% \end{itemize}
+
+% La experiencia adquirida a lo largo de este proyecto abarcó desde el análisis de requisitos con expertos del dominio hasta la implementación de mecanismos de seguridad con fundamento criptográfico, pasando por la selección de tecnologías adecuadas al contexto cubano. El sistema resultante constituye una base funcional sobre la cual el Instituto Finlay puede construir las próximas iteraciones que se describen a continuación.
+
+
+El desarrollo del sistema permitió materializar los objetivos planteados al inicio de este trabajo. Los principales logros alcanzados fueron:
+
+\begin{itemize}
+    \item \textbf{Una arquitectura limpia en capas} que separa el dominio, la aplicación, la infraestructura y la presentación, y permitió migrar entre proveedores de correo sin modificar la lógica de negocio.
+
+    \item \textbf{Una API REST segura} con autenticación basada en JWT, autorización por roles, CAPTCHA, rate limiting y validación en dos niveles.
+
+    \item \textbf{Un sistema de notificaciones asíncrono} que desacopla el envío de correos mediante RabbitMQ, permitiendo que el usuario reciba respuesta inmediata.
+
+    \item \textbf{Una interfaz de usuario responsiva} para que la población reporte eventos adversos y el personal del IFV gestione revisiones y asignaciones según su perfil.
+
+    \item \textbf{La contenerización de la solución con Docker} y su despliegue en Railway y Vercel, con la misma configuración prevista para servidores físicos institucionales.
+\end{itemize}
+
+La experiencia abarcó desde el análisis de requisitos con expertos del dominio hasta la implementación de mecanismos de seguridad con fundamento criptográfico, pasando por la selección de tecnologías adecuadas al contexto cubano. El sistema resultante constituye una base funcional sobre la cual el Instituto Finlay puede construir las próximas iteraciones.
+
+
 \end{conclusions}

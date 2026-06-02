@@ -1,7 +1,14 @@
 \begin{resumen}
-	Resumen en español
+	La implementación del sistema web para la gestión de ESAVI se fundamenta en una arquitectura modular basada en los principios de Clean Architecture, utilizando .NET 8 para el backend y React con TypeScript para el frontend. 
+	La solución integra mecanismos avanzados de seguridad, incluyendo autenticación mediante JWT con rotación de refresh tokens almacenados en cookies HttpOnly, limitación de velocidad (rate limiting) y protección contra ataques automatizados mediante Friendly CAPTCHA. 
+	Para optimizar la experiencia del usuario y la fiabilidad, se implementó una comunicación asíncrona empleando RabbitMQ y MassTransit, facilitando notificaciones automáticas vía correo electrónico y WhatsApp. 
+	El sistema garantiza la integridad y trazabilidad de los datos de farmacovigilancia mediante el uso del patrón Unit of Work y un registro de auditoría automatizado sobre una base de datos MySQL.
 \end{resumen}
 
 \begin{abstract}
-	Resumen en inglés
+	The implementation of the ESAVI management web system is based on a modular architecture following Clean Architecture principles. 
+	The backend was developed using .NET 8 and C\#, while the frontend was built as a Single Page Application (SPA) with React and TypeScript. 
+	The system features a robust security framework, including JWT authentication with Refresh Token rotation (HttpOnly cookies), IP-based rate limiting, and Friendly CAPTCHA protection for public endpoints. 
+	To ensure high availability and responsiveness, the solution incorporates asynchronous messaging via RabbitMQ and MassTransit for automated email and WhatsApp notifications. 
+	Data integrity and traceability are managed through Entity Framework Core, the Unit of Work pattern, and an automated Audit Log system.
 \end{abstract}

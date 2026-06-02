@@ -6,7 +6,6 @@ Asimismo, se revisan conceptos relacionados con el modelado de datos clínicos y
 
 \section{Análisis de sistemas de autorreporte clínico existentes}
 \label{section:analisis_sistemas_autorreporte}
-Análisis de VAERS, V-Safe, etc.
 
 En la farmacovigilancia moderna, los sistemas de autorreporte clínico permiten registrar eventos adversos posteriores a la vacunación de forma estructurada. 
 Estas herramientas operan bajo dos modelos principales: la vigilancia pasiva y la vigilancia activa. El modelo pasivo depende exclusivamente de la iniciativa voluntaria de ciudadanos o profesionales para notificar un evento.
@@ -16,19 +15,12 @@ Este apartado examina tres sistemas representativos a nivel internacional: VAERS
 
 \subsection{Vaccine Adverse Event Reporting System (VAERS)}
 
-% Descripción general
-% Tipo de vigilancia (pasiva)
-% Actores que reportan
-% Canal de notificación (web principalmente)
-% Fortalezas del sistema
-% Limitaciones
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.5]{Graphics/vaers-logo.png}
-    \caption{Logotipo del sistema VAERS (vaers.hhs.gov)}
-    \label{fig:figura1}
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=0.5]{Graphics/vaers-logo.png}
+%     \caption{Logotipo del sistema VAERS (vaers.hhs.gov)}
+%     \label{fig:figura1}
+% \end{figure}
 
 \textbf{VAERS} es el sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la \textit{Food and Drug Administration} (FDA), agencia reguladora de medicamentos y alimentos, y los \textit{Centers for Disease Control and Prevention} (CDC), organismo responsable del control y prevención de enfermedades \cite{fda_vaers}. 
 Su objetivo principal es detectar señales de seguridad, definidas como patrones inusuales o un volumen elevado de reportes que no fueron identificados durante los ensayos clínicos \cite{cdc_vaers}.
@@ -43,16 +35,15 @@ Ante una señal de alerta, el monitoreo escala hacia sistemas de vigilancia acti
 
 \subsection{Sistema NotificaRAM de la Agencia Española de Medicamentos y Productos Sanitarios}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.3]{Graphics/Logo_notifica_ram.png}
-    \caption{Logotipo del sistema NotificaRAM (notificaram.es)}
-    \label{fig:figura4}
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=0.3]{Graphics/Logo_notifica_ram.png}
+%     \caption{Logotipo del sistema NotificaRAM (notificaram.es)}
+%     \label{fig:figura4}
+% \end{figure}
 
 \textbf{NotificaRAM} es la plataforma oficial de farmacovigilancia en España para la notificación de sospechas de reacciones adversas a medicamentos \cite{aemps_manual_2025}.
 \textit{La Agencia Española de Medicamentos y Productos Sanitarios (AEMPS)} gestiona este portal en el marco del Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H) \cite{aemps_sefv_2025}.
-
 
 El sistema funciona de forma descentralizada, remitiendo los reportes a los Centros Autonómicos de Farmacovigilancia para su validación técnica inicial \cite{aemps_manual_2025}. 
 
@@ -65,12 +56,12 @@ Finalmente, la base de datos global \textit{VigiBase}, gestionada por el \textit
 \subsection{Sistema V-safe del Centers for Disease Control and Prevention}
 
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.5]{Graphics/v-safe-logo.png}
-    \caption{Logotipo del sistema V-safe (vsafe.cdc.gov)}
-    \label{fig:figura5}
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[scale=0.5]{Graphics/v-safe-logo.png}
+%     \caption{Logotipo del sistema V-safe (vsafe.cdc.gov)}
+%     \label{fig:figura5}
+% \end{figure}
 
 Los Centers for Disease Control and Prevention (CDC) diseñaron \textbf{V-safe} como una herramienta digital para monitorear la seguridad vacunal en los Estados Unidos.
 Tras su lanzamiento inicial en diciembre de 2020 para supervisar las vacunas contra la COVID-19, el sistema extendió su alcance a otras inmunizaciones, incluyendo aquellas contra el virus respiratorio sincitial (VRS) \cite{cdc_vsafe_portal}.
@@ -82,7 +73,7 @@ El sistema realiza el seguimiento mediante encuestas diarias durante la primera 
 
 La Figura \ref{fig:vsafe_flujo} ilustra el flujo general de interacción del sistema, basado en el envío periódico de encuestas y la recopilación estructurada de datos reportados por los usuarios \cite{vsafe_monitoring_article}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[scale=2.5]{Graphics/gr1_lrg.jpg}
     \caption{Ejemplo del flujo de interacción del sistema V-safe mediante encuestas digitales}
@@ -99,7 +90,6 @@ Además, la plataforma publica los datos recopilados en formato anonimizado para
 
 Este análisis compara los sistemas VAERS, V-safe y NotificaRAM en términos de su enfoque metodológico, grado de digitalización y mecanismos de captura de datos. 
 La Tabla \ref{tab:sistemas_comparacion} sintetiza estos criterios con el objetivo de evidenciar diferencias estructurales y brechas en los modelos actuales de farmacovigilancia.
-
 
 
 \begin{table}[htbp]
@@ -180,48 +170,6 @@ Para el desarrollo de plataformas de autorreporte, resultan clave los siguientes
     \item \textbf{Calidad del dato:} Implementar esquemas de captura estructurada que garanticen la consistencia del formato de los datos y minimicen la pérdida de información relevante en los reportes.
     \item \textbf{Interacción centrada en el usuario:} Diseñar flujos de contacto proactivo (SMS o correo electrónico) que requieran menos de dos minutos, facilitando el seguimiento longitudinal sin generar fatiga en el usuario.
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
