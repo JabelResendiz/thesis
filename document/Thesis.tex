@@ -17,6 +17,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
 \usepackage{multicol}
+\usepackage{textcomp}
 \usepackage{graphicx}
 \usepackage{adjustbox}
 \usepackage{mdframed}
@@ -53,6 +54,38 @@
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Lenguaje TypeScript
+\lstdefinelanguage{TypeScript}{
+    keywords={break, case, catch, continue, debugger, default, delete, do, else, finally, for, function, if, in, instanceof, new, return, switch, this, throw, try, typeof, var, void, while, with, class, const, enum, export, extends, import, let, private, public, static, super, interface, implements, async, await, from, as, any, boolean, string, number},
+    keywordstyle=\color{purple}\bfseries,
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+% Lenguaje Dockerfile
+\lstdefinelanguage{Dockerfile}{
+    keywords={FROM, RUN, COPY, WORKDIR, EXPOSE, ENV, ENTRYPOINT, CMD, AS},
+    keywordstyle=\color{blue}\bfseries,
+    sensitive=true,
+    morecomment=[l]{\#},
+    morestring=[b]",
+    morestring=[b]',
+}
+
+% Lenguaje JSON
+\lstdefinelanguage{JSON}{
+    keywords={true, false, null},
+    keywordstyle=\color{purple}\bfseries,
+    sensitive=true,
+    morestring=[b]",
+    morestring=[b]',
+    literate={{{$}{$\{$}}1 {{}$}{$\}$}}1
+}
+
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -124,27 +157,27 @@
 \frontmatter
 \maketitle
 
-% \include{FrontMatter/Dedication}
-% \include{FrontMatter/Thanks}
-% \include{FrontMatter/SupervisorOpinion}
-% \include{FrontMatter/Abstract}
-% \include{FrontMatter/Contents}
+%  \include{FrontMatter/Dedication}
+%  \include{FrontMatter/Thanks}
+%  \include{FrontMatter/SupervisorOpinion}
+%  \include{FrontMatter/Abstract}
+%  \include{FrontMatter/Contents}
 
 \mainmatter
 
-%\include{MainMatter/Introduction}
-\include{MainMatter/Background copy}
+% \include{MainMatter/Introduction}
+% \include{MainMatter/Background copy}
 %\include{MainMatter/Proposal}
 %\include{MainMatter/Implementation}
-%\include{MainMatter/Result}
+\include{MainMatter/Result}
 
 \backmatter
 
-% \include{BackMatter/Conclusions}
-% \include{BackMatter/Recomendations}
+%  \include{BackMatter/Conclusions}
+%  \include{BackMatter/Recomendations}
 \include{BackMatter/Appendix}
-\include{BackMatter/Glossary}
-\include{BackMatter/Acronyms}
+% \include{BackMatter/Glossary}
+ %\include{BackMatter/Acronyms}
 \include{BackMatter/Bibliography}
 
 \end{document}

@@ -1,67 +1,68 @@
 \chapter{Validación de la aplicación}\label{chapter:result}
 
 
-\section{Propósito de la validación}
+% \section{Propósito de la validación}
 
-La validación del sistema persigue demostrar cuatro afirmaciones concretas:
+% La validación del sistema persigue demostrar cuatro afirmaciones concretas:
 
-\begin{enumerate}
-    \item \textbf{Los flujos principales operan correctamente.} El registro de reportes, la asignación a revisores, la gestión de revisiones y las notificaciones automáticas funcionan conforme a los requerimientos funcionales definidos en el Capítulo \ref{chapter:proposal}.
-    \item \textbf{El sistema responde en menos de 5 segundos.} El envío de un reporte completo —desde la recepción de la solicitud hasta la respuesta de confirmación— no supera el límite establecido en el RNF-05, excluyendo la latencia de red externa.
-    \item \textbf{Los mecanismos de seguridad operan según lo diseñado.} Los endpoints protegidos rechazan solicitudes sin token, con token expirado o con rol insuficiente; el rate limiting bloquea el exceso de solicitudes; y el CAPTCHA impide el envío automatizado de formularios.
-    \item \textbf{Los usuarios finales consideran la interfaz útil y fácil de usar.} La evaluación mediante el cuestionario SUS (System Usability Scale) debe arrojar una puntuación superior a 68, umbral que define la usabilidad aceptable según el estándar del cuestionario \cite{brooke1996sus}.
-\end{enumerate}
+% \begin{enumerate}
+%     \item \textbf{Los flujos principales operan correctamente.} El registro de reportes, la asignación a revisores, la gestión de revisiones y las notificaciones automáticas funcionan conforme a los requerimientos funcionales definidos en el Capítulo \ref{chapter:proposal}.
+%     \item \textbf{El sistema responde en menos de 5 segundos.} El envío de un reporte completo —desde la recepción de la solicitud hasta la respuesta de confirmación— no supera el límite establecido en el RNF-05, excluyendo la latencia de red externa.
+%     \item \textbf{Los mecanismos de seguridad operan según lo diseñado.} Los endpoints protegidos rechazan solicitudes sin token, con token expirado o con rol insuficiente; el rate limiting bloquea el exceso de solicitudes; y el CAPTCHA impide el envío automatizado de formularios.
+%     \item \textbf{Los usuarios finales consideran la interfaz útil y fácil de usar.} La evaluación mediante el cuestionario SUS (System Usability Scale) debe arrojar una puntuación superior a 68, umbral que define la usabilidad aceptable según el estándar del cuestionario \cite{brooke1996sus}.
+% \end{enumerate}
 
-\section{Entorno y metodología}
+% \section{Entorno y metodología}
 
-\subsection{Hardware}
+% \subsection{Hardware}
 
-Las pruebas se ejecutaron sobre una máquina con las siguientes características:
+% Las pruebas se ejecutaron sobre una máquina con las siguientes características:
 
-\begin{itemize}
-    \item \textbf{Procesador:} Intel Core i7-1165G7 @ 2.80 GHz
-    \item \textbf{Memoria RAM:} 16 GB DDR4
-    \item \textbf{Almacenamiento:} SSD NVMe de 512 GB
-\end{itemize}
+% \begin{itemize}
+%     \item \textbf{Procesador:} Intel Core i5-8250 CPU @ 1.80GHz
+%     \item \textbf{Memoria RAM:} 16 GB DDR4
+%     \item \textbf{Almacenamiento:} SSD KINGSTON de 512 GB
+% \end{itemize}
 
-\subsection{Software}
+% \subsection{Software}
 
-El entorno de pruebas replicó la configuración de desarrollo local definida en el Capítulo \ref{chapter:implementation}:
+% El entorno de pruebas replicó la configuración de desarrollo local definida en el Capítulo \ref{chapter:implementation}:
 
-\begin{itemize}
-    \item \textbf{Sistema operativo:} Windows 11 Pro
-    \item \textbf{Base de datos:} MySQL 8.0
-    \item \textbf{Backend:} .NET 8, ejecutado mediante Docker Compose
-    \item \textbf{Frontend:} Vite + React 18, ejecutado en modo desarrollo
-    \item \textbf{Navegador:} Google Chrome 124
-\end{itemize}
+% \begin{itemize}
+%     \item \textbf{Sistema operativo:} Windows 11 Pro
 
-\subsection{Red}
+%     \item \textbf{Base de datos:} MySQL 8.0
+%     \item \textbf{Backend:} .NET 8, ejecutado mediante Docker Compose
+%     \item \textbf{Frontend:} Vite + React 18, ejecutado en modo desarrollo
+%     \item \textbf{Navegador:} Google Chrome 124
+% \end{itemize}
 
-Todas las pruebas se ejecutaron en entorno local, con la API y la base de datos corriendo en la misma máquina. Esta configuración excluye la latencia de red externa de las mediciones de rendimiento, conforme al RNF-05.
+% \subsection{Red}
 
-\subsection{Datos de prueba}
+% Todas las pruebas se ejecutaron en entorno local, con la API y la base de datos corriendo en la misma máquina. Esta configuración excluye la latencia de red externa de las mediciones de rendimiento, conforme al RNF-05.
 
-La base de datos se pobló con datos sintéticos que simulan el escenario real del Instituto Finlay:
+% \subsection{Datos de prueba}
 
-\begin{itemize}
-    \item \textbf{Provincias y municipios:} 16 provincias y 32 municipios, correspondientes a la división político-administrativa de Cuba.
-    \item \textbf{Vacunas:} 5 vacunas activas con sus respectivos fabricantes.
-    \item \textbf{Síntomas:} 15 síntomas activos.
-    \item \textbf{Usuarios:} 1 administrador, 2 jefes de vacunación municipales, 3 médicos evaluadores y 2 ciudadanos de prueba.
-    \item \textbf{Reportes:} 20 reportes de ESAVI con distintos estados, severidades y asignaciones.
-\end{itemize}
+% La base de datos se pobló con datos sintéticos que simulan el escenario real del Instituto Finlay:
 
-\subsection{Metodología}
+% \begin{itemize}
+%     \item \textbf{Provincias y municipios:} 16 provincias y 32 municipios, correspondientes a la división político-administrativa de Cuba.
+%     \item \textbf{Vacunas:} 5 vacunas activas con sus respectivos fabricantes.
+%     \item \textbf{Síntomas:} 15 síntomas activos.
+%     \item \textbf{Usuarios:} 1 administrador, 2 jefes de vacunación municipales, 3 médicos evaluadores y 2 ciudadanos de prueba.
+%     \item \textbf{Reportes:} 20 reportes de ESAVI con distintos estados, severidades y asignaciones.
+% \end{itemize}
 
-La validación combinó cuatro enfoques complementarios:
+% \subsection{Metodología}
 
-\begin{itemize}
-    \item \textbf{Pruebas funcionales manuales:} ejecución de los flujos principales del sistema por parte del desarrollador, verificando que cada paso produce el resultado esperado según los requerimientos funcionales.
-    \item \textbf{Pruebas unitarias automatizadas:} validación de reglas de negocio mediante xUnit sobre los validadores de la capa de aplicación, con dependencias simuladas.
-    \item \textbf{Pruebas de rendimiento:} medición de tiempos de respuesta con K6, ejecutando 100 solicitudes por endpoint.
-    \item \textbf{Pruebas de usabilidad:} evaluación con usuarios representativos mediante el método de pensamiento en voz alta y el cuestionario SUS.
-\end{itemize}
+% La validación combinó cuatro enfoques complementarios:
+
+% \begin{itemize}
+%     \item \textbf{Pruebas funcionales manuales:} ejecución de los flujos principales del sistema por parte del desarrollador, verificando que cada paso produce el resultado esperado según los requerimientos funcionales.
+%     \item \textbf{Pruebas unitarias automatizadas:} validación de reglas de negocio mediante xUnit sobre los validadores de la capa de aplicación, con dependencias simuladas.
+%     \item \textbf{Pruebas de rendimiento:} medición de tiempos de respuesta con K6, ejecutando 100 solicitudes por endpoint.
+%     \item \textbf{Pruebas de usabilidad:} evaluación con usuarios representativos mediante el método de pensamiento en voz alta y el cuestionario SUS.
+% \end{itemize}
 
 \section{Pruebas funcionales}
 
@@ -87,28 +88,14 @@ CP05 & Asignación de reporte a revisor & Reporte pendiente y revisor disponible
 \hline
 CP06 & Consulta de reportes por municipio & Municipio con 5 reportes registrados & Lista con 5 reportes & \checkmark \\
 \hline
-CP07 & Finalización de revisión médica & Reporte en estado "En revisión" & Estado actualizado a "Revisado" & \checkmark \\
+CP07 & Finalización de revisión médica & Reporte en estado: \textit{En revisión} & Estado actualizado a \texttt{Revisado} & \checkmark \\
 \hline
 CP08 & Exportación de reporte a PDF & Reporte con datos completos & Archivo PDF generado correctamente & \checkmark \\
 \hline
+CP09 & Consultar estado de reporte válido & Número de notificación & Estado detallado & \checkmark \\
+\hline
 \end{tabular}
 \end{table}
-
-% Las figuras \ref{fig:reporte_exitoso} y \ref{fig:panel_asignaciones} muestran dos de los casos de prueba ejecutados: el registro exitoso de un reporte público y el panel de asignaciones del jefe de vacunación.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.85\textwidth]{Graphics/Cap5/reporte_exitoso.png}
-%     \caption{CP01: Registro exitoso de un reporte público con número de notificación generado.}
-%     \label{fig:reporte_exitoso}
-% \end{figure}
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.85\textwidth]{Graphics/Cap5/panel_asignaciones.png}
-%     \caption{CP05: Panel de asignaciones del jefe de vacunación con reportes pendientes.}
-%     \label{fig:panel_asignaciones}
-% \end{figure}
 
 
 \section{Pruebas de rendimiento}

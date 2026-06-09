@@ -1,4 +1,5 @@
 \begin{recomendations}
+\label{ref:recomendations}
     
 Más allá de los logros alcanzados, el proyecto deja abiertas varias líneas de evolución que permitirán al Instituto Finlay de Vacunas y a los desarrolladores que den continuidad al sistema llevarlo a su pleno potencial operativo. Se proponen las siguientes recomendaciones:
 
@@ -8,6 +9,8 @@ Más allá de los logros alcanzados, el proyecto deja abiertas varias líneas de
     \item \textbf{Desarrollo de una aplicación móvil nativa.} Se recomienda al equipo de desarrollo evaluar la creación de una aplicación para iOS y Android que aproveche notificaciones push, acceso sin conexión a internet y una experiencia optimizada para pantallas táctiles. La API actual ya soporta esta evolución sin requerir modificaciones en el backend.
 
     \item \textbf{Ampliación de los canales de notificación.} Se recomienda migrar progresivamente los servicios de notificación de prototipado a producción: un servidor SMTP institucional para el correo electrónico y la API oficial de WhatsApp Business para la mensajería. Adicionalmente, se sugiere incorporar SMS como canal complementario para alcanzar a usuarios sin acceso a datos móviles.
+
+    \item \textbf{Fusión inteligente de duplicados:} Actualmente, al confirmar un duplicado, el sistema descarta la copia incluso si contiene datos adicionales que el original no tiene. Una mejora futura consistiría en implementar una estrategia de fusión que, al confirmar el duplicado, preserve los datos únicos de la copia en el reporte original, siempre bajo supervisión del jefe de vacunación.
 \end{enumerate}
 
 Estas recomendaciones se dirigen tanto al personal técnico del IFV encargado de la infraestructura y el desarrollo como a los directivos responsables de autorizar los contratos de servicios y la asignación de recursos necesarios para cada etapa.

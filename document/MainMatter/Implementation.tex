@@ -15,19 +15,16 @@ Finalmente, el contenido aborda elementos asociados al despliegue y la organizac
 \section{Tecnologías y herramientas utilizadas}
 \label{section:technologies}
 
-\subsection{Tecnologías del backend}
+El sistema se implementó sobre el conjunto de tecnologías seleccionadas en el Capítulo \ref{chapter:marco-teorico-referencial}. 
+A continuación se detallan las versiones específicas y las herramientas complementarias que materializaron el desarrollo.
 
-\textbf{C\# y .NET 8.} El backend se desarrolló en C\# sobre .NET 8, un framework de alto rendimiento que ofrece compilación nativa, inyección de dependencias integrada y un ecosistema maduro de bibliotecas para construir APIs REST. La documentación oficial de Microsoft establece que .NET 8 es la versión LTS (Long Term Support) recomendada para aplicaciones en producción \cite{dotnet8}.
+\subsection{Stack tecnológico principal}
 
-\textbf{Entity Framework Core.} La persistencia de datos emplea Entity Framework Core como ORM (Object-Relational Mapper), que permite trabajar con la base de datos mediante objetos de C\# y expresiones LINQ sin escribir consultas SQL manualmente \cite{microsoft_efcore}.
+\textbf{C\# y .NET 8.} La capa de servicios se desarrolló en C\# sobre .NET 8, cuya versión de soporte a largo plazo garantiza estabilidad y actualizaciones de seguridad durante todo el ciclo de vida del proyecto. Para la persistencia se empleó Entity Framework Core 8, que permite trabajar con la base de datos mediante objetos del dominio sin escribir consultas SQL manualmente.
 
-\subsection{Tecnologías de la interfaz de usuario}
+\textbf{React 18 con TypeScript.} La interfaz de usuario se construyó en React 18, cuya versión introdujo el modo de renderizado concurrente que mejora la fluidez de la interfaz. TypeScript añadió tipado estático al desarrollo, lo que redujo errores en tiempo de ejecución y mejoró la mantenibilidad del código.
 
-\textbf{React con TypeScript.} La interfaz de usuario se construye como una Single Page Application (SPA) en React, una biblioteca de JavaScript que permite crear interfaces interactivas mediante componentes reutilizables. TypeScript añade tipado estático sobre JavaScript, lo que reduce errores en tiempo de desarrollo y mejora la mantenibilidad del código.
-
-\subsection{Sistema gestor de bases de datos}
-
-\textbf{MySQL.} El sistema utiliza MySQL como motor de base de datos relacional. La documentación oficial de MySQL establece que su arquitectura de almacenamiento basada en tablas y su soporte para claves foráneas e índices lo hacen adecuado para aplicaciones que requieren integridad referencial estricta \cite{mysql_docs}. Esta característica resultó determinante para un dominio como el de farmacovigilancia, donde entidades como reportes, sujetos vacunados, revisores y vacunas deben mantener relaciones consistentes.
+\textbf{MySQL 8.0.} El sistema utilizó MySQL 8.0 como motor de base de datos relacional, accedido mediante el proveedor Pomelo.EntityFrameworkCore.MySql. Para la administración visual de la base de datos, el diseño de esquemas y la ejecución de consultas se empleó MySQL Workbench.
 
 \subsection{Herramientas de infraestructura y despliegue}
 
@@ -53,23 +50,13 @@ Al tratarse de un sistema distribuido, cada copia local del repositorio contiene
 
 
 
-% \section{Estructura general de la solución}
-% \label{section:solution_structure}
-
-% \subsection{Organización de proyectos}
-
-% \subsection{Separación por capas y responsabilidades}
-
-% \subsection{Estructura modular del sistema}
-
-
-
-
 \section{Implementación de la arquitectura}
 \label{section:backend}
 
-Una vez definida la arquitectura del sistema en la sección \ref{section:arquitectura}, este apartado describe cómo se materializaron las decisiones de diseño en código. 
-La implementación sigue la estructura en capas propuesta por la arquitectura limpia: dominio, aplicación, infraestructura y presentación. Por cada capa se presentan los patrones utilizados, las tecnologías que los materializan y los fragmentos de código que ilustran las decisiones más relevantes.
+El Capítulo \ref{chapter:proposal} definió la arquitectura del sistema a partir de los criterios de diseño establecidos. 
+Este apartado describe cómo se materializaron esas decisiones en código. 
+La implementación sigue la estructura en capas propuesta por la arquitectura limpia: dominio, aplicación, infraestructura y presentación. 
+Por cada capa se presentan los patrones utilizados, las tecnologías que los materializan y los fragmentos de código que ilustran las decisiones más relevantes.
 
 \subsection{Capa de Dominio}
 
@@ -100,7 +87,7 @@ public interface IEntity<TId>
 }
 \end{lstlisting}
 
-A partir de esta interfaz, el dominio proporciona dos clases abstractas especializadas. La clase \texttt{GuidEntity} constituye la norma para la mayoría de las entidades del sistema y utiliza un \texttt{Guid} como identificador:
+A partir de esta interfaz, el dominio proporciona dos clases abstractas especializadas. La clase \texttt{GuidEntity} constituye la norma para la mayoría de las entidades del sistema y utiliza un \texttt{Guid} como identificador. La documentación oficial de Microsoft establece que un \texttt{Guid} (Globally Unique Identifier) es un número de 128 bits generado mediante una combinación de la marca de tiempo, una secuencia y el identificador único de la máquina \cite{microsoft_guid}. Este mecanismo garantiza que dos \texttt{Guid} generados en cualquier momento o lugar tengan una probabilidad de colisión tan baja que resulta estadísticamente insignificante, incluso si se generan millones de identificadores por segundo. A diferencia de los identificadores enteros autoincrementales, un \texttt{Guid} no depende de un contador centralizado ni del estado de la base de datos, lo que lo hace inmune a fallos del servidor o cortes de electricidad. Además, no revela la cantidad de registros en una tabla y no es predecible, lo que impide que un usuario malintencionado itere sobre valores consecutivos expuestos en una URL.
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Clase GuidEntity para entidades con identificador Guid}, label={lst:guidentity}]
 public abstract class GuidEntity : BasicEntity, IEntity<Guid>
@@ -118,8 +105,6 @@ public abstract class CatalogEntity : BasicEntity, IEntity<int>
 }
 \end{lstlisting}
 
-La elección de \texttt{Guid} como tipo de identificador para las entidades principales responde a criterios de seguridad y escalabilidad. La documentación oficial de Microsoft establece que un \texttt{Guid} (Globally Unique Identifier) es un número pseudoaleatorio de 128 bits con una probabilidad de colisión tan baja que resulta estadísticamente insignificante \cite{microsoft_guid}. A diferencia de los identificadores enteros autoincrementales, un \texttt{Guid} no revela la cantidad de registros en una tabla y no es predecible, lo que refuerza la seguridad de la aplicación. Esta propiedad permite, por ejemplo, exponer el identificador en una URL sin riesgo de que un usuario malintencionado itere sobre valores consecutivos.
-
 Gracias a que \texttt{BasicEntity} unifica las propiedades comunes \texttt{CreatedAt} y \texttt{UpdatedAt}, la capa de aplicación puede definir interfaces genéricas que operan sobre cualquier entidad del sistema sin necesidad de implementaciones específicas por cada tipo. El siguiente fragmento, extraído de la capa de aplicación, ilustra esta ventaja:
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Interfaz genérica que opera sobre cualquier entidad que herede de BasicEntity}, label={lst:genericinterface}]
@@ -131,7 +116,6 @@ public interface IGenericRepository<T> where T : BasicEntity
 \end{lstlisting}
 
 La restricción \texttt{where T : BasicEntity} garantiza en tiempo de compilación que la interfaz solo reciba entidades que posean las marcas de tiempo \texttt{CreatedAt} y \texttt{UpdatedAt}, independientemente del tipo de su identificador. Así, el sistema puede incorporar nuevas entidades —ya sea con \texttt{Guid} o con \texttt{int} como identificador— sin modificar las interfaces genéricas existentes, en cumplimiento del Principio de Abierto/Cerrado de \texttt{SOLID}.
-
 
 
 \paragraph{Entidades User y Role}
@@ -149,7 +133,15 @@ public class User : IdentityUser<Guid>
 }
 \end{lstlisting}
 
-Aunque la clase derivada solo declara tres propiedades adicionales, la herencia de \texttt{IdentityUser<Guid>} aporta un conjunto completo de campos que cubren todas las necesidades de gestión de identidad \cite{microsoft_identity_model}. \texttt{UserName} almacena el nombre de usuario único para el inicio de sesión. \texttt{Email} contiene el correo electrónico empleado para notificaciones y verificación de cuenta. \texttt{PasswordHash} guarda el resultado del algoritmo de hashing y nunca contiene la contraseña en texto plano. \texttt{PhoneNumber} registra el teléfono para autenticación de dos factores o recuperación de cuenta. \texttt{EmailConfirmed} indica si el usuario verificó su correo electrónico. \texttt{LockoutEnd} establece la fecha y hora hasta la cual la cuenta permanece bloqueada tras superar el máximo de intentos fallidos. \texttt{AccessFailedCount} lleva el contador de intentos fallidos consecutivos. \texttt{SecurityStamp} almacena un valor aleatorio que cambia al modificar credenciales, lo que invalida automáticamente sesiones y tokens anteriores.
+Aunque la clase derivada solo declara tres propiedades adicionales, la herencia de \texttt{IdentityUser<Guid>} aporta un conjunto completo de campos que cubren todas las necesidades de gestión de identidad \cite{microsoft_identity_model}. 
+\texttt{UserName} almacena el nombre de usuario único para el inicio de sesión. 
+\texttt{Email} contiene el correo electrónico empleado para notificaciones y verificación de cuenta. 
+\texttt{PasswordHash} guarda el resultado del algoritmo de hashing y nunca contiene la contraseña en texto plano. 
+\texttt{PhoneNumber} registra el teléfono para autenticación de dos factores o recuperación de cuenta. 
+\texttt{EmailConfirmed} indica si el usuario verificó su correo electrónico. 
+\texttt{SecurityStamp} almacena un valor aleatorio que cambia al modificar credenciales, lo que invalida automáticamente sesiones y tokens anteriores.
+% \texttt{LockoutEnd} establece la fecha y hora hasta la cual la cuenta permanece bloqueada tras superar el máximo de intentos fallidos. 
+% \texttt{AccessFailedCount} lleva el contador de intentos fallidos consecutivos. 
 
 La entidad \texttt{Role} hereda de \texttt{IdentityRole<Guid>} y mantiene la misma coherencia en el tipo de identificador:
 
@@ -158,8 +150,7 @@ public class Role : IdentityRole<Guid>{ }
 \end{lstlisting}
 
 La herencia de \texttt{IdentityRole<Guid>} proporciona las propiedades \texttt{Name} (nombre único del rol) y \texttt{NormalizedName} (versión normalizada para búsquedas). 
-La relación entre usuarios y roles sigue una restricción de uno a muchos: cada usuario posee un único rol mediante la clave foránea \texttt{RoleId} en la entidad \texttt{User}, mientras que un mismo rol puede agrupar a múltiples usuarios. 
-Esta decisión simplifica la administración de permisos y refleja los perfiles definidos en el diseño del sistema (administrador, médico evaluador y jefe de vacunación municipal).
+La relación entre usuarios y roles sigue una restricción de uno a muchos: cada usuario posee un único rol mediante la clave foránea \texttt{RoleId} en la entidad \texttt{User}, mientras que un mismo rol puede agrupar a múltiples usuarios.
 
 
 El uso de \texttt{Guid} como tipo de identificador en \texttt{IdentityUser} y \texttt{IdentityRole} mantiene la coherencia con la clase \texttt{GuidEntity} definida para el resto de las entidades del sistema, lo que permite que las tablas de identidad compartan el mismo tipo de clave primaria que las tablas de negocio.
@@ -196,13 +187,14 @@ La verificación de la contraseña durante el inicio de sesión se realiza inter
 \paragraph{Generación de tokens para verificación de identidad}
 
 El paquete Identity incluye proveedores de tokens integrados que generan cadenas criptográficamente seguras para distintos propósitos. 
-El sistema emplea estos tokens durante el proceso de registro para verificar que un usuario controla la dirección de correo electrónico declarada y para permitir el establecimiento seguro de su contraseña inicial. 
-La documentación oficial explica que el proveedor predeterminado \texttt{DataProtectorTokenProvider} utiliza internamente la API de Protección de Datos de ASP.NET Core, la cual aplica cifrado autenticado (AES-256-CBC\footnote{AES-256-CBC (Advanced Encryption Standard con modo Cipher Block Chaining y clave de 256 bits): algoritmo de cifrado simétrico estandarizado por el Instituto Nacional de Estándares y Tecnología (NIST, por sus siglas en inglés), agencia del gobierno de Estados Unidos. Transforma datos legibles en texto cifrado usando una clave secreta, y el modo CBC garantiza que mensajes idénticos produzcan resultados cifrados diferentes \cite{nist_aes}.} con HMAC-SHA256) sobre los datos del token \cite{microsoft_token_providers}. 
+El sistema emplea estos tokens en el flujo de registro de médicos evaluadores descrito en los casos de uso (Sección \ref{section:casos_uso}): cuando un jefe de vacunación da de alta a un médico, el sistema genera un token y lo envía por correo electrónico para que el médico active su cuenta y establezca su contraseña.
+
+La documentación oficial explica que el proveedor predeterminado \texttt{DataProtector\-TokenProvider} utiliza internamente la API de Protección de Datos de ASP.NET Core, la cual aplica cifrado autenticado (AES-256-CBC\footnote{AES-256-CBC (Advanced Encryption Standard con modo Cipher Block Chaining y clave de 256 bits): algoritmo de cifrado simétrico estandarizado por el Instituto Nacional de Estándares y Tecnología (NIST, por sus siglas en inglés), agencia del gobierno de Estados Unidos. Transforma datos legibles en texto cifrado usando una clave secreta, y el modo CBC garantiza que mensajes idénticos produzcan resultados cifrados diferentes \cite{nist_aes}.} con HMAC-SHA256) sobre los datos del token \cite{microsoft_token_providers}. 
 Esto garantiza tres propiedades de seguridad esenciales: el token no revela información del usuario si es interceptado, cualquier modificación invalida la firma y provoca el rechazo del servidor, y un atacante no puede generar un token válido sin acceder a las claves de protección del servidor \cite{microsoft_data_protection}.
 
 El token posee una vigencia predeterminada de 24 horas, controlada por la propiedad \texttt{TokenLifespan} de \texttt{DataProtectionTokenProviderOptions}, transcurrida la cual expira automáticamente \cite{microsoft_identity_config}. 
 La validación ocurre en el servidor sin necesidad de consultar una tabla de tokens pendientes, lo que simplifica la arquitectura y elimina la necesidad de limpiar tokens expirados. 
-El caso de uso concreto que orquesta la generación y validación de estos tokens durante el registro de médicos evaluadores se detalla en la sección dedicada a la capa de aplicación.
+% El caso de uso concreto que orquesta la generación y validación de estos tokens durante el registro de médicos evaluadores se detalla en la sección dedicada a la capa de aplicación.
 
 \paragraph{Configuración de seguridad adicional}
 
@@ -219,23 +211,42 @@ Este ajuste sigue las recomendaciones actuales de OWASP para el algoritmo PBKDF2
 
 
 
-\subsubsection{Objetos de valor}
+% \subsubsection{Objetos de valor}
 
-El dominio incluye el objeto de valor \texttt{IdentityNumber}, que encapsula la validación del formato del carné de identidad cubano, la extracción de la fecha de nacimiento y el cálculo de la edad. Esta decisión responde a que varias entidades del sistema —\texttt{VaccinatedSubject}, \texttt{Reporter} y \texttt{MedicalReviewer}— contienen un carné de identidad y requieren las mismas operaciones sobre él. Al extraer esta lógica en un objeto de valor inmutable, se evita la duplicación de código y se garantiza que cualquier validación o cálculo sobre el carné se aplique de manera uniforme en todo el sistema.
+% El dominio incluye el objeto de valor \texttt{IdentityNumber}, que encapsula la validación del formato del carné de identidad cubano, la extracción de la fecha de nacimiento y el cálculo de la edad. Esta decisión responde a que varias entidades del sistema —\texttt{VaccinatedSubject}, \texttt{Reporter} y \texttt{MedicalReviewer}— contienen un carné de identidad y requieren las mismas operaciones sobre él. Al extraer esta lógica en un objeto de valor inmutable, se evita la duplicación de código y se garantiza que cualquier validación o cálculo sobre el carné se aplique de manera uniforme en todo el sistema.
 
 \subsubsection{Enumerados}
 
 Los enumerados representan clasificaciones propias del negocio cuyos valores no cambian durante la ejecución de la aplicación. El dominio los define mediante el tipo \texttt{enum} de C\#, lo que garantiza que toda la aplicación comparta las mismas categorías sin riesgo de discrepancias entre capas. Estos tipos no constituyen entidades ni tablas en la base de datos porque sus valores son fijos y no requieren persistencia independiente.
 
-En contraste, conceptos como \texttt{Province} y \texttt{Municipality} sí se modelan como entidades y tablas. Existe una relación entre ambos —cada municipio pertenece a una provincia— que resulta más clara de expresar mediante llaves foráneas que mediante un enumerado extenso. Además, el sistema realiza operaciones frecuentes de búsqueda y filtrado sobre estos datos, para las cuales una tabla indexada ofrece mejor rendimiento. Por último, la lista de provincias y municipios puede actualizarse ocasionalmente por cambios administrativos, y una tabla permite modificarla sin recompilar la aplicación.
+En contraste, provincia y municipio sí constituyen entidades propias.
+Existe una relación entre ambos —cada municipio pertenece a una provincia— que resulta más clara de expresar mediante llaves foráneas que mediante un enumerado extenso. 
+Además, el sistema realiza operaciones frecuentes de búsqueda y filtrado sobre estos datos, para las cuales una tabla indexada ofrece mejor rendimiento. 
+Por último, la lista de provincias y municipios puede actualizarse ocasionalmente por cambios administrativos, y una tabla permite modificarla sin recompilar la aplicación.
 
 
-\subsubsection{Eventos de dominio}
+% \subsubsection{Eventos de dominio}
 
-Los eventos de dominio representan sucesos relevantes del negocio que otras partes del sistema deben conocer. El proyecto los define como clases simples con propiedades que identifican los datos del suceso y los utiliza para desencadenar el envío de notificaciones por correo electrónico sin acoplar la lógica de envío a las entidades. Esta arquitectura mantiene el dominio aislado de los detalles de infraestructura y permite agregar nuevos manejadores sin modificar las entidades ni los casos de uso.
+% Los eventos de dominio representan sucesos relevantes del negocio que otras partes del sistema deben conocer. El proyecto los define como clases simples con propiedades que identifican los datos del suceso y los utiliza para desencadenar el envío de notificaciones por correo electrónico sin acoplar la lógica de envío a las entidades. Esta arquitectura mantiene el dominio aislado de los detalles de infraestructura y permite agregar nuevos manejadores sin modificar las entidades ni los casos de uso.
 
-Durante la implementación surgieron además dos entidades de infraestructura no previstas en el diseño inicial: \texttt{RefreshToken}, que permite la renovación de sesiones sin reautenticación, y \texttt{AuditLog}, que registra las operaciones realizadas sobre el sistema con fines de trazabilidad. Ambas heredan de \texttt{GuidEntity} y su definición detallada se presenta en el Anexo \ref{anexo:entidades_infraestructura}.
+% % Durante la implementación surgieron además dos entidades de infraestructura no previstas en el diseño inicial: \texttt{RefreshToken}, que permite la renovación de sesiones sin reautenticación, y \texttt{AuditLog}, que registra las operaciones realizadas sobre el sistema con fines de trazabilidad. Ambas heredan de \texttt{GuidEntity} y su definición detallada se presenta en el Anexo \ref{anexo:entidades_infraestructura}.
 
+% Durante la implementación surgió además una entidad de infraestructura no prevista en el diseño inicial: \texttt{RefreshToken}, que permite la renovación de sesiones sin reautenticación. Hereda de \texttt{GuidEntity} y su definición detallada se presenta en el Anexo \ref{anexo:entidades_infraestructura}.
+
+
+
+
+\subsubsection{Objetos de valor y eventos de dominio}
+
+El dominio incluye el objeto de valor \texttt{IdentityNumber}, que encapsula la validación del formato del carné de identidad cubano, la extracción de la fecha de nacimiento y el cálculo de la edad. 
+Esta decisión evita la duplicación de esta lógica en las entidades que contienen un carné de identidad. 
+
+Los eventos de dominio representan sucesos relevantes del negocio que otras partes del sistema deben conocer. 
+El proyecto los define como clases simples y los utiliza para desencadenar notificaciones sin acoplar la lógica de envío a las entidades. 
+
+Durante la implementación surgieron además dos entidades de infraestructura no previstas en el diseño inicial: \texttt{RefreshToken}, que permite la renovación de sesiones sin reautenticación.
+\texttt{AuditLog} registra las operaciones realizadas sobre el sistema con fines de trazabilidad.
+Ambas heredan de \texttt{GuidEntity} y su definición detallada se presenta en el Anexo \ref{anexo:entidades_infraestructura}.
 
 
 \subsection{Capa de Aplicación}
@@ -243,67 +254,166 @@ Durante la implementación surgieron además dos entidades de infraestructura no
 
 La capa de aplicación orquesta los casos de uso del sistema. Recibe comandos y consultas desde la capa de presentación, coordina las entidades del dominio y los servicios de infraestructura, y retorna resultados transformados en DTOs. Esta capa depende exclusivamente del dominio, por lo que desconoce los detalles de la base de datos, el envío de correos o la generación de tokens.
 
+
+
+\subsubsection{Mapeo y transformación de datos}
+
+La capa de aplicación define DTOs para mover información entre la API y el dominio, sin exponer las entidades fuera de esta capa. 
+El sistema emplea AutoMapper, una biblioteca del ecosistema .NET que automatiza la conversión entre objetos, materializando el patrón Mapper definido en el Capítulo \ref{chapter:proposal}. 
+AutoMapper empareja las propiedades del tipo origen y del tipo destino por similitud de nombre, lo que evita que el desarrollador escriba manualmente cada asignación y reduce el código repetitivo.
+
+Las reglas de transformación se organizan en perfiles: clases que heredan de \texttt{Profile} y agrupan todas las conversiones de un mismo recurso del dominio. 
+Cada perfil declara cómo se asigna cada propiedad del tipo origen al tipo destino, incluso cuando el valor proviene de una relación entre entidades:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Perfil de mapeo con AutoMapper}, label={lst:mapper_profile}]
+public class AutomapperProfile : Profile
+{
+    public AutomapperProfile()
+    {
+        CreateMap<AefiReport, ReportDto>()
+            .ForMember(dest => dest.SubjectName,
+                opt => opt.MapFrom(src => src.VaccinatedSubject.FullName))
+            .ForMember(dest => dest.VaccineNames,
+                opt => opt.MapFrom(src => src.Vaccinations
+                    .Select(v => v.Lot.Vaccine.Name)));
+    }
+}
+\end{lstlisting}
+
+En este ejemplo, \texttt{SubjectName} (nombre del sujeto vacunado) no existe directamente en \texttt{AefiReport} (entidad de reporte), sino que se obtiene navegando la relación hacia \texttt{VaccinatedSubject} (sujeto vacunado). 
+AutoMapper resuelve esta navegación automáticamente y genera la consulta SQL correspondiente.
+
+Para las consultas, el sistema aprovecha el método \texttt{ProjectTo<T>} de AutoMapper. 
+A diferencia de un mapeo en memoria —que cargaría la entidad completa para luego transformarla—, \texttt{ProjectTo} traduce la proyección directamente a SQL.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Proyección directa a DTO con ProjectTo}, label={lst:projectto}]
+// mapear de la entidad AefiReport a un ReportDto
+    var items = await _unitOfWork.GetRepository<AefiReport>()
+    .GetPaged(query, skip, take)
+    .ProjectTo<ReportDto>(_mapper.ConfigurationProvider) 
+    .ToListAsync();
+\end{lstlisting}
+
+Al invocar \texttt{ProjectTo<ReportDto>}, Entity Framework Core consulta el perfil de AutoMapper para conocer qué propiedades del DTO provienen de qué columnas de la entidad y construye una consulta SQL con solo esos campos, incluyendo las uniones y selecciones necesarias para resolver las navegaciones definidas en el mapeo. Esto evita cargar la entidad completa y delega el filtrado al motor de base de datos.
+
+
+
+
+% \subsubsection{Casos de uso y servicios de aplicación}
+
+% Los casos de uso se implementan mediante servicios de aplicación que el controlador invoca a través de interfaces. Esta decisión responde al patrón de Inyección de Dependencias (Dependency Injection, DI): en lugar de que cada clase cree sus propias dependencias mediante \texttt{new}, el contenedor de DI de ASP.NET Core las suministra automáticamente al constructor. 
+% El desarrollador registra qué implementación concreta corresponde a cada interfaz, y el contenedor resuelve las dependencias en tiempo de ejecución \cite{ms_di_doc}.
+
+% Este patrón resuelve un problema concreto de acoplamiento. Sin DI, la capa de presentación necesitaría conocer las clases concretas de la capa de aplicación para instanciarlas. Con DI, la presentación solo declara la interfaz en su constructor, sin saber qué implementación recibe ni dónde se encuentra. 
+% Así, si la lógica de negocio cambia, solo debe modificarse la capa de aplicación; la presentación permanece intacta. Este mismo principio se aplica en todas las capas del sistema: la capa de aplicación declara interfaces de repositorio que la infraestructura implementa, y la capa de infraestructura declara interfaces de servicios externos que los proveedores concretos satisfacen. 
+% El contenedor centraliza las dependencias en métodos como \texttt{AddAplication} e \texttt{AddInfrastructure}:
+
+% \begin{lstlisting}[language={[Sharp]C}, caption={Registro de servicios en el contenedor de DI}, label={lst:di_registration}]
+% // Capa de aplicación: AddAplication
+% services.AddScoped<IReportCommandService, ReportCommandService>();
+% services.AddScoped<IReportQueryService, ReportQueryService>();
+% services.AddScoped<IIdentityService, IdentityService>();
+
+% // Capa de infraestructura: AddInfrastructure
+% services.AddScoped<IUnitOfWork, UnitOfWork>();
+% services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+% services.AddScoped<IEmailService, EmailJsService>();
+% \end{lstlisting}
+
+% El siguiente fragmento muestra cómo el controlador recibe \texttt{IIdentityService} sin conocer su implementación, y cómo el servicio de aplicación recibe a su vez \texttt{IJwtTokenGenerator} y \texttt{IUnitOfWork} bajo el mismo principio:
+
+% \begin{lstlisting}[language={[Sharp]C}, caption={Inyección de abstracciones en todas las capas}, label={lst:di_controller}]
+% // Capa de presentación: solo conoce la interfaz
+% public class AuthenticationController : ControllerBase
+% {
+%     private readonly IIdentityService _identityService;
+
+%     public AuthenticationController(IIdentityService identityService)
+%     {
+%         _identityService = identityService;
+%     }
+% }
+
+% // Capa de aplicación: recibe interfaces, no implementaciones
+% public class IdentityService : IIdentityService
+% {
+%     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+%     private readonly IUnitOfWork _unitOfWork;
+
+%     public IdentityService(
+%         IJwtTokenGenerator jwtTokenGenerator,
+%         IUnitOfWork unitOfWork)
+%     {
+%         _jwtTokenGenerator = jwtTokenGenerator;
+%         _unitOfWork = unitOfWork;
+%     }
+% }
+% \end{lstlisting}
+
+% El sistema aplica además el Principio de Separación de Comandos y Consultas (CQS), propuesto por Bertrand Meyer, que establece que una operación debe ser un comando —modifica el estado sin retornar datos— o una consulta —retorna datos sin modificar el estado—, pero nunca ambas cosas \cite{Meyer1988}. 
+% Llevado a la arquitectura, cada recurso del dominio define dos interfaces: una para comandos y otra para consultas. 
+% El siguiente fragmento muestra esta separación para el recurso de reportes:
+
+% \begin{lstlisting}[language={[Sharp]C}, caption={Separación CQS en interfaces de reportes}, label={lst:cqs}]
+% // Comandos: modifican el estado
+% public interface IReportCommandService
+% {
+%     Task<Guid> CreatePublicReportAsync(PublicAefiReportDto dto);
+%     Task CompleteReviewAsync(CompleteReviewDto dto);
+% }
+
+% // Consultas: retornan datos sin modificar
+% public interface IReportQueryService
+% {
+%     Task<PagedResultDto<ReportDto>> GetReportsAsync(PagedRequestDto paged);
+%     Task<ReportDto> GetReportByNotificationNumber(string notificationNumber);
+% }
+% \end{lstlisting}
+
+% Esta separación no alcanza la complejidad de un CQRS completo —ambos servicios comparten el mismo modelo de dominio y la misma base de datos—, pero permite que cada interfaz evolucione según sus necesidades específicas.
+
+% Los servicios de aplicación coordinan los repositorios y el Unit of Work para ejecutar los casos de uso. El siguiente fragmento, extraído de \texttt{IdentityService}, muestra cómo un caso de uso orquesta múltiples dependencias dentro de una misma transacción:
+
+% \begin{lstlisting}[language={[Sharp]C}, caption={Orquestación de dependencias en un caso de uso}, label={lst:orchestration}]
+% public async Task<UserResponseDTO> LoginUserAsync(LoginUserDto loginDto)
+% {
+%     var savedUser = await _identityManager.CheckCredentialsAsync(
+%         loginDto.Email, loginDto.Password)
+%         ?? throw new ArgumentException("Invalid credentials");
+
+%     var accessToken = await _jwtTokenGenerator.GenerateToken(savedUser);
+%     var refreshToken = GenerateRefreshToken();
+
+%     await _unitOfWork.GetRepository<RefreshToken>().CreateAsync(
+%         new RefreshToken
+%         {
+%             Token = refreshToken,
+%             ExpiresAt = DateTime.UtcNow.AddDays(7),
+%             UserId = savedUser.Id
+%         });
+
+%     await _unitOfWork.CompleteAsync();
+
+%     return new UserResponseDTO { ... };
+% }
+% \end{lstlisting}
+
+
+
 \subsubsection{Casos de uso y servicios de aplicación}
 
-Los casos de uso se implementan mediante servicios de aplicación que el controlador invoca a través de interfaces. Esta decisión responde al patrón de Inyección de Dependencias (Dependency Injection, DI): en lugar de que cada clase cree sus propias dependencias mediante \texttt{new}, el contenedor de DI de ASP.NET Core las suministra automáticamente al constructor. 
-El desarrollador registra qué implementación concreta corresponde a cada interfaz, y el contenedor resuelve las dependencias en tiempo de ejecución \cite{ms_di_doc}.
+\paragraph{Separación de comandos y consultas}
 
-Este patrón resuelve un problema concreto de acoplamiento. Sin DI, la capa de presentación necesitaría conocer las clases concretas de la capa de aplicación para instanciarlas. Con DI, la presentación solo declara la interfaz en su constructor, sin saber qué implementación recibe ni dónde se encuentra. 
-Así, si la lógica de negocio cambia, solo debe modificarse la capa de aplicación; la presentación permanece intacta. Este mismo principio se aplica en todas las capas del sistema: la capa de aplicación declara interfaces de repositorio que la infraestructura implementa, y la capa de infraestructura declara interfaces de servicios externos que los proveedores concretos satisfacen. 
-El contenedor centraliza las dependencias en métodos como \texttt{AddAplication} e \texttt{AddInfrastructure}:
-
-\begin{lstlisting}[language={[Sharp]C}, caption={Registro de servicios en el contenedor de DI}, label={lst:di_registration}]
-// Capa de aplicación: AddAplication
-services.AddScoped<IReportCommandService, ReportCommandService>();
-services.AddScoped<IReportQueryService, ReportQueryService>();
-services.AddScoped<IIdentityService, IdentityService>();
-
-// Capa de infraestructura: AddInfrastructure
-services.AddScoped<IUnitOfWork, UnitOfWork>();
-services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-services.AddScoped<IEmailService, EmailJsService>();
-\end{lstlisting}
-
-El siguiente fragmento muestra cómo el controlador recibe \texttt{IIdentityService} sin conocer su implementación, y cómo el servicio de aplicación recibe a su vez \texttt{IJwtTokenGenerator} y \texttt{IUnitOfWork} bajo el mismo principio:
-
-\begin{lstlisting}[language={[Sharp]C}, caption={Inyección de abstracciones en todas las capas}, label={lst:di_controller}]
-// Capa de presentación: solo conoce la interfaz
-public class AuthenticationController : ControllerBase
-{
-    private readonly IIdentityService _identityService;
-
-    public AuthenticationController(IIdentityService identityService)
-    {
-        _identityService = identityService;
-    }
-}
-
-// Capa de aplicación: recibe interfaces, no implementaciones
-public class IdentityService : IIdentityService
-{
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public IdentityService(
-        IJwtTokenGenerator jwtTokenGenerator,
-        IUnitOfWork unitOfWork)
-    {
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _unitOfWork = unitOfWork;
-    }
-}
-\end{lstlisting}
-
-El sistema aplica además el Principio de Separación de Comandos y Consultas (CQS), propuesto por Bertrand Meyer, que establece que una operación debe ser un comando —modifica el estado sin retornar datos— o una consulta —retorna datos sin modificar el estado—, pero nunca ambas cosas \cite{Meyer1988}. 
+El sistema aplica el Principio de Separación de Comandos y Consultas (CQS), propuesto por Bertrand Meyer, que establece que una operación debe ser un comando —modifica el estado sin retornar datos— o una consulta —retorna datos sin modificar el estado—, pero nunca ambas cosas \cite{Meyer1988}. 
 Llevado a la arquitectura, cada recurso del dominio define dos interfaces: una para comandos y otra para consultas. 
+Los comandos pueden retornar un identificador o una confirmación mínima sin violar el principio, ya que el valor retornado no es el resultado de una consulta sino un dato necesario para que el cliente pueda referenciar el recurso creado.
 El siguiente fragmento muestra esta separación para el recurso de reportes:
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Separación CQS en interfaces de reportes}, label={lst:cqs}]
 // Comandos: modifican el estado
 public interface IReportCommandService
 {
-    Task<Guid> CreatePublicReportAsync(PublicAefiReportDto dto);
-    Task CompleteReviewAsync(CompleteReviewDto dto);
+    Task<string> CreatePublicReportAsync(PublicAefiReportDto dto);
 }
 
 // Consultas: retornan datos sin modificar
@@ -316,137 +426,248 @@ public interface IReportQueryService
 
 Esta separación no alcanza la complejidad de un CQRS completo —ambos servicios comparten el mismo modelo de dominio y la misma base de datos—, pero permite que cada interfaz evolucione según sus necesidades específicas.
 
-Los servicios de aplicación coordinan los repositorios y el Unit of Work para ejecutar los casos de uso. El siguiente fragmento, extraído de \texttt{IdentityService}, muestra cómo un caso de uso orquesta múltiples dependencias dentro de una misma transacción:
+\paragraph{Creación de reporte público.}
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Orquestación de dependencias en un caso de uso}, label={lst:orchestration}]
-public async Task<UserResponseDTO> LoginUserAsync(LoginUserDto loginDto)
+El método \texttt{CreatePublicReportAsync} ilustra el orden lógico de un caso de uso complejo. 
+Primero ejecuta los validadores de negocio que verifican la consistencia de los datos. 
+Luego persiste el sujeto vacunado y el reportante —o los recupera si ya existen—, genera el número de notificación y almacena el reporte. 
+A continuación invoca al servicio de detección de duplicados, que compara el número de identidad del sujeto y las vacunas administradas con los reportes existentes; si encuentra coincidencias, registra la relación en \texttt{ReportDuplicate} sin rechazar el reporte. 
+Finalmente publica un evento para que el sistema envíe la notificación de confirmación sin bloquear la respuesta al usuario:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Flujo principal de creación de reporte}, label={lst:create_report_flow}]
+// 1. Validar
+foreach (var validator in _validators)
+    await validator.ValidateAsync(reportDto);
+
+// 2. Persistir sujeto, reportante y reporte
+await _unitOfWork.GetRepository<AefiReport>().CreateAsync(report);
+await _unitOfWork.CompleteAsync();
+
+// 3. Detectar duplicados
+var duplicate = await _reportDuplicate.ValidateAndRegisterAsync(report);
+
+// 4. Notificar sin bloquear
+await _eventBus.PublishAsync(new ReportConfirmationEvent { ... });
+
+return new CreateReportResponseDto { NotificationNumber = report.NotificationNumber };
+\end{lstlisting}
+
+La detección de duplicados compara el número de identidad del sujeto vacunado y, para cada vacuna del nuevo reporte, busca coincidencias de vacuna y fecha de administración en reportes anteriores:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Consulta de detección de duplicados}, label={lst:duplicate_query}]
+var reportOrigin = _unitOfWork.GetRepository<AefiReport>()
+    .GetAllByItems(ar =>
+        ar.VaccinatedSubject.IdentityNumber.Value == report.VaccinatedSubject.IdentityNumber.Value
+        && ar.Id != report.Id) // para evitar que un reporte se considere duplicado de sí mismo al actualizar
+    .FirstOrDefault(ar =>
+        ar.Vaccinations.Any(v =>
+            report.Vaccinations.Any(rv =>
+                v.Lot.VaccineId == rv.Lot.VaccineId &&
+                v.AdministrationDate == rv.AdministrationDate)));
+\end{lstlisting}
+
+El número de notificación sigue la estructura \texttt{AEFI-YYYYMMDD-XXXXXXXX}, donde \texttt{YYYYMMDD} es la fecha de creación y \texttt{XXXXXXXX} es un código alfanumérico de 8 caracteres. Para generar este código, el sistema selecciona 8 valores aleatorios de un alfabeto de 36 caracteres —letras mayúsculas de la A a la Z y dígitos del 0 al 9— utilizando \texttt{RandomNumberGenerator}, el generador criptográfico de .NET:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Generación del código aleatorio del número de notificación}, label={lst:notification_number}]
+private string GenerateSecureCode(int length)
 {
-    var savedUser = await _identityManager.CheckCredentialsAsync(
-        loginDto.Email, loginDto.Password)
-        ?? throw new ArgumentException("Invalid credentials");
-
-    var accessToken = await _jwtTokenGenerator.GenerateToken(savedUser);
-    var refreshToken = GenerateRefreshToken();
-
-    await _unitOfWork.GetRepository<RefreshToken>().CreateAsync(
-        new RefreshToken
-        {
-            Token = refreshToken,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            UserId = savedUser.Id
-        });
-
-    await _unitOfWork.CompleteAsync();
-
-    return new UserResponseDTO { ... };
+    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var bytes = new byte[length];
+    using var rng = RandomNumberGenerator.Create();
+    rng.GetBytes(bytes);
+    var result = new StringBuilder(length);
+    foreach (var b in bytes)
+        result.Append(chars[b % chars.Length]);
+    return result.ToString();
 }
 \end{lstlisting}
 
-\subsubsection{Mapeo y transformación de datos}
+Esta estrategia evita la dependencia de un contador secuencial, lo que hace el número de notificación inmune a cortes de electricidad o reinicios del servidor. La combinación de fecha y código aleatorio reduce la probabilidad de colisión a 1 entre 2.8 billones por día. Un índice único sobre este campo en la base de datos garantiza que, en el improbable caso de una colisión, el sistema reintente la generación hasta obtener un valor único.
 
-La capa de aplicación define DTOs (Data Transfer Objects, objetos de transferencia de datos) para mover información entre la API y el dominio. Un DTO es un objeto plano que contiene solo propiedades, sin lógica de negocio, diseñado para transportar datos en un formato adecuado para el cliente. Las entidades del dominio no se exponen fuera de esta capa, lo que protege al núcleo del sistema de cambios en los formatos de intercambio y evita la exposición accidental de propiedades internas.
+\paragraph{Asignación y reasignación de reportes.}
 
-El sistema emplea AutoMapper para convertir entidades en DTOs y viceversa, aplicando el patrón Mapper \cite{fowler_mapper}. 
-AutoMapper permite definir reglas de transformación en clases llamadas perfiles, que heredan de \texttt{Profile} y centralizan las conversiones entre tipos. 
-Cada perfil declara cómo se asigna cada propiedad de un tipo origen a un tipo destino, incluyendo propiedades anidadas que requieren lógica adicional:
+Si bien el flujo de asignación y reasignación quedó definido en los casos de uso (Sección \ref{section:casos_uso}), su implementación involucra un problema de concurrencia que no se desprende del flujo funcional: dos operaciones simultáneas —un médico completando una revisión y un jefe reasignando el mismo reporte— pueden generar una actualización perdida en la base de datos. El siguiente fragmento muestra cómo la capa de aplicación resuelve este conflicto: el método \texttt{ReassignedAsync} cancela la asignación anterior y crea una nueva, y el bloque \texttt{try-catch} captura \texttt{DbUpdateConcurrencyException} para notificar al jefe que el estado cambió mientras procesaba la operación:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Perfil de mapeo con AutoMapper}, label={lst:mapper_profile}]
-public class AefiReportProfile : Profile
+\begin{lstlisting}[language={[Sharp]C}, caption={Manejo de concurrencia en la reasignación}, label={lst:reassign_concurrency}]
+try
 {
-    public AefiReportProfile()
+    await _unitOfWork.GetRepository<MedicalReviewAssignment>().CreateAsync(newMedicalReviewAssignment);
+    await _unitOfWork.CompleteAsync();
+}
+catch (DbUpdateConcurrencyException)
+{
+    throw new InvalidOperationException(
+        "The assignment was modified while processing the reassignment. Please refresh and verify.");
+}
+\end{lstlisting}
+
+El mecanismo de detección de concurrencia que dispara esta excepción —basado en tokens de fila— se detalla en la sección de infraestructura.
+
+
+
+\paragraph{Inyección de dependencias.}
+
+El patrón de Inyección de Dependencias definido en el Capítulo \ref{chapter:proposal} se materializa mediante el contenedor nativo de ASP.NET Core. 
+El siguiente fragmento muestra el registro centralizado y cómo el controlador recibe la interfaz sin conocer la implementación concreta:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Registro y consumo de dependencias}, label={lst:di_registration}]
+// Registro: el contenedor asocia cada interfaz con su implementación
+services.AddScoped<IReportCommandService, ReportCommandService>();
+services.AddScoped<IIdentityService, IdentityService>();
+
+// Consumo: el controlador solo declara la interfaz en su constructor
+public class ReportController : ControllerBase
+{
+    private readonly IReportCommandService _reportCommandService;
+
+    public ReportController(IReportCommandService reportCommandService)
     {
-        CreateMap<AefiReport, ReportDto>()
-            .ForMember(dest => dest.SubjectName,
-                opt => opt.MapFrom(src => src.VaccinatedSubject.FullName))
-            .ForMember(dest => dest.VaccineNames,
-                opt => opt.MapFrom(src => src.Vaccinations
-                    .Select(v => v.Lot.Vaccine.Name)));
+        _reportCommandService = reportCommandService;
     }
 }
 \end{lstlisting}
 
-En este ejemplo, \texttt{SubjectName} no existe directamente en \texttt{AefiReport}, sino que se obtiene navegando la relación hacia \texttt{VaccinatedSubject}. 
-AutoMapper resuelve esta navegación automáticamente y genera la consulta SQL correspondiente.
+.Net resuelve en tiempo de ejecución que \texttt{IReportCommandService} corresponde a \texttt{ReportCommandService} y lo inyecta automáticamente.
+El método \texttt{AddScoped} registra un servicio para que el contenedor cree una única instancia por cada solicitud HTTP, lo que garantiza que todos los componentes que participan en una misma petición compartan el mismo contexto de base de datos. 
+Cada capa del sistema define su propio método de extensión para registrar sus dependencias, invocados al inicio de la aplicación:
 
-Para las consultas, el sistema aprovecha el método \texttt{ProjectTo<T>} de AutoMapper. 
-A diferencia de un mapeo en memoria —que cargaría la entidad completa para luego transformarla—, \texttt{ProjectTo} traduce la proyección directamente a SQL, de modo que solo las columnas necesarias viajan desde la base de datos hasta la aplicación:
+\begin{lstlisting}[language={[Sharp]C}, caption={Invocación de los métodos de registro en Program.cs}, label={lst:program}]
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Proyección directa a DTO con ProjectTo}, label={lst:projectto}]
-var items = await _unitOfWork.GetRepository<AefiReport>()
-    .GetPaged(query, skip, take)
-    .ProjectTo<ReportDto>(_mapper.ConfigurationProvider)
-    .ToListAsync();
+// Cada capa registra sus propias dependencias
+services.AddPresentation();
+services.AddApplication(builder.Configuration);
+services.AddInfrastructure(builder.Configuration);
+
+var app = builder.Build();
+
+app.Run();
+
 \end{lstlisting}
 
-Esta técnica mejora el rendimiento de las consultas al evitar la carga completa de las entidades y sus relaciones, y al delegar la selección de columnas al motor de base de datos.
 
 
 \subsubsection{Validaciones y manejo de solicitudes}
 
-El sistema aplica dos niveles de validación sobre cada solicitud entrante, en momentos distintos del procesamiento y con propósitos complementarios.
+% El sistema aplica dos niveles de validación sobre cada solicitud entrante, en momentos distintos del procesamiento y con propósitos complementarios.
 
-El primer nivel opera sobre los DTOs mediante atributos de validación de .NET. 
-Estos atributos verifican condiciones simples —obligatoriedad, longitud máxima, formato de correo electrónico o número de teléfono— antes de que la solicitud alcance el servicio de aplicación. ASP.NET Core ejecuta esta validación automáticamente al construir el DTO desde el cuerpo de la solicitud, gracias al atributo \texttt{[ApiController]}. 
-Si algún atributo falla, el middleware devuelve un código 400 con los campos que incumplieron la validación. El siguiente fragmento muestra un DTO con atributos de validación estándar y personalizados:
+% El primer nivel opera sobre los DTOs mediante atributos de validación de .NET. 
+% Estos atributos verifican condiciones simples —obligatoriedad, longitud máxima, formato de correo electrónico o número de teléfono— antes de que la solicitud alcance el servicio de aplicación. ASP.NET Core ejecuta esta validación automáticamente al construir el DTO desde el cuerpo de la solicitud, gracias al atributo \texttt{[ApiController]}. 
+% Si algún atributo falla, el middleware devuelve un código 400 con los campos que incumplieron la validación. El siguiente fragmento muestra un DTO con atributos de validación estándar y personalizados:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={DTO con atributos de validación}, label={lst:dto_validation}]
+% \begin{lstlisting}[language={[Sharp]C}, caption={DTO con atributos de validación}, label={lst:dto_validation}]
+% public class VaccinatedSubjectDto
+% {
+%     [Required(ErrorMessage = "Full name is required.")]
+%     [StringLength(150, MinimumLength = 1)]
+%     public string FullName { get; set; } = string.Empty;
+
+%     [Required(ErrorMessage = "Identity number is required.")]
+%     [IdentityNumberValidation]
+%     public string IdentityNumber { get; set; } = string.Empty;
+    
+%     // el resto de atributos
+% }
+% \end{lstlisting}
+
+% Los atributos personalizados \texttt{IdentityNumberValidation} y \texttt{EmailValidation}, definidos en la capa de aplicación, heredan de \texttt{ValidationAttribute} y encapsulan reglas reutilizables sin duplicar código en múltiples DTOs:
+
+% \begin{lstlisting}[language={[Sharp]C}, caption={Atributo de validación personalizado}, label={lst:custom_validation}]
+% public class IdentityNumberValidationAttribute : ValidationAttribute
+% {
+%     protected override ValidationResult? IsValid(object? value,
+%         ValidationContext validationContext)
+%     {
+%         // valida que tenga formato de 11 dígitos y coherencia
+%         return ValidationResult.Success;
+%     }
+% }
+% \end{lstlisting}
+
+
+
+El sistema aplica dos niveles de validación. El primero opera sobre los DTOs mediante el paquete \texttt{System.ComponentModel.DataAnnotations} de .NET, que permite decorar propiedades con atributos que verifican condiciones simples —obligatoriedad, longitud máxima, formato de correo electrónico— sin escribir lógica de validación manual. Si alguna regla no se cumple, el sistema rechaza la solicitud automáticamente antes de que alcance el servicio de aplicación. .NET proporciona atributos integrados como \texttt{[Required]} y \texttt{[StringLength]}; el sistema extiende este mecanismo con atributos personalizados que heredan de \texttt{ValidationAttribute} y encapsulan reglas reutilizables:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Atributos de validación integrados y personalizados}, label={lst:validation}]
 public class VaccinatedSubjectDto
 {
-    [Required(ErrorMessage = "Full name is required.")]
+    [Required(ErrorMessage = "Full name is required.")]       
+    // Integrado de .NET
     [StringLength(150, MinimumLength = 1)]
     public string FullName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Identity number is required.")]
-    [IdentityNumberValidation]
+    // Personalizado para que cumpla el formato de CI en Cuba
+    [IdentityNumberValidation]                                
     public string IdentityNumber { get; set; } = string.Empty;
-    
-    // el resto de atributos
 }
 \end{lstlisting}
 
-Los atributos personalizados \texttt{IdentityNumberValidation} y \texttt{EmailValidation}, definidos en la capa de aplicación, heredan de \texttt{ValidationAttribute} y encapsulan reglas reutilizables sin duplicar código en múltiples DTOs:
+% El segundo nivel opera dentro del servicio de aplicación, una vez que la solicitud superó las validaciones de formato. Este nivel aplica reglas de negocio que requieren consultar la base de datos o comparar datos de múltiples fuentes: verificar que una vacuna exista, que un lote pertenezca a la vacuna declarada, o que la fecha de administración de la vacuna no sea posterior a la fecha de inicio de los síntomas. Para ello, el sistema define la interfaz \texttt{IReportValidator<T>} y la inyecta en los servicios de aplicación mediante el contenedor de dependencias:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Atributo de validación personalizado}, label={lst:custom_validation}]
-public class IdentityNumberValidationAttribute : ValidationAttribute
-{
-    protected override ValidationResult? IsValid(object? value,
-        ValidationContext validationContext)
-    {
-        // valida que tenga formato de 11 dígitos y coherencia
-        return ValidationResult.Success;
-    }
-}
-\end{lstlisting}
-
-El segundo nivel opera dentro del servicio de aplicación, una vez que la solicitud superó las validaciones de formato. Este nivel aplica reglas de negocio que requieren consultar la base de datos o comparar datos de múltiples fuentes: verificar que una vacuna exista, que un lote pertenezca a la vacuna declarada, o que la fecha de administración de la vacuna no sea posterior a la fecha de inicio de los síntomas. Para ello, el sistema define la interfaz \texttt{IReportValidator<T>} y la inyecta en los servicios de aplicación mediante el contenedor de dependencias:
-
-\begin{lstlisting}[language={[Sharp]C}, caption={Inyección de validadores en el servicio de aplicación}, label={lst:validator_injection}]
-public class ReportCommandService : IReportCommandService
-{
-   // constructor de la clase y variables privadas
+% \begin{lstlisting}[language={[Sharp]C}, caption={Inyección de validadores en el servicio de aplicación}, label={lst:validator_injection}]
+% public class ReportCommandService : IReportCommandService
+% {
+%    // constructor de la clase y variables privadas
    
-    public async Task<CreateReportResponseDto> CreatePublicReportAsync(
-        PublicAefiReportDto reportDto)
-    {
-        // Ejecuta todos los validadores registrados para este tipo de DTO
-        foreach (var validator in _validators)
-            await validator.ValidateAsync(reportDto);
+%     public async Task<CreateReportResponseDto> CreatePublicReportAsync(
+%         PublicAefiReportDto reportDto)
+%     {
+%         // Ejecuta todos los validadores registrados para este tipo de DTO
+%         foreach (var validator in _validators)
+%             await validator.ValidateAsync(reportDto);
 
-        // Continúa con la creación del reporte...
+%         // Continúa con la creación del reporte...
+%     }
+% }
+% \end{lstlisting}
+
+% El contenedor de dependencias resuelve automáticamente todas las implementaciones de \texttt{IReportValidator<T>} registradas y las inyecta como una colección. Esto permite que el servicio ejecute todos los validadores sin conocer sus tipos concretos, en cumplimiento del Principio de Abierto/Cerrado: agregar una nueva regla de validación solo requiere implementar la interfaz y registrarla en el contenedor, sin modificar el servicio de aplicación.
+
+El segundo nivel opera dentro del servicio de aplicación y aplica reglas de negocio que requieren consultar la base de datos o comparar datos de múltiples fuentes. El sistema define la interfaz \texttt{IReportValidator<T>} e inyecta todas sus implementaciones como una colección. Cada implementación valida un aspecto específico: \texttt{AdverseEventValidator} verifica que los síntomas existan en la base de datos, que las fechas respeten la consistencia cronológica (RN-04) y que los eventos de fallecimiento incluyan la fecha correspondiente:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Validador de eventos adversos}, label={lst:adverse_event_validator}]
+public class AdverseEventValidator : IReportValidator<ReportDto>
+{
+    public async Task ValidateAsync(ReportDto reportDto)
+    {
+        // RN-05: Al menos un evento adverso y una vacuna
+        if (!reportDto.AdverseEvents.Any())
+            throw new ArgumentException("At least one adverse event is required.");
+
+        // RN-04: Consistencia cronológica
+        if (adverseEvent.StartDate < minVaccinationDate)
+            throw new ArgumentException("Event start date cannot be before vaccination date.");
+
+        // Verificar que el síntoma exista en la base de datos
+        var symptom = await symptomsRepository.GetByIdAsync(adverseEvent.SymptomId)
+            ?? throw new KeyNotFoundException($"Symptom not found.");
     }
 }
 \end{lstlisting}
 
-El contenedor de dependencias resuelve automáticamente todas las implementaciones de \texttt{IReportValidator<T>} registradas y las inyecta como una colección. Esto permite que el servicio ejecute todos los validadores sin conocer sus tipos concretos, en cumplimiento del Principio de Abierto/Cerrado: agregar una nueva regla de validación solo requiere implementar la interfaz y registrarla en el contenedor, sin modificar el servicio de aplicación.
+El contenedor de dependencias de .NET resuelve automáticamente todas las implementaciones de \texttt{IReportValidator<T>} registradas y las inyecta como una colección. Basta con registrar cada validador en el método \texttt{AddAplication} para que el servicio los reciba sin conocer sus tipos concretos:
 
-Este mismo patrón de validación en segundo nivel aplica a otras reglas de negocio que operan sobre datos ya persistidos. 
-Un ejemplo es la expiración de asignaciones, implementada en \texttt{IAssignmentExpirationService}. 
-Esta regla materializa RN-07 y RN-08 (Capítulo \ref{chapter:proposal}): determina la prioridad del reporte a partir del evento adverso más grave que contenga y aplica el plazo de evaluación correspondiente —24 horas para prioridad alta, 5 días para prioridad media y 7 días para prioridad baja—. 
-El servicio consulta las asignaciones pendientes, compara su fecha de asignación con el plazo según la prioridad del reporte asociado y marca como expiradas aquellas que lo superan.
+\begin{lstlisting}[language={[Sharp]C}, caption={Registro de validadores en el contenedor}, label={lst:validator_registration}]
+services.AddScoped<IReportValidator<ReportDto>, AdverseEventValidator>();
+services.AddScoped<IReportValidator<ReportDto>, VaccinationValidator>();
+\end{lstlisting}
 
-La capa de aplicación extiende el principio de inversión de dependencias a los servicios de infraestructura que necesita para completar sus casos de uso.
-Para acceder a los datos, la aplicación declara interfaces de repositorio como \texttt{IGenericRepository<T>} y \texttt{IUserRepository}, cuyas implementaciones residen en la capa de infraestructura. Para enviar notificaciones, declara \texttt{IEmailService} sin saber si el envío utiliza un servicio externo, un servidor SMTP o cualquier otro mecanismo. Para la autenticación, declara \texttt{IJwtTokenGenerator} e \texttt{IIdentityManager} sin conocer los algoritmos de firma ni las claves secretas. 
-En cada caso, el servicio de aplicación solo conoce la interfaz y confía en que el contenedor de DI suministrará la implementación registrada en \texttt{AddInfrastructure}. Esta separación permite cambiar el proveedor de correo electrónico, el motor de base de datos o el servicio de CAPTCHA sin modificar una sola línea de la capa de aplicación.
+Agregar una nueva regla de validación solo requiere implementar la interfaz y añadir una línea de registro, sin modificar el servicio de aplicación.
+
+% Este mismo mecanismo de inyección de dependencias se extiende a los servicios de infraestructura que la capa de aplicación consume. 
+% La aplicación declara interfaces como \texttt{IEmailService}, \texttt{IJwtTokenGenerator} o \texttt{IGenericRepository<T>} sin conocer sus implementaciones concretas, que residen en la capa de infraestructura y se registran en el contenedor del mismo modo que los validadores.
+
+% Este mismo patrón de validación en segundo nivel aplica a otras reglas de negocio que operan sobre datos ya persistidos. 
+
+    % Un ejemplo es la expiración de asignaciones, implementada en \texttt{IAssignmentExpirationService}. 
+    % Esta regla materializa RN-07 y RN-08 (Capítulo \ref{chapter:proposal}): determina la prioridad del reporte a partir del evento adverso más grave que contenga y aplica el plazo de evaluación correspondiente —24 horas para prioridad alta, 5 días para prioridad media y 7 días para prioridad baja—. 
+    % El servicio consulta las asignaciones pendientes, compara su fecha de asignación con el plazo según la prioridad del reporte asociado y marca como expiradas aquellas que lo superan.
+
+    % La capa de aplicación extiende el principio de inversión de dependencias a los servicios de infraestructura que necesita para completar sus casos de uso.
+    % Para acceder a los datos, la aplicación declara interfaces de repositorio como \texttt{IGenericRepository<T>} y \texttt{IUserRepository}, cuyas implementaciones residen en la capa de infraestructura. Para enviar notificaciones, declara \texttt{IEmailService} sin saber si el envío utiliza un servicio externo, un servidor SMTP o cualquier otro mecanismo. Para la autenticación, declara \texttt{IJwtTokenGenerator} e \texttt{IIdentityManager} sin conocer los algoritmos de firma ni las claves secretas. 
+    % En cada caso, el servicio de aplicación solo conoce la interfaz y confía en que el contenedor de DI suministrará la implementación registrada en \texttt{AddInfrastructure}. Esta separación permite cambiar el proveedor de correo electrónico, el motor de base de datos o el servicio de CAPTCHA sin modificar una sola línea de la capa de aplicación.
 
 
 
@@ -460,21 +681,20 @@ La capa de infraestructura implementa los contratos definidos en las capas de do
 
 
 \subsubsection{Persistencia de datos y configuración de Entity Framework Core}
-
-El sistema utiliza MySQL como motor de base de datos relacional. 
-La conexión se establece mediante una cadena de conexión —que contiene el servidor, el nombre de la base de datos y las credenciales de acceso— almacenada en las variables de entorno del servidor bajo el nombre \texttt{AppDbConnectionString}. 
-El paquete Pomelo.EntityFrameworkCore.MySql, un proveedor de .NET que adapta Entity Framework Core a las características específicas de MySQL \cite{mysql_efcore}, toma esta cadena y la utiliza para establecer la comunicación con la base de datos. 
+La conexión a MySQL se establece mediante una cadena que contiene la dirección del servidor de base de datos, el nombre de la base de datos y las credenciales de acceso, almacenada en las variables de entorno bajo el nombre \texttt{AppDbConnectionString}.
 La configuración se realiza durante el arranque de la aplicación, en un método de extensión llamado \texttt{AddInfrastructure} que centraliza el registro de todos los servicios de esta capa en el contenedor de inyección de dependencias:
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Configuración de la conexión a MySQL}, label={lst:mysqlconfig}]
 var connectionString = configuration.GetConnectionString("AppDbConnectionString");
+
 services.AddDbContext<FinlayDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(
+        connectionString, ServerVersion.AutoDetect(connectionString)));
 \end{lstlisting}
 
 Sobre esta conexión, el contexto \texttt{FinlayDbContext} —la clase que representa la sesión con la base de datos— centraliza el acceso a todas las tablas del sistema. 
 Las características de infraestructura de cada tabla se definen en el método \texttt{OnModelCreating} mediante la API fluida de Entity Framework Core, sin decorar las clases del dominio con atributos propios de la persistencia \cite{microsoft_efcore}. 
-Este método aplica las mismas restricciones definidas en el diseño de la base de datos (Capítulo 3, Sección 3.5): nulabilidad, longitudes máximas, llaves foráneas e índices\footnote{Un índice es una estructura de datos que permite al motor de base de datos localizar filas sin recorrer toda la tabla, de forma similar al índice alfabético de un libro. El sistema define índices sobre columnas consultadas con frecuencia.}.
+Este método aplica las mismas restricciones definidas en el diseño de la base de datos (Sección \ref{section:db_design}): nulabilidad, longitudes máximas, llaves foráneas e índices\footnote{Un índice es una estructura de datos que permite al motor de base de datos localizar filas sin recorrer toda la tabla, de forma similar al índice alfabético de un libro. El sistema define índices sobre columnas consultadas con frecuencia.}.
 Además, cada relación declara un comportamiento de borrado y actualización: \texttt{Cascade} propaga la operación cuando la entidad dependiente carece de sentido sin su principal, mientras que \texttt{Restrict} la bloquea si existen registros referenciados desde otra tabla. 
 El siguiente fragmento, correspondiente a la entidad \texttt{AefiReport}, ilustra estas decisiones:
 
@@ -498,7 +718,9 @@ builder.Entity<AefiReport>(entity =>
 
 \subsubsection{Migraciones y acceso a datos}
 
-El acceso a los datos se implementa mediante el patrón Repository, que abstrae las operaciones de persistencia detrás de interfaces definidas en la capa de aplicación. La clase \texttt{GenericRepository<T>} proporciona una implementación genérica para operaciones comunes —crear, obtener por identificador, listar, actualizar y eliminar— y aprovecha la restricción \texttt{where T : BasicEntity} para operar sobre cualquier entidad del sistema sin duplicar código:
+El acceso a los datos se implementa mediante dos patrones complementarios. 
+El patrón Repositorio abstrae las operaciones de persistencia detrás de interfaces definidas en la capa de aplicación. 
+La clase \texttt{GenericRepository<T>} proporciona una implementación genérica para operaciones comunes —crear, obtener por identificador, listar, actualizar y eliminar— y aprovecha la restricción \texttt{where T : BasicEntity} para operar sobre cualquier entidad del sistema sin duplicar código:
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Repositorio genérico}, label={lst:genericrepository}]
 public class GenericRepository<T> : IGenericRepository<T> where T : BasicEntity
@@ -508,83 +730,195 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BasicEntity
     public virtual async Task<T> CreateAsync(T element) { ... }
     public virtual async Task<T> GetByIdAsync<TId>(TId elementId) { ... }
     public virtual IQueryable<T> GetAll() { ... }
-    public virtual void Update(T element) { ... }
-    public virtual async Task DeleteByIdAsync<TId>(TId elementId) { ... }
+
 }
 \end{lstlisting}
 
-Cuando una entidad requiere consultas que el repositorio genérico no cubre, el sistema define repositorios especializados que heredan de \texttt{GenericRepository<T>} y añaden métodos particulares. Todas las consultas utilizan LINQ, el lenguaje de consulta integrado de C\#, que Entity Framework Core traduce automáticamente a SQL. El siguiente ejemplo muestra una consulta LINQ y la sentencia SQL equivalente que se ejecuta en la base de datos:
+Cada entidad del dominio cuenta con su propio repositorio, que hereda de \texttt{Generic\-Repository<T>} incluso si en esta etapa no añade métodos adicionales. Para aquellas entidades que requieren consultas específicas, el repositorio correspondiente extiende la clase base con los métodos particulares que necesita. Todas las consultas utilizan LINQ, el lenguaje de consulta integrado de C\#, que Entity Framework Core traduce automáticamente a SQL.
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Consulta LINQ y su traducción a SQL}, label={lst:linq}]
-// LINQ
-var reportes = await _entity
-    .Where(r => r.Status == AefiReportStatus.UnderReview)
-    .OrderByDescending(r => r.ReportDate)
-    .Take(10)
-    .ToListAsync();
+La interfaz \texttt{IGenericRepository<T>} declara un conjunto completo de operaciones de lectura y escritura. 
+Esto supone una relajación deliberada del Principio de Segregación de Interfaces (ISP) de SOLID, ya que algunas entidades —como \texttt{RefreshToken}— no necesitan todos estos métodos en sus casos de uso. 
+Mantener un repositorio unificado prioriza la simplicidad del diseño para el volumen actual de entidades, y la clase genérica evita que los repositorios específicos tengan que implementar manualmente métodos que no utilizan. 
+Si en el futuro aumentara la diversidad de casos de uso o el número de entidades con restricciones similares, la interfaz podría segregarse en contratos independientes de lectura y escritura, una mejora que se recoge como trabajo futuro.
 
-// SQL generado
-SELECT TOP 10 *
-FROM AefiReports
-WHERE Status = 'UnderReview'
-ORDER BY ReportDate DESC;
+
+El patrón Unit of Work, implementado en la clase \texttt{UnitOfWork}, coordina las operaciones de múltiples repositorios dentro de una única transacción. Su método \texttt{CompleteAsync} invoca \texttt{SaveChangesAsync} del contexto, lo que garantiza que todos los cambios realizados durante un caso de uso se persistan de forma atómica \cite{martin_fowler_uow}. El método \texttt{GetRepository<T>} resuelve el repositorio correspondiente a cada entidad bajo demanda mediante reflexión, lo que evita inyectar manualmente decenas de repositorios en cada servicio de aplicación.
+
+Ni \texttt{CreateAsync} ni \texttt{Update} materializan los cambios en la base de datos por sí mismos: se limitan a marcar las entidades en el \texttt{ChangeTracker} de Entity Framework Core como pendientes de inserción o modificación. Solo cuando el caso de uso invoca \texttt{CompleteAsync}, el Unit of Work traduce todas esas marcas acumuladas a sentencias SQL y las ejecuta dentro de una única transacción. El siguiente fragmento, correspondiente a la creación de un reporte, ilustra cómo el reporte y el registro de un posible duplicado se marcan antes de confirmarse juntos:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Marcado de entidades y confirmación atómica}, label={lst:unitofwork_atomic}]
+await _unitOfWork.GetRepository<AefiReport>().CreateAsync(report);   // Marca el reporte
+await _reportDuplicate.ValidateAndRegisterAsync(report);             // Marca el duplicado, si existe
+await _unitOfWork.CompleteAsync();                                   // Confirma ambos o ninguno
 \end{lstlisting}
 
-El patrón Unit of Work, implementado en la clase \texttt{UnitOfWork}, coordina las operaciones de múltiples repositorios dentro de una única transacción. 
-Su método \texttt{CompleteAsync} invoca \texttt{SaveChangesAsync} del contexto. 
-Esto garantiza que todos los cambios realizados durante un caso de uso se persistan de forma atómica: si cualquier operación falla, ninguna se materializa en la base de datos \cite{martin_fowler_uow}.
-
-El registro de auditoría se implementa mediante un interceptor de Entity Framework Core que hereda de \texttt{SaveChangesInterceptor}. 
-Este interceptor se ejecuta automáticamente antes de cada \texttt{SaveChangesAsync}: recorre las entidades modificadas, serializa los valores anteriores y posteriores de cada operación, y añade los registros correspondientes a la tabla \texttt{AuditLog}. 
-Como el interceptor opera dentro de la misma transacción, la auditoría y los cambios de negocio se persisten de forma atómica. 
-Esta solución mantiene la transparencia para los casos de uso, que no necesitan invocar ningún servicio de auditoría.
-
-\subsubsection{Integración con servicios externos}
-
-El sistema integra cuatro servicios externos principales: 
+El nivel de aislamiento transaccional es el predeterminado de MySQL (REPEATABLE READ)\footnote{REPEATABLE READ (lectura repetible): nivel de aislamiento que garantiza que una misma consulta ejecutada varias veces dentro de una transacción devuelva los mismos resultados, evitando lecturas sucias y no repetibles \cite{mysql_isolation}.}. Esto significa que cualquier otra solicitud que consulte las tablas involucradas en una transacción en curso verá el estado anterior a dicha transacción hasta que \texttt{CompleteAsync} la confirme. De este modo, ninguna solicitud externa observará un estado intermedio donde el reporte exista pero el duplicado no. Los conflictos de concurrencia entre escrituras simultáneas se abordan en la sección siguiente.
 
 
-\textbf{Friendly CAPTCHA\footnote{CAPTCHA (Completely Automated Public Turing test to tell Computers and Humans Apart): prueba de Turing automatizada que distingue a un humano de un ordenador.}.} Los endpoints públicos están expuestos a ataques automatizados que envían solicitudes directamente a la API. Como primera barrera, el sistema utiliza Friendly CAPTCHA, un servicio de verificación basado en prueba de trabajo criptográfica (proof-of-work) que no afecta la experiencia del usuario. La sección de seguridad (Apartado \ref{section:seguridad}) detalla el fundamento y el flujo de verificación de este mecanismo.
 
-\textbf{Notificaciones por correo electrónico y WhatsApp.} El sistema necesita notificar a los usuarios sobre eventos relevantes —confirmación de reporte, asignación a revisor, expiración de asignación— a través de canales accesibles para la población cubana. La vía de SMS resultó inviable para esta etapa por razones de infraestructura y costo, por lo que el sistema adopta el correo electrónico y WhatsApp, las dos vías con mayor penetración en la ciudadanía cubana.
+\subsubsection{Control de concurrencia optimista}
 
-\textbf{EmailJS.} Para el envío de correos electrónicos, el sistema utiliza EmailJS, un servicio que permite enviar correos sin configurar un servidor SMTP propio. 
-El servicio \texttt{EmailJsService} implementa la interfaz \texttt{IEmailService} y construye una solicitud HTTP a la API de EmailJS con los parámetros de la plantilla, el identificador del servicio y el token de acceso, todos configurados en \texttt{EmailJsSettings}:
+Cuando dos operaciones simultáneas intentan modificar la misma asignación —por ejemplo, un médico completando una revisión mientras un jefe de vacunación reasigna ese mismo reporte—, existe el riesgo de que la segunda operación sobrescriba los cambios de la primera sin detectar el conflicto. Para resolverlo, el sistema adopta una estrategia de concurrencia optimista: en lugar de bloquear la fila durante toda la operación, permite que ambas transacciones avancen y detecta el conflicto al momento de persistir los cambios.
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Envío de correo mediante EmailJS}, label={lst:emailjs}]
+La entidad \texttt{MedicalReviewAssignment} incluye una propiedad \texttt{RowVersion} que Entity Framework Core gestiona como token de concurrencia:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Token de concurrencia en MedicalReviewAssignment}, label={lst:rowversion}]
+public class MedicalReviewAssignment : GuidEntity
+{
+    public byte[] RowVersion { get; set; } = null!;
+}
+
+// En OnModelCreating
+entity.Property(a => a.RowVersion).IsRowVersion();
+\end{lstlisting}
+
+Cada vez que una transacción modifica la fila, MySQL incrementa automáticamente el valor de \texttt{RowVersion}. Cuando otra transacción intenta modificar la misma fila, EF Core compara el valor original del token con el valor actual en la base de datos. Si difieren —porque otra operación la modificó antes—, lanza una excepción \texttt{DbUpdateConcurrencyException}. La capa de aplicación captura esta excepción y notifica al usuario que el estado cambió mientras procesaba la operación, como se mostró en la sección de asignación y reasignación (Apartado \ref{subsection:aplicacion}).
+
+\subsubsection{Idempotencia en la creación de reportes}
+
+Aunque el sistema incorpora mecanismos para que un jefe de sección pueda detectar y validar posibles reportes duplicados, existen situaciones ajenas a la lógica de negocio que pueden provocar la creación innecesaria de múltiples registros. Entre ellas se encuentran los dobles clics sobre el botón de envío, los reintentos automáticos ocasionados por fallos de red o la repetición accidental de una misma solicitud por parte del cliente.
+
+Para evitar este problema se implementó una estrategia de idempotencia. Esta consiste en asociar a cada solicitud de creación de reportes un identificador único, denominado \texttt{Idempotency-Key}, generado por el frontend antes de realizar el envío. Cuando el backend recibe una petición, verifica si esa clave ya ha sido utilizada. Si existe un registro asociado, la operación no se procesa nuevamente, garantizando que una misma solicitud produzca un único resultado.
+
+Con el propósito de realizar esta comprobación de manera eficiente, la clave de idempotencia se almacena en una columna indexada de la base de datos. Sin embargo, el uso de un índice por sí solo no elimina completamente el riesgo de concurrencia. Si dos solicitudes con la misma clave llegan prácticamente al mismo instante, ambas podrían consultar la base de datos antes de que alguna de ellas complete la inserción y concluir incorrectamente que la clave aún no existe.
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Definición de la clave de idempotencia}, label={lst}]
+builder.Entity<AefiReport>(entity =>
+{
+    entity.Property(e => e.IdempotencyKey)
+        .IsRequired()
+        .HasMaxLength(50);
+
+    entity.HasIndex(e => e.IdempotencyKey)
+        .IsUnique();
+});
+\end{lstlisting}
+
+Para evitar esta condición de carrera, la columna correspondiente se define además con una restricción de unicidad. De esta forma, cuando dos solicitudes con la misma \texttt{Idempotency-Key} intentan insertarse simultáneamente, el motor de almacenamiento de MySQL permite que solo una de ellas complete la operación, mientras que la segunda es rechazada por violación de la restricción única \cite{mysql_isolation}. Este mecanismo garantiza que únicamente se cree un reporte, incluso bajo escenarios de concurrencia extrema.
+
+
+\subsubsection{Registro de auditoría}
+
+El requerimiento RNF-08 exige que el sistema registre las acciones relevantes realizadas por los usuarios con fines de trazabilidad. 
+Para implementarlo, el sistema define un interceptor\footnote{Interceptor: clase que se engancha al proceso de guardado de Entity Framework Core y ejecuta lógica adicional antes de que los cambios lleguen a la base de datos.} que hereda de \texttt{SaveChangesInterceptor}. 
+Este interceptor se ejecuta automáticamente antes de cada \texttt{SaveChangesAsync}. Recorre el \texttt{ChangeTracker} —el registro interno que EF Core mantiene con todas las entidades modificadas desde la última consulta— y serializa los valores anteriores y posteriores de cada operación en formato JSON. A continuación, añade los registros correspondientes a la tabla \texttt{AuditLog}.
+Como el interceptor opera dentro de la misma transacción, la auditoría y los cambios de negocio se persisten de forma atómica. Los casos de uso no necesitan invocar ningún servicio de auditoría.
+
+La serialización de los valores anteriores y posteriores añade una sobrecarga mínima a cada transacción, proporcional al número de entidades modificadas. 
+Para el volumen de operaciones de escritura esperado en el Instituto Finlay —decenas de reportes diarios, no miles—, este costo resulta insignificante y no afecta perceptiblemente el tiempo de respuesta.
+
+
+\subsubsection{Registro de logs}
+
+El sistema utiliza Serilog, una biblioteca de registro estructurado para .NET, configurada al iniciar la aplicación. Los registros se escriben simultáneamente en consola y en archivos rotativos diarios almacenados en el directorio \texttt{logs/}, lo que permite diagnosticar errores en producción sin necesidad de acceder a la base de datos:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de Serilog en Program.cs}, label={lst:serilog}]
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/app-.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+\end{lstlisting}
+
+La biblioteca \texttt{Microsoft.Extensions.Logging} de .NET proporciona una abstracción común para el registro, con niveles predefinidos —Information, Warning, Error, Debug— que el sistema utiliza sin necesidad de configuración adicional. Cada servicio de aplicación recibe una instancia de \texttt{ILogger<T>} mediante inyección de dependencias y la utiliza para registrar eventos relevantes durante la ejecución de los casos de uso:
+
+
+\subsubsection{Exportación de datos}
+
+El sistema debe permitir la exportación de reportes en formatos PDF y Excel para su uso en análisis institucionales. Para la generación de PDF, el servicio \texttt{PdfService} utiliza la librería QuestPDF, que describe la estructura del documento —páginas, tablas, texto— mediante una API fluida en código C\#, sin depender de plantillas HTML ni de librerías externas \cite{questpdf}. Para la exportación a Excel, el sistema emplea la biblioteca ClosedXML, que genera hojas de cálculo directamente desde los datos consultados, sin necesidad de automatizar Microsoft Excel.
+
+\subsubsection{Notificaciones del sistema}
+
+El sistema debe notificar a los usuarios sobre eventos relevantes del flujo de farmacovigilancia —asignación a revisor, expiración de asignación— a través de canales accesibles para la población cubana. 
+La vía de SMS resultó inviable para esta etapa por razones de infraestructura y costo, por lo que el sistema adopta el correo electrónico y WhatsApp, los dos canales con mayor presencia en la ciudadanía cubana.
+
+\paragraph{EmailJS.}
+
+EmailJS es un servicio de correo electrónico transaccional que permite enviar mensajes desde aplicaciones web sin necesidad de configurar un servidor SMTP propio. 
+Funciona mediante una API REST: el desarrollador define plantillas en la plataforma de EmailJS y la aplicación envía solicitudes HTTP con los parámetros que completan cada plantilla. 
+EmailJS ofrece un plan gratuito con un límite mensual de envíos, lo que lo hace adecuado para la etapa de prototipado sin incurrir en costos iniciales. 
+
+La capa de aplicación declara la interfaz \texttt{IEmailService}, que recibe el correo del destinatario, el tipo de notificación definido y los datos del evento de dominio que contienen la información de la plantilla:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Interfaz genérica de envío de correos}, label={lst:iemailservice}]
+public interface IEmailService
+{
+    Task SendEmailAsync<T>(
+        string toEmail,
+        EmailTemplateType template,
+        T templateData);
+}
+\end{lstlisting}
+
+El servicio \texttt{EmailJsService} implementa esta interfaz. 
+A partir del tipo de notificación recibido, selecciona el \texttt{template\_id} correspondiente sin necesidad de exponer este identificador ni las variables de entorno fuera de la capa de infraestructura.
+A continuación, construye una solicitud HTTP con los parámetros de la plantilla, el identificador del servicio y el token de acceso, todos obtenidos de las variables de entorno generadas por la plataforma:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Construcción y envío de la solicitud a la API de EmailJS}, label={lst:emailjs}]
 var payload = new
 {
     service_id = _settings.ServiceId,       
     template_id = templateId,                
     user_id = _settings.UserId,             
     accessToken = _settings.AccessToken,   
-    template_params = templateParams          // diccionario que tiene los datos específicos de la plantilla
+    template_params = templateParams
 };
 
-// Serializar y enviar la solicitud a la API de EmailJS
 var json = JsonSerializer.Serialize(payload);
 var content = new StringContent(json, Encoding.UTF8, "application/json");
 var response = await _httpClient.PostAsync(url, content);
 \end{lstlisting}
 
-Cada tipo de notificación se corresponde con una plantilla predefinida, identificada por un \texttt{template\_id}. 
-Los datos específicos de cada plantilla viajan dentro del objeto \texttt{template\_params}, que el servicio construye dinámicamente a partir de los datos recibidos desde la capa de aplicación.
 
-\textbf{OpenWA (WhatsApp).} Para las notificaciones por WhatsApp, el sistema utiliza OpenWA, una API de código abierto que permite enviar mensajes mediante un servidor intermediario conectado a un número de teléfono registrado. A diferencia de la API oficial de WhatsApp Business de Meta, OpenWA no exige verificación empresarial ni tiene costo por mensaje, lo que la hace adecuada para la etapa de prototipado. El servicio que implementa esta integración sigue el mismo patrón que EmailJS: recibe los datos de la notificación desde la capa de aplicación, los transforma al formato esperado por OpenWA y envía la solicitud HTTP correspondiente. Las credenciales de acceso —URL del servidor y token de autenticación— residen en variables de entorno, sin exponerse en el código fuente.
+\paragraph{OpenWA (WhatsApp).}
 
-Tanto EmailJS como OpenWA constituyen soluciones para la etapa de desarrollo y demostración. La arquitectura en capas permite migrar a servicios de producción sin modificar la lógica de negocio: EmailJS puede reemplazarse por un servidor SMTP institucional del IFV o por servicios como SendGrid o Resend con planes extensivos; OpenWA puede migrar a la API oficial de WhatsApp Business de Meta cuando el proyecto transite a producción.
+OpenWA es una API de código abierto que permite enviar mensajes de WhatsApp mediante un servidor intermediario conectado a una sesión de WhatsApp Web activa. 
+El servidor OpenWA se despliega localmente a partir del repositorio oficial del proyecto, lo que otorga control total sobre la infraestructura: configurar puertos, gestionar sesiones, decidir la persistencia de datos y establecer las claves de API que autorizan el acceso. 
+Esta gestión propia introduce una complejidad operativa adicional, pero garantiza mayor soberanía sobre los datos y elimina los costos por mensaje y la verificación empresarial que exige la API oficial de WhatsApp Business, cuyas credenciales y mensajes transitan por servidores ajenos.
 
-\textbf{Generación de PDF.} El servicio \texttt{PdfService} utiliza la librería QuestPDF para generar documentos PDF a partir de los datos de un reporte ESAVI. QuestPDF emplea una API fluida que describe la estructura del documento —páginas, tablas, texto— en código C\# sin depender de plantillas HTML ni de librerías externas \cite{questpdf}.
+La capa de aplicación declara la interfaz \texttt{IWhatsAppService} con el mismo patrón que \texttt{IEmailService}: recibe el número de teléfono del destinatario, el tipo de notificación y los datos del evento de dominio. La capa de infraestructura tiene predefinido el texto de cada mensaje y lo completa con los datos recibidos antes de enviarlo:
 
+\begin{lstlisting}[language={[Sharp]C}, caption={Interfaz de envío de mensajes WhatsApp}, label={lst:iwhatsappservice}]
+public interface IWhatsAppService
+{
+    Task SendMessageAsync<T>(
+        string phoneNumber,
+        WhatsAppTemplateType template,
+        T templateData);
+}
+\end{lstlisting}
 
+El servicio \texttt{WhatsAppService} implementa esta interfaz. A partir del tipo de notificación recibido, selecciona el texto predefinido correspondiente, inserta los datos del evento de dominio y construye la solicitud HTTP al servidor OpenWA con el número de teléfono normalizado y el mensaje resultante:
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Construcción y envío de la solicitud HTTP a OpenWA}, label={lst:whatsapp}]
+var requestBody = new
+{
+    chatId = $"{cleanPhoneNumber}@c.us",
+    text = message
+};
+
+var json = JsonSerializer.Serialize(requestBody);
+var content = new StringContent(json, Encoding.UTF8, "application/json");
+var response = await _httpClient.PostAsync(endpoint, content);
+\end{lstlisting}
+
+Tanto EmailJS como OpenWA constituyen soluciones para la etapa de desarrollo y demostración. 
+La arquitectura en capas permite migrar a servicios de producción sin modificar la lógica de negocio: EmailJS puede reemplazarse por un servidor SMTP institucional del IFV.
+OpenWA puede migrar a la API oficial de WhatsApp Business de Meta cuando el proyecto transite a producción. 
+
+Se reconoce la ausencia de políticas específicas anti-spam aplicadas sobre los canales de salida de mensajería. 
+El control de abuso actual del sistema se gestiona únicamente de forma global en el punto de entrada de la aplicación para mitigar accesos automatizados generales.
+Por consiguiente, el sistema no restringe cuotas de envío individuales por usuario o número de teléfono por hora. 
+Esta limitación es asumible para el alcance de este MVP. Al ser componentes auxiliares fuera del núcleo de farmacovigilancia, su robustecimiento se delega a futuras etapas de infraestructura perimetral.
 
 \subsubsection{Comunicación asíncrona mediante mensajería}
 
-Cuando un usuario completa un reporte ESAVI, el sistema valida los datos, los persiste y envía una notificación de confirmación por correo electrónico. Aunque la operación principal se procesa correctamente, la notificación depende de un servicio externo sujeto a latencia de red o indisponibilidad temporal. Si el envío se ejecuta dentro del mismo hilo que atiende la solicitud HTTP, el usuario percibe esa demora o nunca recibe la confirmación a pesar de que su reporte se guardó exitosamente.
+Cuando un jefe de vacunación asigna un reporte a un médico evaluador, el sistema persiste la asignación y envía una notificación. Aunque la operación principal se procesa correctamente, el envío depende de un servicio externo sujeto a latencia de red o indisponibilidad temporal. Si esta comunicación ocurre dentro del mismo hilo que atiende la solicitud HTTP, el usuario percibe esa demora o nunca recibe la notificación.
 
-Las colas de mensajes resuelven este problema desacoplando la operación principal de sus efectos secundarios. El caso de uso deposita un mensaje en la cola y retorna de inmediato al usuario; el mensaje se procesa en segundo plano. Si el procesamiento falla, el mensaje permanece en la cola y puede reintentarse sin afectar al usuario.
+Las colas de mensajes resuelven este problema desacoplando la operación principal de sus efectos secundarios. El caso de uso deposita un evento en la cola y retorna de inmediato al usuario; el procesamiento ocurre en segundo plano. Si falla, el evento permanece en la cola y puede reintentarse sin afectar al usuario.
 
-El sistema utiliza RabbitMQ como intermediario de mensajería y MassTransit como librería de integración con .NET \cite{masstransit}. Para mantener la capa de aplicación independiente de MassTransit, el sistema define una abstracción propia: la interfaz \texttt{IEventBus}, que expone un único método \texttt{PublishAsync}. La implementación concreta, \texttt{MassTransitEventBus}, reside en la capa de infraestructura y delega en \texttt{IPublishEndpoint} de MassTransit. La configuración se centraliza en el método \texttt{AddInfrastructure}:
+El sistema utiliza RabbitMQ como intermediario de mensajería y MassTransit como librería de integración con .NET \cite{masstransit}. Para mantener la capa de aplicación independiente de MassTransit, el sistema define la interfaz \texttt{IEventBus} en la capa de aplicación y su implementación concreta, \texttt{MassTransitEventBus}, en la capa de infraestructura:
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Configuración de MassTransit con RabbitMQ}, label={lst:masstransit}]
 services.AddMassTransit(x =>
@@ -603,64 +937,26 @@ services.AddMassTransit(x =>
 services.AddScoped<IEventBus, MassTransitEventBus>();
 \end{lstlisting}
 
-Cada consumidor implementa la interfaz \texttt{IConsumer<T>} de MassTransit, donde \texttt{T} es el tipo de evento de dominio que procesa. El siguiente fragmento muestra el patrón de uso: el caso de uso guarda el reporte, publica el evento a través de \texttt{IEventBus} y retorna al usuario sin esperar:
+Cada tipo de evento tiene asociado un consumidor que procesa el mensaje cuando llega a la cola. El siguiente fragmento muestra el patrón completo: el caso de uso publica el evento y retorna sin esperar; el consumidor recibe el mensaje en segundo plano y resuelve los datos necesarios para el envío:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Publicación de un evento tras crear un reporte}, label={lst:publishevent}]
-await _unitOfWork.GetRepository<AefiReport>().CreateAsync(report);
+\begin{lstlisting}[language={[Sharp]C}, caption={Publicación y consumo de un evento}, label={lst:publish_consume}]
+// Capa de aplicación: publicar en la cola y retornar
+await _assignmentRepository.CreateAsync(medicalReviewAssignment);
 await _unitOfWork.CompleteAsync();
+await _eventBus.PublishAsync(new NewAssignmentEvent {...});
 
-await _eventBus.PublishAsync(new ReportConfirmationEvent
+// Capa de infraestructura: recibir y procesar
+public class NewAssignmentConsumer : IConsumer<NewAssignmentEvent>
 {
-    ReportNumber = report.NotificationNumber,
-    Email = reporter.Email,
-    SymptomsName = symptomNames,
-    VaccinesName = vaccinesNames,
-    ReportDate = report.ReportDate
-});
-
-return new CreateReportResponseDto
-{
-    NotificationNumber = report.NotificationNumber
-};
-\end{lstlisting}
-
-El método \texttt{PublishAsync} envía el evento a RabbitMQ y retorna de inmediato. En segundo plano, \texttt{ReportConfirmationConsumer} recibe el mensaje y ejecuta el envío mediante \texttt{IEmailService}. Si el envío falla, MassTransit aplica reintentos automáticos con intervalos crecientes, sin que el usuario perciba el error. El mismo mecanismo aplica al resto de notificaciones del sistema: asignación de un reporte a un médico revisor, expiración de una asignación no completada, nuevo reporte recibido por un jefe de vacunación municipal y correo de activación de cuenta para un revisor recién registrado.
-
-
-
-Para las asignaciones que no se completan en el plazo establecido, un servicio en segundo plano verifica periódicamente las pendientes. 
-Este servicio hereda de \texttt{BackgroundService}, clase base de .NET recomendada para tareas de larga duración \cite{microsoft_background}.
-
-\begin{lstlisting}[language={[Sharp]C}, caption={Servicio en segundo plano para expiración de asignaciones}, label={lst:backgroundservice}]
-public class AssignmentExpirationBackgroundService : BackgroundService
-{
-    ...
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task Consume(ConsumeContext<NewAssignmentEvent> context)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            // Crear un ámbito para acceder a servicios scoped
-            using var scope = _scopeFactory.CreateScope();
-            var service = scope.ServiceProvider
-                .GetRequiredService<IAssignmentExpirationService>();
-
-            // Ejecutar la lógica de negocio en capa de aplicación
-            await service.ProcessExpiredAssignmentsAsync(stoppingToken);
-
-            // Esperar 3 horas antes de la próxima verificación
-            await Task.Delay(TimeSpan.FromHours(3), stoppingToken);
-        }
+        // lógica de consumidor
+        await _emailService.SendEmailAsync(...);
     }
 }
 \end{lstlisting}
 
-En cada ciclo, el servicio invoca a \texttt{IAssignmentExpirationService}, el servicio de aplicación encargado de localizar las asignaciones pendientes cuyo plazo expiró, marcarlas como expiradas, reabrir los reportes asociados y publicar los eventos correspondientes a través de \texttt{IEventBus}. 
-Las reglas de negocio que determinan los plazos de expiración según la severidad del reporte se detallan en la capa de aplicación (Apartado \ref{subsection:aplicacion}). 
-Los consumidores reciben estos eventos y envían las notificaciones por correo electrónico al jefe de vacunación municipal correspondiente.
-
-
-
-
+Si el envío falla, MassTransit aplica reintentos automáticos con intervalos crecientes. El mismo mecanismo aplica al resto de notificaciones del sistema: expiración de una asignación no completada y correo de activación de cuenta para un revisor recién registrado.
 
 
 
@@ -668,9 +964,14 @@ Los consumidores reciben estos eventos y envían las notificaciones por correo e
 
 La capa de presentación constituye el punto de entrada al sistema desde el exterior. Materializa los principios de la arquitectura limpia al depender exclusivamente de la capa de aplicación: los controladores reciben solicitudes HTTP, las transforman en comandos o consultas, y retornan respuestas estructuradas sin contener lógica de negocio.
 
-\subsubsection{Diseño de la API REST}
+\subsubsection{Diseño de la API REST y controladores}
 
-El sistema expone una API REST que sigue las convenciones del protocolo HTTP. Esta decisión responde a dos razones: REST utiliza los verbos y códigos de estado estándar de HTTP, lo que facilita la integración con cualquier frontend web o móvil sin necesidad de librerías propietarias, y su modelo sin estado —cada solicitud contiene toda la información necesaria para procesarla— simplifica el escalamiento horizontal y la depuración \cite{fielding2000}. Cada recurso del dominio —reportes, revisores médicos, asignaciones, vacunas— se identifica mediante una ruta única bajo el prefijo \texttt{/api/}. Los controladores utilizan los verbos HTTP estándar conforme a su propósito: \texttt{POST} para crear recursos, \texttt{GET} para consultarlos, \texttt{PUT} para modificarlos y \texttt{DELETE} para eliminarlos.
+El sistema expone una API REST que sigue las convenciones del protocolo HTTP. 
+Esta decisión responde a dos razones. REST utiliza los verbos y códigos de estado estándar de HTTP, lo que permite integrar cualquier interfaz de usuario sin necesidad de librerías propietarias. Además, su modelo sin estado —cada solicitud contiene toda la información necesaria para procesarla— simplifica el escalamiento horizontal y la depuración \cite{fielding2000}.
+
+Cada recurso del dominio —reportes, revisores médicos, asignaciones, vacunas— se identifica mediante una ruta única bajo el prefijo \texttt{/api/}. 
+Los controladores organizan estos recursos y actúan como fachada entre el protocolo HTTP y los casos de uso de la capa de aplicación.
+Utilizan los verbos HTTP estándar conforme a su propósito: \texttt{POST} para crear recursos, \texttt{GET} para consultarlos, \texttt{PUT} para modificarlos y \texttt{DELETE} para eliminarlos. 
 
 Las respuestas siguen una estructura uniforme. Las operaciones exitosas retornan el código HTTP correspondiente junto con un objeto JSON que contiene un mensaje descriptivo y los datos solicitados. El siguiente fragmento, extraído del controlador de reportes, ilustra esta convención:
 
@@ -682,41 +983,18 @@ return StatusCode(StatusCodes.Status201Created, new
 });
 \end{lstlisting}
 
-Los códigos de estado HTTP comunican el resultado de cada operación de forma inequívoca: 201 para creación exitosa, 200 para consultas, 400 para errores de validación, 404 para recursos no encontrados y 500 para errores internos. Cada endpoint declara explícitamente los códigos que puede retornar mediante el atributo \texttt{[ProducesResponseType]}, lo que permite a Swagger documentarlos automáticamente.
+Los códigos de estado HTTP comunican el resultado de cada operación de forma inequívoca: 201 para creación exitosa, 200 para consultas, 400 para errores de validación, 404 para recursos no encontrados y 500 para errores internos. 
 
-\subsubsection{Controladores y endpoints}
-
-Los controladores organizan los endpoints por recurso del dominio y actúan como fachada entre el protocolo HTTP y los casos de uso de la capa de aplicación. El sistema define controladores para autenticación, reportes, revisores médicos, asignaciones, vacunas, síntomas, provincias y centros de vacunación.
-
-Cada controlador recibe mediante inyección de dependencias únicamente los servicios de aplicación que necesita. El controlador de reportes, por ejemplo, depende de \texttt{IReportQueryService} para consultas e \texttt{IReportCommandService} para comandos, lo que materializa el patrón CQRS desde la presentación:
-
-\begin{lstlisting}[language={[Sharp]C}, caption={Controlador de reportes con separación CQRS}, label={lst:reportcontroller}]
-[ApiController]
-[Route("api/[controller]")]
-public class ReportController : ControllerBase
-{
-    private readonly IReportQueryService _reportQueryService;
-    private readonly IReportCommandService _reportCommandService;
-
-    public ReportController(
-        IReportQueryService reportQueryService,
-        IReportCommandService reportCommandService)
-    {
-        _reportQueryService = reportQueryService;
-        _reportCommandService = reportCommandService;
-    }
-}
-\end{lstlisting}
-
-Los atributos \texttt{[ApiController]} y \texttt{[Route]} configuran el comportamiento del controlador: el primero habilita la validación automática del modelo y la inferencia de parámetros desde el cuerpo de la solicitud; el segundo define la ruta base. Cada método expone un endpoint específico con su verbo HTTP, su política de rate limiting y sus tipos de respuesta documentados.
+El atributo \texttt{[ApiController]} activa automáticamente la validación de los DTO descrita en la sección de validaciones, rechazando las solicitudes que no cumplen las reglas declaradas antes de que alcancen el servicio de aplicación.
 
 \subsubsection{Documentación de la API}
 
-La documentación interactiva de la API se genera automáticamente mediante Swagger, integrado a través de la librería Swashbuckle. Swagger analiza los controladores, los modelos de solicitud y respuesta, y los atributos \texttt{[ProducesResponseType]} para producir una especificación OpenAPI completa y una interfaz web donde los desarrolladores pueden explorar los endpoints y realizar peticiones de prueba directamente desde el navegador.
+La documentación interactiva de la API se genera automáticamente mediante Swagger, integrado a través de la librería Swashbuckle. 
+Swagger analiza los controladores, los modelos de solicitud y respuesta para producir una especificación OpenAPI completa y una interfaz web donde los desarrolladores pueden explorar los endpoints y realizar peticiones de prueba directamente desde el navegador.
 
 La configuración se realiza en el método \texttt{AddPresentation} de la capa de API y se expone en el pipeline de la aplicación solo en entorno de desarrollo:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de Swagger en el pipeline}, label={lst:swagger}]
+\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de Swagger en la aplicación}, label={lst:swagger}]
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -726,101 +1004,37 @@ if (app.Environment.IsDevelopment())
 
 Esta restricción garantiza que la documentación interactiva no quede expuesta en producción, donde podría revelar detalles de la API a usuarios no autorizados.
 
+
+
 \subsubsection{Manejo de excepciones y respuestas}
 
-El sistema centraliza el manejo de errores en el middleware \texttt{ErrorHandlingMiddleware}, que intercepta cualquier excepción no controlada que ocurra durante el procesamiento de una solicitud. Este middleware evita que los detalles de implementación —como el seguimiento de pila— lleguen al cliente, y traduce cada tipo de excepción a un código HTTP y un mensaje apropiado \cite{microsoft_error_handling}:
+El sistema centraliza el manejo de errores en el middleware \texttt{ErrorHandlingMiddleware}, que intercepta cualquier excepción no controlada durante el procesamiento de una solicitud y la traduce a un código HTTP y un mensaje apropiado \cite{microsoft_error_handling}. El mapeo distingue varias categorías: \texttt{KeyNotFoundException} retorna 404, \texttt{ArgumentException} y \texttt{ArgumentNullException} retornan 400, \texttt{UnauthorizedAccessException} retorna 401, e \texttt{InvalidOperationException} retorna 400. Cualquier otra excepción retorna 500 con un mensaje genérico. Esta clasificación permite a la interfaz de usuario interpretar el error sin inspeccionar el mensaje:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Middleware de manejo de excepciones}, label={lst:errormiddleware}]
-public class ErrorHandlingMiddleware
+\begin{lstlisting}[language={[Sharp]C}, caption={Mapeo de excepciones a códigos HTTP}, label={lst:error_mapping}]
+switch (exception)
 {
-    private readonly RequestDelegate _next;
-
-    public async Task Invoke(HttpContext context)
-    {
-        try
-        {
-            await _next(context);
-        }
-        catch (Exception ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-    }
-
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        var code = HttpStatusCode.InternalServerError;
-        string message = "An unexpected error occurred.";
-
-        switch (exception)
-        {
-            case KeyNotFoundException:
-                code = HttpStatusCode.NotFound;
-                message = exception.Message;
-                break;
-            case ArgumentNullException:
-            case ArgumentException:
-                code = HttpStatusCode.BadRequest;
-                message = exception.Message;
-                break;
-            case InvalidOperationException:
-                code = HttpStatusCode.BadRequest;
-                message = exception.Message;
-                break;
-        }
-
-        var result = JsonSerializer.Serialize(new { message });
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)code;
-        return context.Response.WriteAsync(result);
-    }
+    case KeyNotFoundException:
+        code = HttpStatusCode.NotFound; break;
+    case ArgumentNullException:
+    case ArgumentException:
+    case InvalidOperationException:
+        code = HttpStatusCode.BadRequest; break;
+    case UnauthorizedAccessException:
+        code = HttpStatusCode.Unauthorized; break;
+    default:
+        code = HttpStatusCode.InternalServerError; break;
 }
 \end{lstlisting}
 
-El mapeo de excepciones distingue tres categorías: \texttt{KeyNotFoundException} retorna 404 (recurso no encontrado), \texttt{ArgumentException} y \texttt{ArgumentNullException} retornan 400 (datos de entrada inválidos), y cualquier otra excepción retorna 500 con un mensaje genérico. Esta clasificación permite al frontend interpretar el error y actuar en consecuencia sin necesidad de inspeccionar el mensaje.
+Para los errores de validación del modelo, el sistema configura una respuesta personalizada que retorna un objeto JSON con los campos que fallaron y los mensajes correspondientes. Esto garantiza que incluso los errores detectados antes de que la solicitud llegue al controlador —como un campo requerido ausente— sigan el mismo formato de respuesta que el resto de la API.
 
-Para los errores de validación del modelo, el sistema configura \texttt{ApiBehaviorOptions} en \texttt{Program.cs} con una fábrica de respuestas personalizada que retorna un objeto JSON estructurado con los campos que fallaron y los mensajes correspondientes \cite{microsoft_validation}:
-
-\begin{lstlisting}[language={[Sharp]C}, caption={Configuración de respuestas de validación}, label={lst:validation}]
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.InvalidModelStateResponseFactory = context =>
-    {
-        var errors = context.ModelState
-            .Where(x => x.Value.Errors.Count > 0)
-            .Select(x => new
-            {
-                Field = x.Key,
-                Errors = x.Value.Errors.Select(e => e.ErrorMessage)
-            });
-
-        return new BadRequestObjectResult(new
-        {
-            success = false,
-            status = 400,
-            message = "Validation failed",
-            errors
-        });
-    };
-});
-\end{lstlisting}
-
-Esta configuración garantiza que incluso los errores detectados antes de que la solicitud llegue al controlador —como un campo requerido ausente o un tipo de dato incorrecto— sigan el mismo formato de respuesta que el resto de la API.
-
-
-
-
-
-
-
-
-
-
-
-
+Las secciones anteriores recorrieron las cuatro capas del sistema —dominio, aplicación, infraestructura y presentación— y mostraron cómo cada una materializa los patrones y tecnologías seleccionados. Queda por abordar un aspecto que atraviesa todas ellas: la seguridad.
 
 \subsection{Seguridad de la aplicación}
 \label{section:seguridad}
+
+El requerimiento RNF-07 exige que el sistema garantice la confidencialidad, integridad y disponibilidad de los datos. 
+Las siguientes subsecciones detallan cómo se implementaron los mecanismos de autenticación, control de acceso y protección ante ataques, desde la generación de tokens hasta la limitación de velocidad.
 
 \subsubsection{Autenticación basada en JWT y Refresh Token}
 
@@ -1126,120 +1340,39 @@ Esta diferenciación garantiza que cada perfil acceda exclusivamente a las funci
 
 
 
-% \section{Implementación del frontend}
-% \label{section:frontend}
+\subsection{Prevención de envíos duplicados}
 
-% El frontend del sistema se construye como una Single Page Application (SPA) en React con TypeScript. La aplicación consume la API REST del backend y ofrece una interfaz accesible tanto para la población que reporta eventos adversos como para el personal del Instituto Finlay que gestiona las revisiones.
+La creación de un reporte puede duplicarse debido a dobles clics del usuario, reintentos automáticos provocados por fallos de red o pérdidas temporales de conectividad. 
+Para evitar este problema, la aplicación cliente implementa un mecanismo de idempotencia técnica basado en una clave única asociada a cada operación de envío.
 
-% \subsection{Arquitectura y enrutamiento}
+La clave se genera mediante \texttt{crypto.randomUUID()}, una función estandarizada que produce identificadores UUID v4 utilizando un generador criptográficamente seguro proporcionado por el sistema operativo. 
+Este mecanismo emplea 122 bits de entropía aleatoria, lo que hace que la probabilidad de que dos solicitudes distintas generen la misma clave sea estadísticamente despreciable \cite{w3c_uuid}.
 
-% La aplicación utiliza enrutamiento interno controlado por el componente principal \texttt{App.tsx}, que mantiene el estado de la página actual y sincroniza la ruta del navegador con el componente correspondiente mediante un mapa de rutas. Esta decisión evita la dependencia de librerías externas de enrutamiento, reduce el tamaño del bundle final y permite animaciones de transición entre páginas. El acceso a las páginas restringidas se protege mediante el contexto de autenticación (\texttt{AuthContext.tsx}), que redirige al usuario a la página de inicio de sesión si no hay una sesión activa. Los contextos \texttt{AuthProvider} y \texttt{ReportProvider} envuelven toda la aplicación y comparten el estado global sin necesidad de pasarlo manualmente entre componentes.
+Una vez creada, la clave permanece almacenada en memoria del navegador hasta que el servidor responde satisfactoriamente. 
+Su ciclo de vida es completamente independiente del estado del servicio; por tanto, un reinicio del servicio, un corte de electricidad o una caída temporal del servidor no provocan su pérdida. Si la solicitud falla, el siguiente intento reutilizará exactamente la misma clave de idempotencia.
 
-% \subsection{Gestión del estado y comunicación con la API}
+La clave se transmite al servidor mediante el encabezado HTTP \texttt{Idempotency-Key}, ya que representa un identificador de la operación y no un dato propio del reporte. De esta forma, el backend puede reconocer reintentos de una misma solicitud y evitar la creación de registros duplicados.
 
-% El estado global de autenticación reside en \texttt{AuthContext.tsx}, que expone los datos del usuario, el estado de la sesión y las funciones de inicio y cierre de sesión. Al cargar la aplicación, el contexto intenta restaurar la sesión mediante el endpoint de refresco de token, lo que evita que el usuario deba iniciar sesión nuevamente si su token de acceso expiró.
+\begin{lstlisting}[language={TypeScript}, caption={Generación y envío de la clave de idempotencia}, label={lst:idempotency_key}]
+const idempotencyKeyRef = useRef<string | null>(null);
 
-% La comunicación con el backend se centraliza en una instancia de Axios (\texttt{api.ts}) configurada con interceptores para la gestión automática de tokens. El interceptor de solicitud inyecta el encabezado \texttt{Authorization} con el token de acceso; el interceptor de respuesta detecta los códigos 401, intenta renovar el token mediante el servicio de autenticación (\texttt{auth.service.ts}) y reenvía la solicitud original. El refresco excluye explícitamente los endpoints de autenticación para evitar bucles, y preserva los encabezados originales en el reintento:
+const handleSubmit = async (payload: ReportPayload) => {
+if (!idempotencyKeyRef.current) {
+idempotencyKeyRef.current = crypto.randomUUID();
+}
 
-% \begin{lstlisting}[language={TypeScript}, caption={Interceptores de Axios para manejo de tokens (api.ts)}, label={lst:axios}]
-% api.interceptors.request.use((config) => {
-%     const token = tokenManager.getAccessToken();
-%     if (token) config.headers.Authorization = `Bearer ${token}`;
-%     return config;
-% });
+```
+const response = await api.post('/Report/createPublic', payload, {
+    headers: {
+        'Idempotency-Key': idempotencyKeyRef.current
+    }
+});
 
-% api.interceptors.response.use(
-%     (response) => response,
-%     async (error) => {
-%         const originalRequest = error.config;
-%         if (error.response?.status === 401 
-%             && !originalRequest._retry
-%             && !originalRequest.url?.includes('/Authentication/')) {
-%             originalRequest._retry = true;
-%             try {
-%                 const { accessToken } = await authService.refreshToken();
-%                 tokenManager.setAccessToken(accessToken);
-%                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-%                 return api(originalRequest);
-%             } catch (refreshError) {
-%                 tokenManager.clearAccessToken();
-%                 window.location.href = '/login';
-%                 return Promise.reject(refreshError);
-%             }
-%         }
-%         return Promise.reject(error);
-%     }
-% );
-% \end{lstlisting}
+idempotencyKeyRef.current = null; // Se libera solo tras éxito
+```
 
-% \subsection{Almacenamiento del JWT en memoria}
-
-% El token de acceso se mantiene en memoria mediante el módulo \texttt{token-manager.ts} para evitar su persistencia en \texttt{localStorage} o \texttt{sessionStorage}. Esta decisión reduce el riesgo de robo por lecturas desde almacenamiento persistente, aunque no protege contra scripts inyectados que se ejecuten en la página. Por ello, el patrón de seguridad completo combina el token de acceso en memoria con un refresh token almacenado en una cookie HttpOnly, Secure y con SameSite estricta, que el frontend no manipula y por tanto no es vulnerable a XSS.
-
-% Esta estrategia conlleva un riesgo: el token de acceso se pierde al recargar la página. Para mitigarlo, el contexto de autenticación invoca el endpoint de refresco al cargar la aplicación. Si el refresco tiene éxito, el nuevo token de acceso se almacena en memoria y la sesión se restaura sin que el usuario perciba interrupción alguna. El backend debe reforzar esta protección aplicando tasas límite al endpoint de refresco, rotando los refresh tokens y revocándolos ante uso indebido.
-
-% \subsection{Validación en tiempo real}
-
-% Los formularios del sistema —presentes en páginas como \texttt{login-page.tsx} y \texttt{activate-account-page.tsx}— aplican validación en tiempo real mediante las librerías \texttt{react-hook-form} y \texttt{zod}. \texttt{react-hook-form} reduce el número de renderizaciones al no almacenar el estado de cada campo individualmente, lo que mejora el rendimiento en formularios extensos como el de registro de reportes. \texttt{zod} define esquemas declarativos que especifican el formato esperado de cada campo y los mensajes de error correspondientes. La integración de ambas librerías mediante \texttt{@hookform/resolvers} permite que el usuario reciba retroalimentación inmediata mientras escribe, sin esperar a enviar el formulario:
-
-% \begin{lstlisting}[language={TypeScript}, caption={Validación en tiempo real con react-hook-form y zod}, label={lst:validation}]
-% import { useForm } from 'react-hook-form';
-% import { z } from 'zod';
-% import { zodResolver } from '@hookform/resolvers/zod';
-
-% const schema = z.object({
-%     email: z.string().email('Email inválido'),
-%     password: z.string().min(8, 'Mínimo 8 caracteres'),
-%     confirmPassword: z.string(),
-% }).superRefine(({ password, confirmPassword }, ctx) => {
-%     if (password !== confirmPassword)
-%         ctx.addIssue({
-%             code: 'custom',
-%             message: 'Las contraseñas no coinciden',
-%             path: ['confirmPassword']
-%         });
-% });
-
-% function AccountForm() {
-%     const { register, handleSubmit, formState } = useForm({
-%         resolver: zodResolver(schema),
-%         mode: 'onChange',
-%     });
-
-%     return (
-%         <form onSubmit={handleSubmit(onSubmit)}>
-%             <input {...register('email')} />
-%             {formState.errors.email && <span>{formState.errors.email.message}</span>}
-%             <button type="submit" disabled={!formState.isValid}>Enviar</button>
-%         </form>
-%     );
-% }
-% \end{lstlisting}
-
-% \subsection{Construcción de interfaces de usuario y diseño responsivo}
-
-% La interfaz se compone de componentes reutilizables construidos con Tailwind CSS y Radix UI, una librería de componentes accesibles que garantiza la compatibilidad con lectores de pantalla y navegación por teclado. Cada página —inicio de sesión, activación de cuenta, panel de reportes, formulario de registro— se implementa como un componente independiente que consume los contextos globales y los servicios de API.
-
-% La responsividad se logra mediante las utilidades de Tailwind CSS. Las cuadrículas reorganizan sus columnas según el ancho de la pantalla, la navegación alterna entre un menú de escritorio y un menú lateral en dispositivos móviles, y los gráficos del panel de control utilizan \texttt{ResponsiveContainer} de \texttt{recharts} para adaptarse automáticamente al tamaño del contenedor. Para garantizar un rendimiento fluido, los datos de los gráficos se preprocesan en el backend y los componentes visuales emplean \texttt{useMemo} para evitar renderizaciones innecesarias. El siguiente fragmento muestra un gráfico de líneas responsivo:
-
-% \begin{lstlisting}[language={TypeScript}, caption={Gráfico responsivo con recharts}, label={lst:recharts}]
-% <ResponsiveContainer width="100%" height={300}>
-%     <LineChart data={eventsByMonth}>
-%         <CartesianGrid strokeDasharray="3 3" />
-%         <XAxis dataKey="month" />
-%         <YAxis />
-%         <Tooltip />
-%         <Line type="monotone" dataKey="total" stroke="#0A4B8F" />
-%     </LineChart>
-% </ResponsiveContainer>
-% \end{lstlisting}
-
-% \subsection{Manejo de autenticación en el cliente}
-
-% Al iniciar sesión, el cliente decodifica el JWT para extraer el rol del usuario y mostrar únicamente las rutas y opciones correspondientes a ese rol. El componente de navegación (\texttt{navigation.tsx}) utiliza \texttt{useAuth()} para renderizar menús diferentes según el perfil: un jefe de vacunación ve opciones de asignación y estadísticas; un revisor médico ve únicamente los reportes asignados; un ciudadano solo accede al formulario de reporte público y a la consulta por número de notificación.
-
-
-
+};
+\end{lstlisting}
 
 
 
@@ -1261,7 +1394,8 @@ Esta diferenciación garantiza que cada perfil acceda exclusivamente a las funci
 \section{Despliegue de la solución}
 \label{section:deployment}
 
-El sistema se despliega en dos entornos diferenciados. Para desarrollo local, un archivo \texttt{docker-compose.yml} levanta los servicios de RabbitMQ y la API, mientras que la base de datos MySQL se ejecuta en el servidor local. 
+El sistema se despliega en dos entornos diferenciados. 
+Para desarrollo local, un archivo \texttt{docker-compose.yml} levanta los servicios de RabbitMQ y la API, mientras que la base de datos MySQL se ejecuta en el servidor local. 
 Para demostración y pruebas, la API se despliega en Railway, una plataforma como servicio que automatiza la construcción y publicación desde el repositorio de GitHub. 
 
 La configuración se centraliza en un \texttt{Dockerfile} multietapa\footnote{Multietapa: técnica que divide la construcción en fases con imágenes base distintas, reduciendo el tamaño final.} que compila la aplicación en una imagen de SDK\footnote{SDK: imagen con compilador y herramientas de desarrollo.} y la publica en una imagen de runtime\footnote{Runtime: imagen solo con las bibliotecas para ejecutar la aplicación.}, y en variables de entorno que inyectan las credenciales de base de datos, las claves de JWT y las API keys de los servicios externos sin exponerlas en el código fuente.

@@ -56,7 +56,7 @@ Flexibilidad ante cambios de requisitos y rediseño
 & Baja. Enfoque secuencial con poca capacidad de adaptación una vez avanzadas las fases. 
 & Alta. Permite adaptación iterativa de requisitos y ajustes entre entregas. 
 & Alta. Facilita la reorganización continua de tareas y prioridades. 
-& Alta. Soporta cambios mediante refactorización continua y desarrollo incremental. \\
+& Alta. Soporta cambios mediante ciclos cortos y refactorización constante \\
 \hline
 
 Calidad y mantenibilidad del código 
@@ -125,38 +125,39 @@ A continuación, los principales:
 \item \textbf{RF-01. Registro de eventos adversos:}  
 El sistema deberá permitir a los usuarios registrar reportes de \gls{esavi} mediante un formulario web estructurado.
 
-\item \textbf{RF-02. Gestión de información del reporte:}  
-El sistema deberá permitir la captura de datos del paciente, vacunas administradas, y descripción del evento adverso, incluyendo la posibilidad de registrar múltiples eventos en un mismo reporte.
-
-\item \textbf{RF-03. Identificación del reporte:}  
+\item \textbf{RF-02. Identificación del reporte:}  
 El sistema deberá generar automáticamente un código único de notificación o identificación para cada reporte registrado exitosamente.
 
-\item \textbf{RF-04. Validación de formularios:}  
+\item \textbf{RF-03. Validación de formularios:}  
 El sistema deberá validar los campos obligatorios del formulario antes de permitir el envío del reporte.
 
-\item \textbf{RF-05. Almacenamiento de reportes:}  
+\item \textbf{RF-04. Almacenamiento de reportes:}  
 El sistema deberá almacenar los reportes en una base de datos centralizada para su posterior análisis y seguimiento.
 
-\item \textbf{RF-06. Gestión del estado del reporte:}  
-El sistema deberá permitir la actualización del estado de los reportes dentro del flujo de farmacovigilancia (por ejemplo: pendiente, en revisión, validado, rechazado, cerrado).
+\item \textbf{RF-05. Gestión del estado del reporte:}  
+El sistema deberá permitir la actualización del estado de los reportes dentro del flujo de farmacovigilancia (por ejemplo: enviado, en revisión, aprobado, rechazado, cerrado).
 
-\item \textbf{RF-07. Consulta de reportes:}  
-El sistema deberá permitir la búsqueda, filtrado y visualización detallada de reportes según criterios como fecha, vacuna, gravedad y datos demográficos.
+\item \textbf{RF-06. Consulta avanzada de reportes:}  
+El sistema deberá ofrecer una vista de consulta con búsqueda, filtrado y ordenación para todos los reportes, según los permisos del rol.
 
-% \item \textbf{RF-08. Visualización de información:}  
-% El sistema deberá permitir la visualización detallada de cada reporte de evento adverso.
-
-\item \textbf{RF-08. Gestión de usuarios:}  
+\item \textbf{RF-07. Gestión de usuarios:}  
 El sistema deberá permitir la autenticación de usuarios y la administración de roles para el acceso a funcionalidades específicas.
 
-\item \textbf{RF-09. Generación de estadísticas:}  
+\item \textbf{RF-08. Generación de estadísticas:}  
 El sistema deberá generar reportes estadísticos y visualizaciones gráficas para el análisis de los eventos adversos registrados, así como del rendimiento y los tiempos de respuesta del flujo de trabajo.
 
-\item \textbf{RF-10. Exportación de datos:}  
+\item \textbf{RF-09. Exportación de datos:}  
 El sistema deberá permitir la exportación de información en formatos PDF y Excel para su uso en análisis o reportes institucionales.
 
-\item \textbf{RF-11. Notificaciones del sistema:}  
+\item \textbf{RF-10. Notificaciones del sistema:}  
 El sistema deberá generar notificaciones automáticas basadas en eventos del flujo de gestión de reportes de eventos adversos, dirigidas a los usuarios según su rol dentro del sistema.
+
+\item \textbf{RF-11. Detección y gestión de duplicados:}
+El sistema deberá detectar automáticamente posibles reportes duplicados y almacenar la relación. 
+Asimismo, deberá permitir que un usuario especializado resuelva dicha relación mediante un veredicto manual que confirme o descarte la duplicidad.
+
+\item \textbf{RF-12. Reasignación por vencimiento:}
+El sistema deberá permitir la reasignación de un reporte cuya fecha límite de evaluación haya sido superada. 
 
 \end{itemize}
 
@@ -170,7 +171,7 @@ Los requerimientos no funcionales establecen los atributos de calidad bajo los c
 \item \textbf{RNF-01. Eficiencia y usabilidad del registro:}  
 El sistema deberá cumplir con los siguientes criterios en el proceso de reporte de un evento adverso:
 \begin{itemize}
-    \item Completarse en un tiempo promedio menor a 3 minutos para un reporte típico (un evento adverso y una vacuna) por parte de un usuario que haya utilizado el sistema al menos una vez previamente.
+    % \item Completarse en un tiempo promedio menor a 3 minutos para un reporte típico (un evento adverso y una vacuna) por parte de un usuario que haya utilizado el sistema al menos una vez previamente.
     \item Presentar una interfaz intuitiva\footnote{Una interfaz intuitiva es aquella que puede ser utilizada sin entrenamiento previo, siguiendo patrones de diseño web convencionales reconocidos por el usuario promedio.} y fácil de usar para usuarios con diferentes niveles de alfabetización digital.
     \item Basar la captura de datos principalmente en elementos estructurados como listas desplegables, botones de selección y casillas de verificación, minimizando el uso de texto libre.
 \end{itemize}
@@ -197,43 +198,11 @@ El sistema deberá garantizar la confidencialidad, integridad y disponibilidad d
 \item \textbf{RNF-08. Auditoría y trazabilidad:}  
 El sistema deberá registrar las acciones relevantes realizadas por los usuarios, incluyendo creación, modificación y actualización de reportes, con fines de auditoría y control institucional.
 
-
-\end{itemize}
-
-\subsection{Reglas de negocio}
-\label{subsection:reglas_negocio}
-
-Las reglas de negocio definen las restricciones y políticas que rigen la operación del sistema. 
-
-\begin{itemize}
-
-    \item \textbf{RN-01. Alcance territorial del jefe de vacunación:} Un jefe de vacunación solo puede gestionar reportes y asignar médicos evaluadores exclusivamente dentro del municipio al que está adscrito.
-
-    \item \textbf{RN-02. Asignación exclusiva:} Un reporte solo puede estar asignado a un único médico evaluador a la vez. Una nueva asignación inhabilita automáticamente la anterior.
-    
-    \item \textbf{RN-03. Unicidad de vacuna por fecha:} El sistema no permite registrar la misma vacuna más de una vez en la misma fecha para un mismo sujeto vacunado.
-    
-    \item \textbf{RN-04. Consistencia cronológica:} Las fechas registradas en un reporte deben guardar una secuencia lógica: la fecha de nacimiento del sujeto y del reportante antecede a las fechas de vacunación, estas preceden a las fechas de inicio de los eventos adversos, y cualquier fecha de fallecimiento debe ser anterior a la fecha de reporte y a la fecha actual.
-    
-    \item \textbf{RN-05. Integridad del reporte:} Todo reporte debe contener al menos un evento adverso y una vacuna asociada para ser enviado.
-    
-    \item \textbf{RN-06. Gravedad derivada:} El sistema clasifica automáticamente un evento adverso como serio o no serio a partir de los criterios de seriedad registrados, sin intervención directa del usuario sobre este campo.
-    
-    \item \textbf{RN-07. Priorización de reportes por nivel de riesgo:} El sistema clasifica cada reporte según el evento adverso más grave que contenga. La prioridad se determina de la siguiente manera:
-    \begin{itemize}
-        \item \textbf{Prioridad alta:} el evento es serio (resultó en muerte, hospitalización, visita al doctor o a emergencias, discapacidad permanente o anomalía congénita).
-        \item \textbf{Prioridad media:} el evento no es serio pero la intensidad del síntoma es severa, o el paciente no se ha recuperado o quedó con secuelas.
-        \item \textbf{Prioridad baja:} el evento no cumple ninguna de las restricciones anteriores (evento no serio, paciente recuperado ,en recuperación, desconocido, intensidad breve)
-    \end{itemize}
-
-    \item \textbf{RN-08. Plazo de evaluación según prioridad:} Los reportes de prioridad alta deben evaluarse en un máximo de 24 horas; los de prioridad media, en un máximo de 5 días; los de prioridad baja, en un máximo de 7 días. 
-    Superado el plazo, la asignación expira, el reporte regresa a la cola de pendientes listo para que vuelva a ser asignado.
-
 \end{itemize}
 
 
 \section{Diagrama de casos de uso}
-
+\ref{section:casos_uso}
 Esta sección presenta las acciones que pueden realizar los distintos tipos de usuarios dentro de la plataforma, detalladas a través de un diagrama de casos de uso\footnote{Diagrama de casos de uso: Forma de diagrama de comportamiento UML mejorado. Sirve para especificar la comunicación y el comportamiento de un sistema mediante su interacción con los usuarios y/u otros sistemas.}. 
 El diagrama organiza las funcionalidades según el actor que las ejecuta y refleja las relaciones de extensión entre casos de uso.
 
@@ -256,7 +225,7 @@ A continuación, la lógica de negocio asociada a cada interacción:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.2]{Graphics/Cap3/diagrama_casos_uso_white_last.jpg}
+    \includegraphics[scale=0.2]{Graphics/Cap3/diagrama_06_06.drawio.png}
     \caption[Diagrama de casos de uso]{Diagrama de casos de usos. Fuente: elaboración propia.}
     \label{fig:diagrama_casos_uso}
 \end{figure}
@@ -269,32 +238,106 @@ A continuación, la lógica de negocio asociada a cada interacción:
 
     \item \textbf{Gestión de reportes (Reportante):}
         \begin{itemize}
-            \item \textbf{Crear reporte ESAVI:} Permite el ingreso de un nuevo reporte. Este caso de uso posee una relación de tipo \textit{extend} hacia \textbf{Exportar a PDF}, lo que indica que el usuario puede, opcionalmente, generar un comprobante documental tras completar el registro.
+            \item \textbf{Crear reporte ESAVI:} Permite el ingreso de un nuevo reporte mediante un formulario estructurado que captura la siguiente información:
+                    
+                \begin{itemize}
+                    \item \textbf{Información del sujeto vacunado:} nombre completo, número de identidad, sexo, estado de embarazo, provincia, municipio, dirección, teléfono, correo electrónico.
+                    \item \textbf{Información médica previa del sujeto vacunado:} medicamentos actuales, alergias y antecedentes médicos.
+                    \item \textbf{Información de la vacunación:} para cada vacuna administrada, el reportante selecciona del catálogo la vacuna por su nombre comercial y su patología objetivo, el lote correspondiente, el sitio de administración, el número de dosis, el centro de vacunación y la fecha de administración. Las vacunas y los lotes provienen de catálogos predefinidos.
+                    \item \textbf{Descripción de los eventos adversos:} para cada evento, el reportante selecciona un síntoma de un catálogo predefinido, indica la fecha de inicio y fin, la intensidad, el desenlace y los criterios de gravedad —hospitalización, visita al médico o emergencias, discapacidad permanente, anomalía congénita o fallecimiento—.
+                    \item \textbf{Datos del reportante:} relación con el sujeto vacunado, nombre comleto, número de identidad, sexo, provincia, municipio, teléfono y correo electrónico.
+                \end{itemize}
+            
+            Al completar el envío, el sistema genera un número de recibo único, envía una notificación al jefe de vacunación del municipio correspondiente sobre el nuevo reporte.
+            Este caso de uso posee una relación de tipo \textit{extend} hacia \textbf{Exportar a PDF}, lo que indica que el usuario puede, opcionalmente, generar un comprobante documental tras completar el registro.
+
             \item \textbf{Consultar estado de reporte:} Permite al reportante verificar el estado de sus envíos previos ingresando el número de recibo.
         \end{itemize}
 
-    \item \textbf{Gestión Clínica (Médico Evaluador):}
-    \begin{itemize}
-        \item \textbf{Gestionar reportes asignados:} Vista principal del médico donde visualiza su carga laboral. De manera opcional (\textit{extend}), puede aplicar \textbf{Filtrar reportes asignados} para priorizar por antigüedad, gravedad u otros criterios.
-        \item \textbf{Revisar reporte:} Acción de análisis detallado de la información clínica para determinar la causalidad del evento.
-    \end{itemize}
 
     \item \textbf{Supervisión Municipal (Jefe de Vacunación):}
     \begin{itemize}
-        \item \textbf{Asignar reporte a médico:} Funcionalidad crítica para delegar los casos entrantes al personal evaluador disponible.
-        \item \textbf{Consultar indicadores de gestión municipal:} Permite al jefe municipal visualizar un panel con métricas clave para la toma de decisiones, tales como carga de trabajo por médico, porcentaje de reportes completados, tiempos promedio de respuesta y congestión del flujo de trabajo. De manera opcional (\textit{extend}), puede aplicar \textbf{Filtrar indicadores} para segmentar los datos por período, médico, estado del reporte y la gravedad.
-        \item \textbf{Gestionar médicos:} Permite el alta, baja y modificación de los perfiles médicos bajo su jurisdicción.
+        \item \textbf{Gestionar reportes:} Permite al jefe de vacunación visualizar los reportes de su municipio en una tabla filtrable por gravedad, vacuna, estado del reporte y ordenable por fecha. 
+        Desde esta vista, puede seleccionar un reporte y asignarlo a un médico evaluador disponible. 
+        Al asignar, el sistema registra la fecha límite de evaluación según la prioridad del reporte (ver reglas de negocio RN-08 en la sección \ref{section:reglas_negocio}). 
+        De manera opcional (\textit{extend}), puede \textbf{Reasignar reporte}: cuando una asignación supera su plazo de evaluación sin que el médico la haya completado, el jefe reasigna el reporte a otro médico. 
+        La asignación anterior pasa a estado \texttt{cancelado} y crea una nueva con una fecha límite actualizada.
+        \item \textbf{Gestionar duplicados:} Permite al jefe de vacunación acceder a una cola de revisión que lista los posibles duplicados detectados por el sistema (ver RN-09). 
+            Al seleccionar un caso, el sistema muestra una vista comparativa lado a lado entre el reporte original y la copia. El jefe emite un veredicto manual mediante una de estas acciones:
+            \begin{itemize}
+                % \item \textbf{Confirmar duplicado:} El sistema descarta la copia del flujo. Si la copia contiene datos que el original no tiene, los fusiona en el original; en caso de conflicto, prevalecen los datos del original. Registra la resolución.
+                \item \textbf{Confirmar duplicado:} El sistema descarta la copia del flujo y registra la resolución.
+                \item \textbf{Separar como caso nuevo:} El sistema libera la copia al flujo normal y registra la resolución.
+            \end{itemize}
+            Este control de calidad es previo a la asignación y garantiza la integridad de los datos antes de que un caso llegue a un médico evaluador. 
+        \item \textbf{Visualizar panel de control municipal:} Ofrece un panel con indicadores agregados del municipio. Incluye un resumen de reportes totales, pendientes, en revisión y completados; tiempos promedio de revisión y de asignación; promedio de asignaciones por reporte; distribución de reportes por rango de tiempo de completitud; distribución porcentual de estados por médico; carga activa de trabajo por médico; y los elementos más reportados: vacunas, síntomas y distribución por gravedad, junto con una línea de tiempo de reportes. Estos indicadores permiten al jefe identificar qué médicos están más ocupados, cuáles responden con mayor rapidez y tomar decisiones sobre la distribución de la carga de trabajo.
+        \item \textbf{Gestionar médicos:} Permite al jefe de vacunación dar de alta a los médicos evaluadores bajo su jurisdicción. El jefe ingresa el correo electrónico y el número de registro profesional del médico. El sistema envía un enlace de activación al correo del médico, quien completa su registro estableciendo su contraseña y confirmando su número de registro profesional. Este mecanismo garantiza que solo el médico legítimo active su cuenta y que la contraseña no sea conocida por terceros.
     \end{itemize}
+
+
+
+    \item \textbf{Gestión Clínica (Médico Evaluador):}
+    \begin{itemize}
+        \item \textbf{Gestionar reportes asignados:} Vista principal donde el médico visualiza los reportes que le han sido asignados por el jefe de vacunación de su municipio. Cada reporte muestra el número de recibo, la fecha de creación y la gravedad. La tabla permite filtrar y ordenar por antigüedad, gravedad u otros criterios para priorizar la carga de trabajo.
+        \item \textbf{Revisar reporte:} El médico accede al detalle del reporte, analiza la información clínica del sujeto vacunado, los datos de vacunación y los eventos adversos descritos. A partir de esta información, determina la causalidad del evento, emite un dictamen y completa la revisión. La regla RN-08 de \ref{section:reglas_negocio} establece el plazo máximo para completar esta evaluación según la prioridad del reporte. Al finalizar, el sistema notifica al jefe de vacunación sobre la conclusión de la evaluación.
+    \end{itemize}
+   
 
     \item \textbf{Administración y Configuración (Administrador):}
     \begin{itemize}
-        \item \textbf{Actualizar catálogos:} Posibilita el mantenimiento de la información actualizada de vacunas, síntomas, lotes, centros de vacunación y promotores por parte del administrador.
-        \item \textbf{Gestionar jefes municipales:} Posibilita el alta, baja y modificación de las cuentas de los jefes de vacunación municipal.
-        \item \textbf{Consultar estadísticas de ESAVI:} Ofrece la visualización de un panel con indicadores agregados de los eventos adversos reportados, como número de reportes por vacuna, lote, municipio o nivel de gravedad. De manera opcional, incluye la aplicación de \textbf{Filtrar estadísticas} (\textit{extend}) para segmentar los datos y la \textbf{Exportación de datos} (\textit{extend}) en formatos PDF o Excel para análisis externos.
+        \item \textbf{Actualizar catálogos:} Permite al administrador mantener actualizados los catálogos del sistema: vacunas, síntomas, lotes y centros de vacunación.
+        \item \textbf{Gestionar jefes municipales:} Permite al administrador dar de alta a los jefes de vacunación municipal. El sistema envía un enlace de activación al correo electrónico del jefe, quien completa su registro estableciendo su contraseña.
+        \item \textbf{Consultar reportes:} Permite al administrador visualizar una tabla con todos los reportes del sistema, filtrable por vacuna, gravedad, estado del reporte y provincia. Cada fila muestra información preliminar del reporte —edad, sexo, provincia, vacunas, eventos adversos, gravedad, estado y médico asignado— y permite acceder al detalle completo del reporte. De manera opcional (\textit{extend}), puede \textbf{Exportar a Excel} la tabla filtrada y \textbf{Exportar a PDF} el detalle de un reporte.
+        \item \textbf{Visualizar panel de control:} Ofrece un panel con indicadores agregados y gráficos interactivos. Incluye tendencias de reportes por estado, distribución geográfica por provincias, reportes por gravedad y por causalidad, indicadores de rendimiento —número de médicos activos, promedio de reportes por médico, tiempos de revisión y de asignación— y los elementos más reportados: vacunas, lotes por vacuna y síntomas.
     \end{itemize}
+
+
 \end{itemize}
 
+\section{Reglas de negocio}
+\label{section:reglas_negocio}
 
+Las reglas de negocio definen las restricciones y políticas que rigen la operación del sistema. 
+
+\begin{itemize}
+
+    \item \textbf{RN-01. Alcance territorial del jefe de vacunación:} Un jefe de vacunación solo puede gestionar reportes y asignar médicos evaluadores exclusivamente dentro del municipio al que está adscrito.
+
+    \item \textbf{RN-02. Asignación exclusiva:} Un reporte solo puede estar asignado a un único médico evaluador a la vez. Cualquier nueva asignación —ya sea inicial o por reasignación— cancela la anterior.
+    
+    \item \textbf{RN-03. Unicidad de vacuna por fecha:} El sistema no permite que un reportante seleccione la misma vacuna del catálogo más de una vez en la misma fecha para un mismo sujeto vacunado.
+    
+    \item \textbf{RN-04. Consistencia cronológica:} Las fechas registradas en un reporte deben respetar las siguientes restricciones. La fecha de nacimiento del sujeto y del reportante antecede a todas las fechas de vacunación y de inicio de eventos adversos. Cada fecha de inicio de evento adverso es posterior o igual a todas las fechas de vacunación. Si un evento adverso registra fecha de fin, esta debe ser posterior o igual a su fecha de inicio. Cualquier fecha de fallecimiento debe ser posterior o igual al inicio de los eventos adversos y anterior o igual a la fecha de reporte y a la fecha actual.
+
+    \item \textbf{RN-05. Integridad del reporte:} Todo reporte debe contener al menos un evento adverso y una vacuna asociada para ser enviado.
+    
+    \item \textbf{RN-06. Gravedad derivada:} El sistema clasifica automáticamente un evento adverso como serio si el reportante marcó al menos uno de los criterios de gravedad registrados en el reporte. En caso contrario, lo clasifica como no serio. El usuario no interviene directamente sobre este campo.
+ 
+    \item \textbf{RN-07. Priorización de reportes por nivel de riesgo:} El sistema clasifica cada reporte según el evento adverso más grave que contenga. La prioridad responde al siguiente criterio:
+    \begin{itemize}
+        \item \textbf{Prioridad alta:} el evento es serio (resultó en muerte, hospitalización, visita al doctor o a emergencias, discapacidad permanente o anomalía congénita).
+        \item \textbf{Prioridad media:} el evento no es serio pero la intensidad del síntoma es severa, o el paciente continúa sin recuperarse o presenta secuelas.
+        \item \textbf{Prioridad baja:} el evento no cumple ninguna de las restricciones anteriores (evento no serio, paciente recuperado ,en recuperación, desconocido, intensidad breve)
+    \end{itemize}
+
+    \item \textbf{RN-08. Plazo de evaluación según prioridad:} Los reportes de prioridad alta deben evaluarse en un máximo de 24 horas; los de prioridad media, en un máximo de 5 días; los de prioridad baja, en un máximo de 7 días. 
+    Cada asignación registra su fecha límite al momento de crearse. 
+    Superado el plazo, el sistema notifica al médico evaluador y al jefe de vacunación correspondiente, pero no modifica automáticamente el estado de la asignación. 
+    Para determinar si una revisión cumplió el plazo, el sistema compara la fecha en que finalizó con la fecha límite registrada.
+
+    \item \textbf{RN-09. Detección de posibles duplicados:}  
+    Al registrarse un nuevo reporte, el sistema verificará si ya existe en la base de datos otro reporte que comparta el mismo identificador del sujeto vacunado, la misma fecha de vacunación y la misma vacuna. 
+    En caso de coincidencia, el sistema insertará automáticamente un registro en la tabla de control de duplicados, estableciendo:
+    \begin{itemize}
+        \item El reporte preexistente como \texttt{original}.
+        \item El reporte recién creado como \texttt{copia}.
+        \item El estado inicial como \texttt{posible\_duplicado}.
+    \end{itemize}
+    Un reporte que figure como \texttt{copia} en dicha tabla con estado \texttt{posible\_duplicado} no podrá ser asignado a ningún evaluador ni avanzar en el flujo de farmacovigilancia hasta que un usuario especializado emita un veredicto manual que confirme o descarte la duplicidad.
+
+\end{itemize}
+
+En conjunto, los requerimientos funcionales, los casos de uso y las reglas de negocio conforman la especificación del sistema. Los primeros definen qué capacidades ofrece; los segundos, quién las ejecuta y cómo interactúa; y las terceras, bajo qué restricciones opera. Esta triple perspectiva asegura que el diseño cubra tanto las necesidades del dominio como las expectativas de los usuarios.
 
 \section{Arquitectura del sistema}
 \label{section:arquitectura}
@@ -342,7 +385,7 @@ La Tabla \ref{tab:monolito_microservicios} contrapone ambos enfoques en aspectos
 		\hline
 
 		Complejidad Operativa &
-        Baja; fácil de gestionar inicialmente. \cite{ibm_microservices_monolith} &
+        Baja; fácil de desplegar y depurar. \cite{ibm_microservices_monolith} &
 		Alta; requiere orquestación y monitoreo complejo \cite{aws_monolith_microservices}\\[6pt]
         \hline
 		
@@ -368,15 +411,16 @@ Las razones estratégicas que sustentan esta decisión aparecen a continuación:
 \begin{itemize}
 
     \item \textbf{Rapidez de desarrollo:}  Dado que el proyecto cuenta con un cronograma ajustado, el enfoque monolítico permite un desarrollo y despliegue mucho más ágil. 
-    Al trabajar con una única base de código, es posible evitar la complejidad y el tiempo adicional que supone coordinar múltiples servicios, APIs\footnote{API (Application Programming Interface): interfaz que permite la comunicación e intercambio de datos entre distintos componentes de software.} y fuentes de datos externas \cite{ibm_microservices_monolith}. 
+    Al trabajar con una única base de código, es posible evitar la complejidad y el tiempo adicional que supone coordinar múltiples servicios, \gls{api}s y fuentes de datos externas \cite{ibm_microservices_monolith}. 
     Esto posibilita concentrar los esfuerzos en la lógica de negocio del reporte de ESAVI sin incurrir en la sobrecarga de diseño que exigen los microservicios.
 
     \item \textbf{Viabilidad para equipos de desarrollo reducidos:} El equipo inicial está compuesto por un único desarrollador, escenario para el cual la arquitectura monolítica resulta especialmente adecuada. Este modelo no impone una curva de aprendizaje excesivamente pronunciada ni requiere habilidades complejas de administración de sistemas distribuidos \cite{ibm_microservices_monolith}. 
     Para un solo integrante, gestionar una unidad de despliegue única simplifica drásticamente las tareas de codificación, pruebas de extremo a extremo y depuración, al permitir rastrear el flujo de datos dentro de un mismo entorno de programación \cite{ibm_microservices_monolith}.
 
-    \item \textbf{Eficiencia operativa y rendimiento técnico:} El sistema de autorreporte de vacunas opera en un entorno con recursos de infraestructura limitados, donde cada llamada entre componentes en una arquitectura distribuida implicaría una solicitud de red sujeta a latencia, congestión y fallos de comunicación. En contraste, en un monolito las llamadas a funciones son instantáneas y predecibles \cite{docker_microservices_need}. 
-    Esto evita la sobrecarga innecesaria de serialización y deserialización de datos, garantizando un mejor desempeño acorde a las restricciones del entorno \cite{ibm_microservices_monolith}.
-
+    \item \textbf{Eficiencia operativa y rendimiento técnico:} El sistema de autorreporte de vacunas opera en un entorno con recursos de infraestructura limitados, donde cada llamada entre componentes en una arquitectura distribuida implicaría una solicitud de red adicional sujeta a congestión y fallos de comunicación. 
+    En un monolito, las llamadas entre componentes internos —lógica de negocio, acceso a datos— no requieren comunicación de red, lo que elimina la latencia y la sobrecarga de serialización que sí existen en una arquitectura de microservicios \cite{docker_microservices_need}. 
+    Esto reduce los puntos de fallo y favorece un mejor desempeño acorde a las restricciones del entorno \cite{ibm_microservices_monolith}.
+    
 \end{itemize}
 
 Cabe destacar que la adopción de una arquitectura monolítica en la etapa inicial del sistema de reporte de ESAVI no excluye una futura migración hacia microservicios \cite{aws_monolith_microservices}.
@@ -395,9 +439,13 @@ A continuación, el documento presenta y compara dichos enfoques.
 
 \begin{itemize}
     \item \textbf{Arquitectura de N-Capas:} Su filosofía es dividir el sistema según responsabilidades técnicas. Consiste en organizar el código en estratos horizontales —presentación, lógica de negocio y acceso a datos— donde una capa solo puede invocar a la que está directamente debajo. 
-    Como ilustra la Figura \ref{fig:nlayer}, la capa de negocio contiene referencias directas a la capa de base de datos, lo que acopla ambas y dificulta la sustitución independiente de tecnologías \cite{microsoft_arch}.
+    % Como ilustra la Figura \ref{fig:nlayer}, la capa de negocio contiene referencias directas a la capa de base de datos, lo que acopla ambas y dificulta la sustitución independiente de tecnologías \cite{microsoft_arch}.
+    La capa de negocio contiene referencias directas a la capa de base de datos, lo que acopla ambas y dificulta la sustitución independiente de tecnologías \cite{microsoft_arch}.
+    
+    
     \item \textbf{Arquitectura Hexagonal (Puertos y Adaptadores):} Enfoca el diseño en mantener el núcleo de negocio independiente de los detalles externos. 
-    Como muestra la Figura \ref{fig:hexagonal}, la intención es colocar el dominio en el centro de la aplicación y rodearlo de puertos (interfaces que declaran lo que el dominio necesita del exterior) y adaptadores (implementaciones concretas de esas interfaces para tecnologías específicas como una base de datos o un sistema de correo). 
+    % Como muestra la Figura \ref{fig:hexagonal}, la intención es colocar el dominio en el centro de la aplicación y rodearlo de puertos (interfaces que declaran lo que el dominio necesita del exterior) y adaptadores (implementaciones concretas de esas interfaces para tecnologías específicas como una base de datos o un sistema de correo). 
+    La intención es colocar el dominio en el centro de la aplicación y rodearlo de puertos (interfaces que declaran lo que el dominio necesita del exterior) y adaptadores (implementaciones concretas de esas interfaces para tecnologías específicas como una base de datos o un sistema de correo).     
     Así, cambiar de tecnología solo requiere escribir un nuevo adaptador, sin tocar el dominio \cite{cockburn2005, aws_hexagonal}.
     
     
@@ -408,22 +456,22 @@ A continuación, el documento presenta y compara dichos enfoques.
 
 \end{itemize}
 
-\begin{figure}[htbp]
-    \centering
-    \begin{minipage}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[scale=0.55]{Graphics/Cap3/n-layer.jpg}
-        \caption[Arquitectura por capas]{Arquitectura por capas (N-Layer).}
-        \label{fig:nlayer}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[scale=0.60]{Graphics/Cap3/hexagonal.jpg}
-        \caption[Arquitectura hexagonal]{Arquitectura hexagonal (Puertos y Adaptadores).}
-        \label{fig:hexagonal}
-    \end{minipage}
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{minipage}[b]{0.48\textwidth}
+%         \centering
+%         \includegraphics[scale=0.55]{Graphics/Cap3/n-layer.jpg}
+%         \caption[Arquitectura por capas]{Arquitectura por capas (N-Layer).}
+%         \label{fig:nlayer}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}[b]{0.48\textwidth}
+%         \centering
+%         \includegraphics[scale=0.60]{Graphics/Cap3/hexagonal.jpg}
+%         \caption[Arquitectura hexagonal]{Arquitectura hexagonal (Puertos y Adaptadores).}
+%         \label{fig:hexagonal}
+%     \end{minipage}
+% \end{figure}
 
 
 
@@ -460,7 +508,6 @@ Esta satisface los criterios de independencia de la infraestructura, testabilida
 
 Asimismo, la regla de dependencia y la separación en anillos facilitan la aplicación de los principios \gls{SOLID} y DRY (ver glosario \gls{DRY}), al conducir naturalmente a clases con responsabilidades únicas, interfaces segregadas y lógica no duplicada \cite{martin2018}.
 
-
 \subsection{Diseño del sistema basado en Arquitectura Limpia}
 \label{subsection:clean_architecture}
 
@@ -477,71 +524,44 @@ La Figura \ref{fig:arquitectura} ilustra esta organización: las dependencias en
 La distribución de responsabilidades quedó establecida de la siguiente manera:
 
 \begin{itemize}
-    \item \textbf{Capa de Dominio:} Constituye el núcleo del sistema, sin dependencias externas. Aquí residen las entidades de negocio, enumeraciones para clasificación y cualquier regla inherente al dominio del reporte de ESAVI.
+    \item \textbf{Capa de Dominio:} Constituye el núcleo del sistema, sin dependencias externas. Aquí residen las entidades de negocio, enumeraciones para clasificación y eventos de dominio que modelan el comportamiento del reporte de ESAVI.
     
-    \item \textbf{Capa de Aplicación:} Depende exclusivamente del dominio. Orquesta los casos de uso siguiendo el patrón CQRS\footnote{CQRS (Command Query Responsibility Segregation): patrón que separa las operaciones de lectura (consultas) de las de escritura (comandos), permitiendo optimizar cada modelo por separado.}. Define las interfaces que deberán implementar las capas exteriores, estableciendo así los contratos para repositorios, notificaciones y demás servicios requeridos.
-    
-    \item \textbf{Capa de Infraestructura:}  Depende de la capa de aplicación, a través de la cual accede indirectamente al dominio, respetando la regla de dependencia. Contiene las implementaciones concretas de las interfaces definidas en la capa de aplicación, así como la configuración de mecanismos de persistencia, envío de correo y seguridad.
-    
-    \item \textbf{Capa de Presentación:} Depende exclusivamente de la capa de aplicación. Expone la funcionalidad del sistema a través de una API REST y traduce las peticiones externas en comandos o consultas procesables por las capas interiores.
+   \item \textbf{Capa de aplicación:} Depende exclusivamente del dominio. Orquesta los casos de uso y contiene tanto sus interfaces como sus implementaciones, ya que el volumen de casos de uso no justifica una capa adicional. Define dos tipos de contrato: las interfaces de casos de uso, que la presentación consume sin conocer la lógica interna, y las interfaces de servicios de infraestructura —repositorios, envío de correo, mensajería—, cuyas implementaciones residen en la capa de infraestructura. También aloja los validadores que aplican las reglas de negocio antes de que una operación llegue al dominio.
+   
+   \item \textbf{Capa de infraestructura:} Depende de la capa de aplicación, a través de la cual accede indirectamente al dominio, respetando la regla de dependencia. Contiene las implementaciones concretas de las interfaces definidas en la aplicación: persistencia en base de datos, envío de correo, mensajería y seguridad. También configura los servicios externos que estas implementaciones requieren para operar.
+   
+    \item \textbf{Capa de Presentación:} Depende exclusivamente de la capa de aplicación. Expone la funcionalidad del sistema a través de una API REST y traduce las peticiones externas en invocaciones a los casos de uso.
 \end{itemize}
 
-% La implementación concreta de cada capa —incluyendo las tecnologías, frameworks y patrones utilizados— se detalla en el Capítulo 4.
-
-% \subsection{Patrones de Diseño}
-
-% La implementación de la Arquitectura Limpia se complementa con un conjunto de patrones de diseño que refuerzan la separación de responsabilidades y la mantenibilidad del sistema. A continuación se describen los más relevantes y se ilustran con fragmentos de código del proyecto.
-
-
-% \subsubsection{Repository}
-
-% El patrón Repository abstrae el acceso a los datos mediante una interfaz que simula una colección en memoria, permitiendo al dominio obtener y almacenar objetos sin conocer los detalles de persistencia \cite{evans2003, fowler2002}.
-
-% En el proyecto, cada entidad del dominio cuenta con una interfaz de repositorio definida en la capa de Aplicación. La implementación concreta reside en Infraestructura y utiliza Entity Framework Core sobre MySQL. Así, los casos de uso invocan métodos como \texttt{GetByIdAsync} o \texttt{AddAsync} sin depender del \texttt{DbContext} ni del motor de base de datos.
-
-% \subsubsection{Unit of Work}
-
-% El patrón Unit of Work mantiene el registro de los cambios realizados sobre un conjunto de objetos durante una transacción de negocio y los persiste de forma atómica \cite{fowler2002}.
-
-% En el proyecto se implementa mediante la interfaz \texttt{IUnitOfWork} definida en Aplicación. Su implementación en Infraestructura aprovecha el método \texttt{SaveChangesAsync} del \texttt{DbContext} de Entity Framework Core, que por diseño ya actúa como una unidad de trabajo, garantizando que todas las operaciones pendientes se confirmen o se descarten como un solo bloque.
-
-% \subsubsection{Inyección de dependencias}
-
-% La inyección de dependencias es un patrón mediante el cual un objeto recibe las dependencias que necesita en lugar de instanciarlas directamente, invirtiendo el control de su creación \cite{fowler2004}.
-
-% En el proyecto se utiliza el contenedor nativo de ASP.NET Core. En la capa de Presentación se registran todas las interfaces definidas en Aplicación con sus implementaciones concretas en Infraestructura. De este modo, cuando un caso de uso solicita un \texttt{IAefiReportRepository}, el contenedor resuelve automáticamente la implementación concreta, manteniendo las capas internas desacopladas de las externas.
-
-% \subsubsection{Mapper}
-
-% El patrón Mapper transfiere datos entre dos objetos independientes sin que ninguno conozca la estructura del otro \cite{fowler2002}.
-
-% En el proyecto se emplea para convertir entidades de dominio en DTOs y viceversa. Esto evita exponer las entidades fuera de la capa de Aplicación y mantiene el dominio aislado de los formatos de transporte utilizados por la API REST.
-
-Si bien la estructura en capas establece una separación clara de responsabilidades, persisten desafíos concretos que requieren soluciones adicionales: el acceso a datos sin acoplar el dominio a un ORM, la atomicidad de las operaciones, el desacoplamiento entre capas y la transformación de objetos. 
-Para resolverlos, el diseño incorporó patrones ampliamente validados que encajan de forma natural con la Arquitectura Limpia.
+La estructura en capas resuelve la separación de responsabilidades, pero persisten desafíos que requieren mecanismos adicionales: abstraer el acceso a datos, mantener la atomicidad de las operaciones, desacoplar las capas entre sí y transformar objetos en los límites de cada una. Para abordarlos, el diseño incorpora los siguientes patrones:
 
 \begin{itemize}
-    \item \textbf{Repository:} Abstrae el acceso a los datos mediante una interfaz que simula una colección en memoria, permitiendo al dominio obtener y almacenar objetos sin conocer los detalles de persistencia \cite{evans2003, fowler2002}.
+    \item \textbf{Repositorio:} Abstrae el acceso a los datos mediante una interfaz que simula una colección en memoria, permitiendo al dominio obtener y almacenar objetos sin conocer los detalles de persistencia. En la arquitectura limpia, la capa de aplicación declara las interfaces que necesita para sus casos de uso y la capa de infraestructura proporciona la implementación concreta. Así, un cambio en la tecnología de almacenamiento no afecta al núcleo del sistema \cite{evans2003, fowler2002}.
     
-    \item \textbf{Unit of Work:} Mantiene el registro de los cambios realizados sobre un conjunto de objetos durante una transacción de negocio y los persiste de forma atómica \cite{fowler2002}.
+    \item \textbf{Unit of Work:} Agrupa un conjunto de operaciones sobre el repositorio y las persiste de forma atómica. En la arquitectura limpia, este patrón garantiza que el sistema confirme o descarte los cambios de una transacción de negocio como una sola unidad, manteniendo la consistencia de los datos sin que la lógica de dominio tenga que gestionar conexiones ni sesiones \cite{fowler2002}.
+
+    \item \textbf{Inyección de dependencias:} Patrón mediante el cual un objeto recibe las dependencias que necesita en lugar de instanciarlas directamente, invirtiendo el control de su creación. 
+    En la arquitectura limpia, este patrón es el mecanismo que permite que cada capa trabaje con interfaces y que el framework resuelva en tiempo de ejecución la implementación concreta que corresponde. 
+    Así, ninguna capa necesita conocer los detalles de construcción de sus dependencias \cite{fowler2004}.
     
-    \item \textbf{Inyección de dependencias:} Patrón mediante el cual un objeto recibe las dependencias que necesita en lugar de instanciarlas directamente, invirtiendo el control de su creación \cite{fowler2004}.
-    
-    \item \textbf{Mapper:} Transfiere datos entre dos objetos independientes sin que ninguno conozca la estructura del otro \cite{fowler2002}.
+
+\item \textbf{Mapper (DTO Mapper):} Convierte objetos entre capas sin que ninguna conozca la estructura interna de la otra. Los DTO transportan únicamente los datos que cada capa necesita: entidades de dominio hacia la presentación, datos de entrada hacia la aplicación, o metadatos agregados desde infraestructura hacia aplicación. Este mecanismo actúa como traductor en todos esos cruces, garantiza que el dominio permanezca encapsulado y permite que cada capa evolucione sin afectar a las demás \cite{fowler2002}.
+
+ 
 \end{itemize}
 
-Tanto la implementación concreta de cada capa —incluyendo las tecnologías y frameworks empleados— como el desarrollo detallado de los patrones aquí enunciados encuentran su desarrollo en el Capítulo \ref{chapter:implementation}.
 
+El Capítulo \ref{chapter:implementation} detalla la implementación concreta de cada capa y de los patrones aquí enunciados.
+
+Una vez definida la arquitectura del sistema y los patrones que gestionan la persistencia, corresponde diseñar el modelo de datos a partir de las entidades del dominio. 
 
 
 \section{Diseño de base de datos}
 \label{section:db_design}
 
-Esta sección aborda el marco teórico-computacional referente a la persistencia de la información. 
-Comprende el modelo entidad-relación, el esquema relacional y las restricciones de integridad que definen el modelo de datos, así como las decisiones que fundamentaron su estructura.
+El diseño de la base de datos adopta un enfoque relacional, orientado a garantizar la integridad referencial y la trazabilidad de cada reporte desde su creación hasta su evaluación clínica.
 
 \subsection{Modelo Entidad-Relación Extendido (MERX)}
-El modelado de los datos adopta un enfoque relacional, diseñado para garantizar la integridad referencial y la trazabilidad de cada reporte desde su creación hasta su evaluación clínica. 
 La Figura \ref{fig:merx} presenta el diagrama MERX (Modelo Entidad-Relación Extendido), el cual muestra las relaciones entre entidades, sus cardinalidades y las jerarquías de herencia para los roles de usuario.
 
 \begin{figure}[H]
@@ -555,6 +575,10 @@ La Figura \ref{fig:merx} presenta el diagrama MERX (Modelo Entidad-Relación Ext
 
 Para facilitar el análisis y la implementación del sistema, el diseño de la base de datos adopta una segmentación en cinco módulos funcionales. 
 Esta división permite una mejor comprensión de las dependencias de identificación y las reglas de negocio que rigen la trazabilidad de los reportes.
+
+Todas las entidades del esquema emplean un identificador único universal (UUID, por \textit{Universally Unique Identifier}), compuesto por 32 dígitos hexadecimales y 4 guiones que suman 36 caracteres.
+Esta característica permite generar el identificador sin depender de una secuencia centralizada de base de datos. 
+Las tablas provincia y municipio constituyen la única excepción: emplean enteros autoincrementales por tratarse de catálogos geográficos con pocos registros y alta estabilidad, donde la simplicidad y el menor tamaño del identificador resultan más adecuados que las propiedades de un UUID.
 
 \subsection{Módulo 1: Gestión de Usuarios y Roles}
 
@@ -581,8 +605,7 @@ La tabla usuario concentra los atributos comunes a todos los perfiles del sistem
     \item \textbf{Id\_Usuario:} identificador único generado automáticamente al momento del registro.
     \item \textbf{Nombre:} nombre completo del usuario.
     \item \textbf{Correo electrónico:} dirección de correo electrónico institucional, utilizada como credencial de acceso y medio de contacto oficial.
-    \item \textbf{Contraseña:}  almacenada mediante el algoritmo \textit{PBKDF2} con \textit{HMAC-SHA256}, una sal de 128 bits y 10,000 iteraciones, correspondiente al formato \textit{ASP.NET Core Identity Versión 3} implementado por la clase \texttt{PasswordHasher} \cite{andrewlock2017}. 
-    Este mecanismo impide el almacenamiento de las credenciales en texto plano y evita su recuperación a partir del valor hash.
+    \item \textbf{Contraseña:} credencial de acceso que autentica al usuario en el sistema. El sistema la almacena de forma segura mediante mecanismos de hashing criptográfico. El Capítulo \ref{chapter:implementation} detalla la implementación concreta de este mecanismo.
     \item \textbf{Id\_Rol (FK):} llave foránea que referencia a la tabla Rol, estableciendo el perfil funcional del usuario dentro del sistema. Cada usuario tiene asignado al menos un rol, siendo estos: Administrador, Jefe de Vacunación Municipal o Médico Evaluador.
 \end{itemize}
 
@@ -892,27 +915,38 @@ El esquema relacional desarrollado fue verificado hasta alcanzar la Tercera Form
 La elección de la 3FN como nivel objetivo obedece a dos razones: elimina los problemas prácticos de redundancia sin introducir una fragmentación excesiva de tablas que afecte el rendimiento de las consultas, y constituye el nivel ampliamente aceptado en aplicaciones transaccionales como criterio de calidad suficiente \cite{date2012}.
 Formas normales superiores como Boyce-Codd (BCNF) y Cuarta Forma Normal (4FN) abordan casos específicos —dependencias donde todo determinante debe ser clave candidata y dependencias multivaluadas, respectivamente— que no aparecen en el dominio de este sistema \cite{silberschatz2019}.
 
-\subsubsection*{Dependencias funcionales principales}
+% \subsubsection*{Dependencias funcionales principales}
+
+% Una dependencia funcional $X \rightarrow Y$ establece que los valores del conjunto de atributos $X$ determinan unívocamente los valores de $Y$. 
+% A continuación son resumidas las dependencias que rigen el modelo
+
+% \begin{itemize}
+%     \item En \textbf{Usuario}: Id\_Usuario $\rightarrow$ \{Id\_rol, Nombre\_Usuario, Correo\_Electrónico, Contraseña\}.
+%     \item En \textbf{Persona}: CI $\rightarrow$ \{Nombre, Id\_Municipio, Género\}.
+%     \item En \textbf{Sujeto Vacunado}: CI $\rightarrow$ \{Embarazo, Dirección, Historia\_Clínica, Correo\_Electrónico, Número\_Teléfono\}.
+%     \item En \textbf{Reportante}: CI $\rightarrow$ \{Relación\_Sujeto\_Vacunado, Correo, Número\_Teléfono\}.
+%     \item En \textbf{Reporte}: Id\_Reporte $\rightarrow$ \{Id\_Sujeto, Id\_Reportante, Fecha\_Reporte, Estado, Número\_Recibo\}.
+%     \item En \textbf{Evento Adverso}: Id\_Evento\_Adverso $\rightarrow$ \{Id\_Reporte, Id\_Síntoma, Fecha\_Inicio, Fecha\_Fin, Intensidad, Desenlace, Descripción, Variables\_Gravedad \footnote{En el modelo real, la gravedad queda registra mediante un conjunto de atributos booleanos independientes (hospitalización, anemia, amenaza de muerte, discapacidad, anomalía congénita y otras condiciones clínicamente relevantes). Para el análisis de dependencias funcionales, estos atributos quedan agrupados bajo la notación \textit{Variables\_Gravedad}, ya que ninguno de ellos depende funcionalmente de otro y su tratamiento conjunto simplifica la representación sin pérdida de rigor.}\}.
+%     \item En \textbf{Vacunación}: Id\_Vacunación $\rightarrow$ \{Id\_Reporte, Id\_Lote, Id\_Centro, Sitio\_Administración, Número\_Dosis, Fecha\_Administración\}.
+%     \item En \textbf{Lote}: Id\_Lote $\rightarrow$ \{Id\_Vacuna, Número\_Lote\}.
+%     \item En \textbf{Vacuna}: Id\_Vacuna $\rightarrow$ \{Id\_Promotor,Nombre\_Vacuna, Tipo\_Vacuna, Descripción, Patología\_Objetivo\}.
+%     \item En \textbf{Centro de Vacunación}: Id\_centro\_vacunación $\rightarrow$ \{Id\_Municipio, Nombre\_Centro, Dirección\_Centro\}.
+%     \item En \textbf{Promotor}:Id\_Promotor $\rightarrow$ \{Nombre\_Promotor, País\_Promotor\}.
+%     \item En \textbf{Alerta}: Id\_Alerta $\rightarrow$ \{Id\_Reporte, Id\_Jefe\_Vacunación, Fecha\_Creación, Estado\_Alerta \}.
+%     \item En \textbf{Asignación}: Id\_Asignación $\rightarrow$ \{Id\_Alerta, Id\_Médico, Fecha\_Asignación, Estado\_Asignación, Fecha\_Fin\}.
+%     \item En \textbf{Evaluación}: Id\_Evaluación $\rightarrow$ \{Id\_Asignación, Causalidad, Significancia\_Clínica, Observaciones\}.
+% \end{itemize}
+
+
+\subsubsection*{Dependencias funcionales}
 
 Una dependencia funcional $X \rightarrow Y$ establece que los valores del conjunto de atributos $X$ determinan unívocamente los valores de $Y$. 
-A continuación son resumidas las dependencias que rigen el modelo
+Cuando $Y$ depende de $X$ y a su vez $Z$ depende de $Y$, ocurre una dependencia transitiva $X \rightarrow Y \rightarrow Z$, que la tercera forma normal busca eliminar.
 
-\begin{itemize}
-    \item En \textbf{Usuario}: Id\_Usuario $\rightarrow$ \{Id\_rol, Nombre\_Usuario, Correo\_Electrónico, Contraseña\}.
-    \item En \textbf{Persona}: CI $\rightarrow$ \{Nombre, Id\_Municipio, Género\}.
-    \item En \textbf{Sujeto Vacunado}: CI $\rightarrow$ \{Embarazo, Dirección, Historia\_Clínica, Correo\_Electrónico, Número\_Teléfono\}.
-    \item En \textbf{Reportante}: CI $\rightarrow$ \{Relación\_Sujeto\_Vacunado, Correo, Número\_Teléfono\}.
-    \item En \textbf{Reporte}: Id\_Reporte $\rightarrow$ \{Id\_Sujeto, Id\_Reportante, Fecha\_Reporte, Estado, Número\_Recibo\}.
-    \item En \textbf{Evento Adverso}: Id\_Evento\_Adverso $\rightarrow$ \{Id\_Reporte, Id\_Síntoma, Fecha\_Inicio, Fecha\_Fin, Intensidad, Desenlace, Descripción, Variables\_Gravedad \footnote{En el modelo real, la gravedad queda registra mediante un conjunto de atributos booleanos independientes (hospitalización, anemia, amenaza de muerte, discapacidad, anomalía congénita y otras condiciones clínicamente relevantes). Para el análisis de dependencias funcionales, estos atributos quedan agrupados bajo la notación \textit{Variables\_Gravedad}, ya que ninguno de ellos depende funcionalmente de otro y su tratamiento conjunto simplifica la representación sin pérdida de rigor.}\}.
-    \item En \textbf{Vacunación}: Id\_Vacunación $\rightarrow$ \{Id\_Reporte, Id\_Lote, Id\_Centro, Sitio\_Administración, Número\_Dosis, Fecha\_Administración\}.
-    \item En \textbf{Lote}: Id\_Lote $\rightarrow$ \{Id\_Vacuna, Número\_Lote\}.
-    \item En \textbf{Vacuna}: Id\_Vacuna $\rightarrow$ \{Id\_Promotor,Nombre\_Vacuna, Tipo\_Vacuna, Descripción, Patología\_Objetivo\}.
-    \item En \textbf{Centro de Vacunación}: Id\_centro\_vacunación $\rightarrow$ \{Id\_Municipio, Nombre\_Centro, Dirección\_Centro\}.
-    \item En \textbf{Promotor}:Id\_Promotor $\rightarrow$ \{Nombre\_Promotor, País\_Promotor\}.
-    \item En \textbf{Alerta}: Id\_Alerta $\rightarrow$ \{Id\_Reporte, Id\_Jefe\_Vacunación, Fecha\_Creación, Estado\_Alerta \}.
-    \item En \textbf{Asignación}: Id\_Asignación $\rightarrow$ \{Id\_Alerta, Id\_Médico, Fecha\_Asignación, Estado\_Asignación, Fecha\_Fin\}.
-    \item En \textbf{Evaluación}: Id\_Evaluación $\rightarrow$ \{Id\_Asignación, Causalidad, Significancia\_Clínica, Observaciones\}.
-\end{itemize}
+En el esquema diseñado, el atributo determinante de cada tabla es su clave primaria: un identificador único en las tablas transaccionales y de flujo de trabajo, y el número de identidad en la jerarquía de persona, sujeto vacunado y reportante. 
+Los atributos dependientes son todos aquellos que forman parte de la misma tabla y no constituyen la clave primaria, según la estructura presentada en las secciones anteriores. 
+Las dependencias entre tablas quedan modeladas mediante claves foráneas, reflejadas en el diagrama entidad-relación.
+
 
 \subsubsection*{Cumplimiento de las formas normales}
 
@@ -948,6 +982,10 @@ En conclusión, el esquema relacional satisface las tres formas normales definid
 El análisis no identificó dependencias parciales ni transitivas que requirieran descomposición adicional, por lo que el diseño garantiza la integridad de los datos.
 
 
+\section{Conclusiones del capítulo}
+
+Con la arquitectura definida, los patrones establecidos y el modelo de datos normalizado, el diseño del sistema queda completo en sus aspectos estructurales. 
+El siguiente capítulo traslada estas decisiones al plano constructivo: la implementación del sistema, las tecnologías que la materializan y la integración de cada componente en un producto funcional.
 
 
 
