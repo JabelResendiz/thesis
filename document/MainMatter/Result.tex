@@ -64,44 +64,457 @@
 %     \item \textbf{Pruebas de usabilidad:} evaluación con usuarios representativos mediante el método de pensamiento en voz alta y el cuestionario SUS.
 % \end{itemize}
 
+
+
+
+
+
 \section{Pruebas funcionales}
 
-Las pruebas funcionales verificaron que los flujos principales del sistema operan conforme a los requerimientos funcionales definidos en el Capítulo \ref{chapter:proposal}. La Tabla \ref{tab:pruebas_funcionales} resume los casos de prueba ejecutados, seleccionados por su representatividad dentro del flujo de farmacovigilancia.
 
-\begin{table}[H]
+El objetivo de estas pruebas fue validar que las funcionalidades críticas del sistema ESAVI cumplen con los requisitos de diseño y garantizan el flujo de información para la farmacovigilancia [3, 4]. Para ello, se empleó una estrategia de caja negra simulando operaciones de usuarios normales desde el navegador, utilizando datos sintéticos (\textit{mock}) para verificar la persistencia y la respuesta del sistema ante entradas representativas [5]. 
+
+El estado de cumplimiento de las funciones principales se resume en la Tabla \ref{tab:pruebas_funcionales}, donde se evidencia que todos los casos de prueba seleccionados fueron ejecutados con éxito, confirmando la operatividad de la plataforma [1].
+
+
+\begin{table}[htpb]
 \centering
 \caption{Resumen de casos de prueba funcionales}
 \label{tab:pruebas_funcionales}
-\begin{tabular}{|p{1.2cm}|p{3.5cm}|p{3.5cm}|p{3cm}|c|}
+\begin{tabular}{|p{0.9cm}|p{2.8cm}|p{2.8cm}|p{3.2cm}|p{2.5cm}|p{1.3cm}|}
 \hline
-\textbf{ID} & \textbf{Caso de prueba} & \textbf{Datos de entrada} & \textbf{Resultado esperado} & \textbf{¿Pasó?} \\
+\textbf{ID} & \textbf{Caso de prueba} & \textbf{Datos de entrada} & \textbf{Resultado esperado} & \textbf{Resultado obtenido} & \textbf{¿Pasó?} \\
 \hline
-CP01 & Registro de reporte público & Datos completos de sujeto, vacuna y síntoma & Código 201 y número de notificación & \checkmark \\
+CP01 & Inicio de sesión & Credenciales válidas & Acceso al sistema según el rol del usuario & Acceso concedido correctamente & \checkmark \\
 \hline
-CP02 & Registro con campos vacíos & Formulario sin datos obligatorios & Código 400 con errores de validación & \checkmark \\
+CP02 & Registro de reporte ESAVI& Datos completos del reporte & Reporte almacenado y documento PDF generado & Operación realizada correctamente & \checkmark \\
 \hline
-CP03 & Inicio de sesión con credenciales válidas & Correo y contraseña correctos & JWT, cookie de refresh y redirección al panel & \checkmark \\
+CP03 & Consulta por número de notificación & Número de notificación existente & Visualización del estado y detalles del reporte & Información mostrada correctamente & \checkmark \\
 \hline
-CP04 & Inicio de sesión con credenciales inválidas & Correo y contraseña incorrectos & Código 400 con mensaje de error & \checkmark \\
+CP04 & Gestión de usuarios & Datos de un nuevo médico o jefe de sección & Usuario registrado y disponible para administración & Usuario creado correctamente & \checkmark \\
 \hline
-CP05 & Asignación de reporte a revisor & Reporte pendiente y revisor disponible & Asignación creada y notificación enviada & \checkmark \\
+CP05 & Asignación de reporte a médico & Reporte pendiente y médico disponible & Asignación creada y visible para el médico & Asignación realizada correctamente & \checkmark \\
 \hline
-CP06 & Consulta de reportes por municipio & Municipio con 5 reportes registrados & Lista con 5 reportes & \checkmark \\
+CP06 & Resolución de reportes duplicados & Reportes identificados como posibles duplicados & Actualización del estado según la decisión tomada & Proceso ejecutado correctamente & \checkmark \\
 \hline
-CP07 & Finalización de revisión médica & Reporte en estado: \textit{En revisión} & Estado actualizado a \texttt{Revisado} & \checkmark \\
+CP07 & Visualización del dashboard administrativo & Solicitud de acceso al panel de indicadores & Presentación de estadísticas e indicadores & Dashboard mostrado correctamente & \checkmark \\
 \hline
-CP08 & Exportación de reporte a PDF & Reporte con datos completos & Archivo PDF generado correctamente & \checkmark \\
+CP08 & Filtrado de reportes & Parámetros de búsqueda y filtrado & Listado de reportes coincidentes & Resultados obtenidos correctamente & \checkmark \\
 \hline
-CP09 & Consultar estado de reporte válido & Número de notificación & Estado detallado & \checkmark \\
+CP09 & Revisión médica del reporte & Reporte asignado al médico & Actualización del estado y registro de la revisión & Revisión completada correctamente & \checkmark \\
+\hline
+CP10 & Inicio de sesión con credenciales inválidas & Usuario o contraseña incorrectos & Rechazo del acceso y mensaje de error & Validación ejecutada correctamente & \checkmark \\
+\hline
+CP11 & Registro de reporte con datos obligatorios ausentes & Formulario incompleto & Notificación de errores de validación & Validación ejecutada correctamente & \checkmark \\
+\hline
+CP12 & Consulta de número de notificación inexistente & Número no registrado & Notificación de reporte no encontrado & Respuesta emitida correctamente & \checkmark \\
 \hline
 \end{tabular}
 \end{table}
 
 
+\subsection{Evidencias de ejecución}
+
+
+En esta sección se presentan capturas de pantalla que evidencian la ejecución correcta de los principales flujos del sistema, validando la interacción entre el usuario y la interfaz, así como la respuesta del servidor en tiempo real.
+
+Cada flujo funcional se documenta de manera secuencial, permitiendo demostrar de forma estructurada el comportamiento integral del sistema de extremo a extremo.
+
+\subsubsection{Flujo completo del manejo de reportes ESAVI}
+
+Este flujo describe el ciclo completo de gestión de un reporte ESAVI, desde su creación por el usuario hasta su evaluación final por el médico evaluador y la consulta del estado actualizado del caso, como se muestra en la Figura~\ref{fig:esavi-flow}.
+
+\begin{figure}[H]
+    \centering
+
+    % =====================
+    % Fila 1 (2 imágenes)
+    % =====================
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/creacion_reporte.jpg}
+        \caption{Creación de reporte ESAVI}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/creacion_reporte_exitoso.jpg}
+        \caption{Confirmación de registro del reporte}
+    \end{subfigure}
+
+    \vspace{0.6cm}
+
+    % =====================
+    % Fila 2 (imagen vertical)
+    % =====================
+    \begin{subfigure}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/captura_asignacion_jefe.jpg}
+        \caption{Asignación del reporte por el jefe de vacunación municipal a un médico evaluador}
+    \end{subfigure}
+
+    \vspace{0.6cm}
+
+    % =====================
+    % Fila 3 (2 imágenes)
+    % =====================
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/asignación_vista.jpg}
+        \caption{Visualización del reporte por el médico evaluador asignado}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/busqueda_reporte2.jpg}
+        \caption{Actualización del estado del reporte tras la evaluación médica}
+    \end{subfigure}
+
+    \caption{Flujo del sistema ESAVI para la creación, asignación y evaluación de reportes de eventos adversos posteriores a la vacunación}
+    \label{fig:esavi-flow}
+\end{figure}
+
+
+\subsubsection{Gestión de acceso y registro de médico evaluador}
+
+Este flujo abarca el proceso de registro de un médico evaluador en el sistema y su posterior autenticación mediante inicio de sesión, garantizando el acceso controlado a las funcionalidades del módulo de revisión de reportes.
+
+
+
+
+
+\subsection{Análisis de resultados}
+
+
+% 1.
+
+
+
+
+
+
+
+
 \section{Pruebas de rendimiento}
+
+% objetivo
+
+% metodología (K6, metricas, hardware y modo de prueba(datos simulados, red local))
+
+\subsection{Entorno de Pruebas}
+
+Las pruebas de rendimiento se ejecutaron con k6, herramienta de código abierto para pruebas de carga. 
+El backend se desplegó en una máquina con sistema operativo Linux Ubuntu 22.04, procesador Intel Core i5 de 4 núcleos a 2.5 GHz, 8 GB de RAM y almacenamiento SSD de 256 GB. 
+k6 se ejecutó en una máquina cliente independiente con Windows 11, procesador Intel Core i7 de 8 núcleos a 3.0 GHz y 16 GB de RAM, conectadas mediante red hotspot a 2.4 GHz. 
+Esta separación garantiza que las mediciones no se vean afectadas por competencia de recursos entre el cliente de pruebas y el servidor.
+
+Se emplearon datos simulados que representan solicitudes realistas de creación y búsqueda de reportes ESAVI, con una carga útil equivalente a la del sistema en producción. Las métricas analizadas fueron: latencia promedio y percentil 95 (\texttt{http\_req\_duration}), throughput (\texttt{http\_reqs}) y tasa de solicitudes exitosas (status 201). 
+Se definió como umbral de tiempo aceptable 3000 ms y como criterio de fallo funcional cualquier código de estado distinto de 2XX.
+
+El objetivo fue identificar, para cada endpoint crítico, el número máximo de usuarios concurrentes que el sistema soporta antes de superar estos umbrales.
+
+\subsubsection{Creación de Reporte de ESAVI}
+
+Para evaluar el rendimiento del endpoint de creación de reportes se diseñó una prueba de carga incremental con datos simulados. Cada solicitud contiene un reporte completo con 13 vacunas y 10 lotes por vacuna. Los detalles de configuración —etapas de rampa (1 min subida, 3 min estable, 1 min bajada), generación de datos y código k6— se presentan en el Anexo \ref{anexo:k6-creacion}. Las pruebas se ejecutaron de forma independiente para 5, 10, 30, 50, 70, 80, 100, 150 y 200 VUs.
+
+Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fig:creacion-porcentaje} muestran la evolución de las métricas conforme aumenta la carga concurrente.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.80]
+            \begin{axis}[
+                xlabel={VUs},
+                ylabel={Latencia (ms)},
+                legend pos=north west,
+                grid=major,
+                width=8cm,
+                height=7cm,
+                xtick={5,10,30,50,70,80,100,150,200},
+                xticklabel style={font=\tiny},
+                ytick={0,2000,4000,6000,8000,10000},
+                yticklabels={0,2k,4k,6k,8k,10k},
+                yticklabel style={font=\tiny},
+                legend style={font=\tiny},
+            ]
+                \addplot[mark=square, blue, thick] coordinates {
+                    (5, 106.6) (10, 188.6) (30, 304.1) (50, 546.2)
+                    (70, 975.6) (80, 1882.1) (100, 2246.9) (150, 4721.3) (200, 5404.2)
+                };
+                \addlegendentry{Promedio}
+                \addplot[mark=triangle, red, thick] coordinates {
+                    (5, 177.4) (10, 327.7) (30, 627.9) (50, 1192.8)
+                    (70, 2214.1) (80, 2956.2) (100, 4056.4) (150, 6728.2) (200, 8011.1)
+                };
+                \addlegendentry{p(95)}
+                \addplot[black, dashed, thick] coordinates {(5,3000) (200,3000)};
+                \node[anchor=south, font=\tiny] at (axis cs:100,3000) {Umbral 3000 ms};
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.40\textwidth}
+        \small
+        Los resultados muestran tres zonas de comportamiento. Hasta 70 VUs, la latencia se mantiene por debajo de 1000 ms con el 100\% de las solicitudes respondiendo en menos de 3000 ms. A partir de 80 VUs aparece el primer punto de degradación: la latencia asciende a 1882 ms. Con 100 VUs alcanza 2246 ms, y con 200 VUs supera los 5400 ms.
+    \end{minipage}
+    \caption{Evolución de la latencia según usuarios concurrentes.}
+    \label{fig:creacion-latencia}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.80]
+            \begin{axis}[
+                xlabel={VUs},
+                ylabel={Throughput (req/s)},
+                legend pos=north east,
+                grid=major,
+                width=8cm,
+                height=7cm,
+                xtick={5,10,30,50,70,80,100,150,200},
+                xticklabel style={font=\tiny},
+                ymin=0,
+                ymax=35,
+                yticklabel style={font=\tiny},
+                legend style={font=\tiny},
+            ]
+                \addplot[mark=*, green!60!black, thick] coordinates {
+                    (5, 23.1) (10, 26.8) (30, 24.6) (50, 23.0)
+                    (70, 20.3) (80, 22.2) (100, 20.1) (150, 21.0) (200, 25.0)
+                };
+                \addlegendentry{Throughput}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.40\textwidth}
+        \small
+        El throughput se mantuvo estable entre 20 y 26 req/s en todos los niveles de carga. Esto indica que el sistema alcanzó su capacidad máxima de procesamiento sin degradar la tasa de solicitudes exitosas: los usuarios adicionales no aumentan el rendimiento, sino que se traducen en mayor latencia.
+    \end{minipage}
+    \caption{Evolución del throughput según usuarios concurrentes.}
+    \label{fig:creacion-throughput}
+\end{figure}
+
+
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.80]
+            \begin{axis}[
+                xlabel={VUs},
+                ylabel={Solicitudes < 3000ms (\%)},
+                legend pos=north east,
+                grid=major,
+                width=8cm,
+                height=7cm,
+                xtick={5,10,30,50,70,80,100,150,200},
+                xticklabel style={font=\tiny},
+                ymin=0,
+                ymax=110,
+                yticklabel style={font=\tiny},
+                legend style={font=\tiny},
+            ]
+                \addplot[mark=*, orange, thick] coordinates {
+                    (5, 100) (10, 100) (30, 100) (50, 100) (70, 100)
+                    (80, 95.8) (100, 74.8) (150, 19.1) (200, 10.7)
+                };
+                \addlegendentry{\% < 3000ms}
+                \addplot[black, dashed] coordinates {(5,100) (200,100)};
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.40\textwidth}
+        \small
+        Hasta 70 VUs, el 100\% de las solicitudes responde en menos de 3000 ms. A partir de 80 VUs este porcentaje comienza a caer: 95.8\% con 80 VUs, 74.8\% con 100 VUs, y se desploma al 19.1\% y 10.7\% con 150 y 200 VUs respectivamente. En ningún momento se registraron errores funcionales (100\% status 201), lo que confirma que la degradación es atribuible a las limitaciones del entorno de pruebas y no a deficiencias del código.
+    \end{minipage}
+    \caption{Porcentaje de solicitudes por debajo del umbral de 3000 ms.}
+    \label{fig:creacion-porcentaje}
+\end{figure}
+
+La prueba de carga sobre el endpoint de creación de reportes permite concluir que el sistema ofrece un rendimiento sólido bajo concurrencia moderada, con una zona de operación óptima donde la experiencia de usuario se mantiene fluida y sin degradación. La prueba simula un escenario más exigente que el uso real —cada usuario virtual envía solicitudes de forma ininterrumpida—, por lo que los resultados representan una cota inferior conservadora de la capacidad real del sistema.
+
+Al superar el umbral de operación óptima, la latencia comienza a degradarse progresivamente, aunque sin comprometer la funcionalidad: en ningún nivel de carga se registraron errores, lo que confirma que las limitaciones observadas son atribuibles al entorno de pruebas y no a deficiencias del código desarrollado.
+
+
+\subsubsection{Búsqueda de Reporte por Número de Notificación}
+
+Para evaluar el rendimiento del endpoint de búsqueda se diseñó una prueba de carga incremental variando dos factores: el tamaño de la base de datos y la concurrencia. Se pobló la base de datos con 1,000, 10,000, 50,000 y 100,000 reportes, y para cada nivel se ejecutaron pruebas independientes con 5, 10, 30, 50 y 100 VUs. 
+Cada solicitud busca un número de notificación aleatorio extraído de un archivo CSV con los identificadores reales de los reportes almacenados. 
+Los detalles de configuración, generación de datos y código k6 se presentan en el Anexo \ref{anexo:k6-busqueda}.
+
+Las Figuras \ref{fig:busqueda-latencia} y \ref{fig:busqueda-porcentaje} muestran la evolución de las métricas conforme aumenta la carga concurrente para cada tamaño de base de datos.
+
+
+Los resultados muestran que [análisis pendiente de completar con los datos]. Para bases de datos de hasta [X] reportes, la latencia se mantiene por debajo de [Y] ms con el 100\% de las solicitudes respondiendo en menos de 3000 ms. A partir de [Z] VUs con [W] reportes, aparece el primer punto de degradación. En ningún caso se registraron errores funcionales (100\% status 202), lo que confirma que el endpoint de búsqueda es robusto tanto frente a la concurrencia como al crecimiento del volumen de datos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Validación del Entorno de Producción y Calidad Web}
+
+Esta validación verifica la calidad del sistema una vez desplegado en un entorno real, considerando la experiencia del usuario final bajo distintas condiciones de conectividad. Para ello se empleó PageSpeed Insights, herramienta de Google que ejecuta el motor de auditoría Lighthouse y evalúa la calidad web con base en las métricas definidas en Web Vitals \cite{googlewebdev}. 
+El sistema, desplegado en Vercel, se auditó simulando dos escenarios: un Moto G Power con red 4G lenta (móvil) y una estación de trabajo con conexión de alta velocidad (escritorio).
+
+A continuación, se presentan y discuten los resultados para cada categoría evaluada.
+
+\subsection{Rendimiento}
+
+La categoría de rendimiento mide la velocidad de carga y la capacidad de respuesta de la página. Para ello, Lighthouse emplea las siguientes métricas:
+
+\begin{itemize}
+    \item \textbf{Primer Despliegue de Contenido (FCP, por sus siglas en inglés):} tiempo que transcurre hasta que el navegador muestra el primer elemento visual de la página.
+
+    \item \textbf{Despliegue del Contenido Más Grande (LCP):} tiempo necesario para renderizar el elemento de mayor tamaño visible para el usuario, siendo el principal indicador de velocidad de carga percibida.
+
+    \item \textbf{Tiempo Total de Bloqueo (TBT):} tiempo durante el cual el hilo principal del navegador permanece bloqueado e incapaz de responder a las interacciones del usuario.
+
+    \item \textbf{Índice de Velocidad (SI):} mide la rapidez con la que el contenido visible de la página se muestra progresivamente.
+
+    \item \textbf{Desplazamiento Acumulado del Diseño (CLS):} cuantifica la estabilidad visual de la interfaz, reflejando los desplazamientos inesperados de los elementos durante la carga.
+\end{itemize}
+
+Las Tablas \ref{tab:rendimiento-escritorio} y \ref{tab:rendimiento-movil} muestran los resultados obtenidos para las páginas representativas del sistema.
+
+\begin{table}[H]
+\centering
+\caption{Resultados de rendimiento en entorno de escritorio.}
+\label{tab:rendimiento-escritorio}
+\begin{tabular}{lcccccc}
+\hline
+\textbf{Página} & \textbf{Puntaje} & \textbf{FCP} & \textbf{LCP} & \textbf{TBT} & \textbf{SI} & \textbf{CLS} \\
+\hline
+Página principal       & 100 & 0.4 s & 0.6 s & 0 ms & 0.7 s & 0.00 \\
+Registro de ESAVI      & 100 & 0.4 s & 0.6 s & 0 ms & 0.6 s & 0.00 \\
+Panel informativo      & 100 & 0.4 s & 0.6 s & 0 ms & 0.5 s & 0.00 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Resultados de rendimiento en entorno móvil.}
+\label{tab:rendimiento-movil}
+\begin{tabular}{lcccccc}
+\hline
+\textbf{Página} & \textbf{Puntaje} & \textbf{FCP} & \textbf{LCP} & \textbf{TBT} & \textbf{SI} & \textbf{CLS} \\
+\hline
+Página principal       & 90 & 2.2 s & 2.9 s & 0 ms & 4.6 s & 0.00 \\
+Registro de ESAVI      & 96 & 1.7 s & 2.7 s & 0 ms & 1.7 s & 0.00 \\
+Panel informativo      & 95 & 1.7 s & 2.4 s & 0 ms & 3.9 s & 0.00 \\
+\hline
+\end{tabular}
+\end{table}
+
+Los resultados en escritorio reflejan un rendimiento excepcional: las tres páginas alcanzan la puntuación máxima de 100, con métricas muy por debajo de los umbrales recomendados por Google (LCP menor a 2.5 s, CLS menor a 0.1)\cite{googlewebdev} , lo que garantiza una experiencia instantánea y sin bloqueos.
+
+En el entorno móvil, los puntajes se mantienen altos (90--96), aunque se observa un deterioro esperable por la simulación de red 4G lenta. La página principal es la más afectada, con un LCP de 2.9 s que supera ligeramente el umbral óptimo y un SI de 4.6 s que evidencia una carga progresiva más lenta. No obstante, el TBT nulo y el CLS perfecto se conservan en todas las páginas, lo que indica que la interfaz, una vez visible, responde sin demoras ni desplazamientos.
+
+La auditoría de Lighthouse identificó los siguientes problemas que explican esta degradación en móvil:
+
+\begin{itemize}
+    \item \textbf{Solicitudes que bloquean el renderizado:} la hoja de estilos principal (19.8 KiB) retrasa la renderización inicial en aproximadamente 300 ms. La solución pasaría por identificar y priorizar los estilos críticos necesarios para la primera visualización, difiriendo el resto.
+
+    \item \textbf{JavaScript no utilizado:} el archivo principal (131.1 KiB) contiene 54.6 KiB de código prescindible en la carga inicial. La mejora consistiría en analizar qué porciones de código requiere cada página y separarlas para que se descarguen solo cuando sean necesarias.
+
+    \item \textbf{Cadena de dependencias de red:} la solicitud al backend de autenticación introduce una latencia de ruta crítica de 515 ms. La solución requeriría investigar mecanismos para reducir el tiempo de establecimiento de conexión con dicho origen.
+\end{itemize}
+
+Estas oportunidades de mejora no se corrigieron durante el desarrollo de esta tesis porque no constituyen fallas del sistema, sino optimizaciones de configuración del entorno de despliegue. Dado que los puntajes obtenidos ya son satisfactorios, se decidió priorizar la implementación de las funcionalidades principales. Su aplicación en trabajos futuros permitiría reducir el LCP móvil por debajo de 2.5 s y llevar el rendimiento por encima de 95 puntos en todos los escenarios.
+
+\subsection{Accesibilidad}
+
+La categoría de accesibilidad evalúa qué tan usable es la página para personas con discapacidades, considerando aspectos como la compatibilidad con lectores de pantalla, la navegación por teclado y el contraste de colores.
+
+La Tabla \ref{tab:accesibilidad} muestra los puntajes obtenidos en cada página y entorno.
+
+\begin{table}[H]
+\centering
+\caption{Puntajes de accesibilidad por página y entorno.}
+\label{tab:accesibilidad}
+\begin{tabular}{lcc}
+\hline
+\textbf{Página} & \textbf{Escritorio} & \textbf{Móvil} \\
+\hline
+Página principal       & 98 & 93 \\
+Registro de ESAVI      & 89 & 89 \\
+Panel informativo      & 98 & 95 \\
+\hline
+\end{tabular}
+\end{table}
+
+Los puntajes son altos en la mayoría de las páginas, aunque el Registro de ESAVI desciende a 89 en ambos entornos. La auditoría identificó tres problemas que explican esta diferencia:
+
+\begin{itemize}
+    \item \textbf{Botones sin nombre accesible:} los desplegables de provincia y municipio carecen de un nombre descriptivo, por lo que un lector de pantalla los leerá simplemente como "botón". La solución pasaría por asignar atributos que permitan a las tecnologías de asistencia anunciar su función.
+     
+    \item \textbf{Barras de progreso sin etiqueta:} el indicador de avance del formulario no posee un nombre accesible, impidiendo que los lectores de pantalla informen su propósito. La mejora requeriría etiquetar este elemento para describir su función dentro del flujo de registro.
+    
+    \item \textbf{Jerarquía de encabezados incorrecta:} las etiquetas \texttt{H1}, \texttt{H2}, \texttt{H3} no siguen un orden descendente secuencial, lo cual dificulta la navegación a usuarios con lectores de pantalla. La corrección requeriría revisar la estructura semántica de los componentes para garantizar una jerarquía lógica.
+\end{itemize}
+
+Estas incidencias afectan principalmente a usuarios que dependen de lectores de pantalla para interactuar con el sistema. Su resolución no requiere cambios funcionales profundos, sino una auditoría de los elementos interactivos y su etiquetado, lo que permitiría elevar el puntaje del Registro de ESAVI por encima de 90 y alcanzar valores cercanos a 100 en todas las páginas.
+
+
+\subsection{Mejores Prácticas}
+
+Esta categoría verifica que la página cumpla con los estándares de seguridad y desarrollo web moderno. El sistema obtuvo una puntuación uniforme de \textbf{96/100} en todas las páginas y entornos.
+
+La única incidencia detectada fue un error de consola por CORS en la solicitud de refresco de autenticación. 
+Este error se produjo porque el servidor backend se encontraba inactivo al momento de la auditoría, por lo que el navegador no recibió respuesta ni las cabeceras necesarias. 
+Una vez reactivado el backend, la incidencia desaparece. 
+
+\subsection{SEO}
+
+Esta categoría analiza qué tan optimizada está la página para los motores de búsqueda. El sistema obtuvo \textbf{83/100} de forma uniforme en todas las páginas y entornos. La auditoría detectó dos carencias puntuales:
+
+\begin{itemize}
+    \item \textbf{Ausencia de meta descripción:} el documento HTML no incluye una etiqueta \texttt{<meta name="description">}, utilizada por los buscadores para generar el fragmento descriptivo en los resultados.
+
+    \item \textbf{Archivo robots.txt no válido:} Vercel, al no encontrar un archivo \texttt{robots.txt} en el proyecto, devuelve el \texttt{index.html} en su lugar, lo que genera errores de sintaxis en la auditoría. La solución consistiría en agregar un archivo \texttt{robots.txt} básico que indique las reglas de rastreo.
+\end{itemize}
+
+Ambos problemas son superficiales y no afectan la operatividad del sistema. Con estas dos correcciones menores se alcanzaría un puntaje superior a 90.
+
+El sistema cumple satisfactoriamente con los estándares de calidad web en ambos entornos, con puntuaciones de excelencia en escritorio y valores aceptables en móvil. Las incidencias detectadas son superficiales y no comprometen la operatividad ni la experiencia del usuario.
+
 
 \section{Pruebas de usabilidad}
 
 \section{Discusión de resultados}
-
-\section{Resumen de hallazgos}

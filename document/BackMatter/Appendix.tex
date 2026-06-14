@@ -286,51 +286,198 @@
 
 
 
-\chapter{Entidades de infraestructura}
-\label{anexo:entidades_infraestructura}
+% \chapter{Entidades de infraestructura}
+% \label{anexo:entidades_infraestructura}
 
-\section{RefreshToken}
+% \section{RefreshToken}
 
-La entidad \texttt{RefreshToken} permite la renovación de sesiones sin que el usuario deba iniciar sesión nuevamente. Cuando un usuario se autentica, el sistema genera un token de acceso JWT de corta duración y un token de actualización que persiste en esta tabla. Al expirar el token de acceso, el cliente presenta el token de actualización y obtiene uno nuevo.
+% La entidad \texttt{RefreshToken} permite la renovación de sesiones sin que el usuario deba iniciar sesión nuevamente. Cuando un usuario se autentica, el sistema genera un token de acceso JWT de corta duración y un token de actualización que persiste en esta tabla. Al expirar el token de acceso, el cliente presenta el token de actualización y obtiene uno nuevo.
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Entidad RefreshToken}, label={lst:refreshtoken}]
-public class RefreshToken : GuidEntity
-{
-    public string Token { get; set; } = null!;
-    public DateTime ExpiresAt { get; set; }
-    public bool Revoked { get; set; }
-    public Guid UserId { get; set; }
-    public User User { get; set; } = null!;
+% \begin{lstlisting}[language={[Sharp]C}, caption={Entidad RefreshToken}, label={lst:refreshtoken}]
+% public class RefreshToken : GuidEntity
+% {
+%     public string Token { get; set; } = null!;
+%     public DateTime ExpiresAt { get; set; }
+%     public bool Revoked { get; set; }
+%     public Guid UserId { get; set; }
+%     public User User { get; set; } = null!;
+% }
+% \end{lstlisting}
+
+% \texttt{Token} almacena el valor del token de actualización. \texttt{ExpiresAt} define su vencimiento. \texttt{Revoked} permite invalidarlo antes de esa fecha. \texttt{UserId} y \texttt{User} asocian cada token con su usuario.
+
+
+% \section{AuditLog}
+
+% La entidad \texttt{AuditLog} registra las operaciones realizadas sobre el sistema y constituye la base para las funcionalidades de auditoría y trazabilidad descritas en la sección \ref{section:backend} del Capítulo 4. Contempla tanto usuarios autenticados como reporteros anónimos.
+
+% \begin{table}[H]
+% \centering
+% \caption{Campos de la entidad \texttt{AuditLog}}
+% \label{tab:auditlog}
+% \begin{tabular}{|l|l|p{6cm}|}
+% \hline
+% \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\
+% \hline
+% \texttt{UserId} & \texttt{Guid?} & Usuario autenticado (nulo si es anónimo) \\
+% \texttt{UserEmail} & \texttt{string?} & Correo del usuario autenticado \\
+% \texttt{ReporterName} & \texttt{string?} & Nombre del reportero anónimo \\
+% \texttt{ReporterEmail} & \texttt{string?} & Correo del reportero anónimo \\
+% \texttt{Action} & \texttt{string} & Operación: Create, Update, Delete, View \\
+% \texttt{EntityName} & \texttt{string} & Entidad afectada (ej. AefiReport) \\
+% \texttt{EntityId} & \texttt{Guid?} & Identificador del registro afectado \\
+% \texttt{Details} & \texttt{string?} & Descripción legible de la acción \\
+% \texttt{OldValues} & \texttt{string?} & Datos antes del cambio (JSON) \\
+% \texttt{NewValues} & \texttt{string?} & Datos después del cambio (JSON) \\
+% \texttt{IpAddress} & \texttt{string?} & Dirección IP de origen \\
+% \texttt{CreatedAt} & \texttt{DateTime} & Fecha y hora de la operación \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+
+
+
+% \chapter{Entidades de infraestructura}
+% \label{anexo:entidades_infraestructura}
+
+\chapter{Código de las pruebas de rendimiento}
+\label{anexo:k6}
+
+A continuación se presentan los scripts de k6 utilizados en las pruebas de rendimiento del Capítulo 5, así como la configuración del entorno de pruebas.
+
+\section{Prueba de carga: creación de reporte ESAVI}
+\label{anexo:k6-creacion}
+
+\subsection{Configuración del entorno de prueba}
+
+Cada solicitud de creación incluye: 13 vacunas del Instituto Finlay, 10 lotes por cada vacuna con número de lote, dosis, sitio de administración y fecha; datos del reportante y del paciente generados dinámicamente; y fechas de administración, inicio y fin del evento adverso predefinidas. Para evitar una base de datos completamente vacía, cada prueba se ejecutó con 1000 reportes precargados.
+
+Cada prueba se configuró con etapas de rampa, carga estable y enfriamiento: 1 minuto de subida hasta el objetivo de VUs, 3 minutos de carga estable y 1 minuto de bajada a cero. Las pruebas fueron independientes para cada nivel de carga: 5, 10, 30, 50, 70, 80, 100, 150 y 200 VUs.
+
+
+\subsection{Script principal (load\_test.js)}
+
+\begin{lstlisting}[language=Java]
+import http from 'k6/http';
+import { check } from 'k6';
+import { buildReport } from './payload.js';
+
+const API_BASE = __ENV.API_BASE || 'http://192.168.XXX.XXX:5137/api';
+const TARGET = __ENV.TARGET || 100;
+
+export const options = {
+    stages: [
+        { duration: '1m', target: Number(TARGET) },
+        { duration: '3m', target: Number(TARGET) },
+        { duration: '1m', target: 0 },
+    ],
+};
+
+export default function () {
+    const payload = buildReport(__VU, __ITER);
+
+    const res = http.post(
+        `${API_BASE}/Report/createPublic`,
+        JSON.stringify(payload),
+        { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    check(res, {
+        'status 201': (r) => r.status === 201,
+        'tiempo < 3000ms': (r) => r.timings.duration < 3000,
+    });
 }
 \end{lstlisting}
 
-\texttt{Token} almacena el valor del token de actualización. \texttt{ExpiresAt} define su vencimiento. \texttt{Revoked} permite invalidarlo antes de esa fecha. \texttt{UserId} y \texttt{User} asocian cada token con su usuario.
+\subsection{Tabla de resultados completos}
 
+La Tabla \ref{tab:anexo-creacion} presenta los valores detallados obtenidos en cada nivel de carga.
 
-\section{AuditLog}
-
-La entidad \texttt{AuditLog} registra las operaciones realizadas sobre el sistema y constituye la base para las funcionalidades de auditoría y trazabilidad descritas en la sección \ref{section:backend} del Capítulo 4. Contempla tanto usuarios autenticados como reporteros anónimos.
 
 \begin{table}[H]
 \centering
-\caption{Campos de la entidad \texttt{AuditLog}}
-\label{tab:auditlog}
-\begin{tabular}{|l|l|p{6cm}|}
+\caption{Resultados completos de la prueba de carga para creación de reportes.}
+\label{tab:anexo-creacion}
+\footnotesize
+\begin{tabular}{lccccc}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\
+\textbf{VUs} & \textbf{Latencia (ms)} & \textbf{p(95) (ms)} & \textbf{Lat. sin red (ms)} & \textbf{Throug. (r/s)} & \textbf{<3000ms} \\
 \hline
-\texttt{UserId} & \texttt{Guid?} & Usuario autenticado (nulo si es anónimo) \\
-\texttt{UserEmail} & \texttt{string?} & Correo del usuario autenticado \\
-\texttt{ReporterName} & \texttt{string?} & Nombre del reportero anónimo \\
-\texttt{ReporterEmail} & \texttt{string?} & Correo del reportero anónimo \\
-\texttt{Action} & \texttt{string} & Operación: Create, Update, Delete, View \\
-\texttt{EntityName} & \texttt{string} & Entidad afectada (ej. AefiReport) \\
-\texttt{EntityId} & \texttt{Guid?} & Identificador del registro afectado \\
-\texttt{Details} & \texttt{string?} & Descripción legible de la acción \\
-\texttt{OldValues} & \texttt{string?} & Datos antes del cambio (JSON) \\
-\texttt{NewValues} & \texttt{string?} & Datos después del cambio (JSON) \\
-\texttt{IpAddress} & \texttt{string?} & Dirección IP de origen \\
-\texttt{CreatedAt} & \texttt{DateTime} & Fecha y hora de la operación \\
+5   & 106.6  & 177.4   & [valor] & 23.1 & 100\% \\
+10  & 188.6  & 327.7   & [valor] & 26.8 & 100\% \\
+30  & 304.1  & 627.9   & [valor] & 24.6 & 100\% \\
+50  & 546.2  & 1192.8  & [valor] & 23.0 & 100\% \\
+70  & 975.6  & 2214.1  & [valor] & 20.3 & 100\% \\
+80  & 1882.1 & 2956.2  & [valor] & 22.2 & 95.8\% \\
+100 & 2246.9 & 4056.4  & [valor] & 20.1 & 74.8\% \\
+150 & 4721.3 & 6728.2  & [valor] & 21.0 & 19.1\% \\
+200 & 5404.2 & 8011.1  & [valor] & 25.0 & 10.7\% \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\section{Prueba de carga: búsqueda de reporte ESAVI}
+\label{anexo:k6-busqueda}
+
+\subsection{Configuración del Entorno para la Búsqueda}
+
+Las solicitudes de búsqueda seleccionan aleatoriamente un número de notificación de un archivo CSV con identificadores reales, generado para cada tamaño de base de datos (1k, 10k, 50k, 100k). Se empleó la misma configuración de etapas que en la prueba de creación. Los mecanismos de CAPTCHA y limitación por IP se desactivaron temporalmente, ya que las pruebas automatizadas no pueden resolverlos, lo que confirma que estas políticas de seguridad cumplen su función de frenar bots.
+
+\subsection{Script principal (search\_test.js)}
+
+\begin{lstlisting}[language=Java]
+import http from 'k6/http';
+import { check } from 'k6';
+import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
+
+const CSV_FILE = __ENV.CSV_FILE || 'reports_1k.csv';
+const csvData = papaparse.parse(open(`./${CSV_FILE}`), { header: true }).data;
+const BASE_URL = __ENV.API_BASE || 'http://192.168.XXX.XXX:5137/api';
+const TARGET = __ENV.TARGET || 10;
+
+export const options = {
+    stages: [
+        { duration: '1m', target: Number(TARGET) },
+        { duration: '3m', target: Number(TARGET) },
+        { duration: '1m', target: 0 },
+    ],
+};
+
+export default function () {
+    const registro = csvData[Math.floor(Math.random() * csvData.length)];
+    const notificationNumber = registro.notificationNumber;
+
+    const res = http.get(
+        `${BASE_URL}/Report/get-report?notificationNumber=${notificationNumber}&token=token-captcha`
+    );
+
+    check(res, {
+        'status 202': (r) => r.status === 202,
+        'tiempo < 3000ms': (r) => r.timings.duration < 3000,
+    });
+}
+\end{lstlisting}
+
+\subsection{Tabla de resultados completos}
+
+La Tabla \ref{tab:anexo-busqueda} presenta los valores detallados obtenidos en cada combinación de tamaño de base de datos y usuarios concurrentes.
+
+\begin{table}[H]
+\centering
+\caption{Resultados completos de la prueba de carga para búsqueda de reportes.}
+\label{tab:anexo-busqueda}
+\footnotesize
+\begin{tabular}{lccccc}
+\hline
+\textbf{VUs} & \textbf{BD 1k (ms)} & \textbf{BD 10k (ms)} & \textbf{BD 50k (ms)} & \textbf{BD 100k (ms)} & \textbf{<3000ms} \\
+\hline
+5   & [valor] & [valor] & [valor] & [valor] & [\%] \\
+10  & [valor] & [valor] & [valor] & [valor] & [\%] \\
+30  & [valor] & [valor] & [valor] & [valor] & [\%] \\
+50  & [valor] & [valor] & [valor] & [valor] & [\%] \\
+100 & [valor] & [valor] & [valor] & [valor] & [\%] \\
 \hline
 \end{tabular}
 \end{table}

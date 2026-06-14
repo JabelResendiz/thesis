@@ -1,861 +1,560 @@
-\chapter{Estado del Arte}\label{chapter:state-of-the-art}
+\chapter{Marco Teórico y Referencial}\label{chapter:marco-teorico-referencial}
 
-El presente capítulo tiene como objetivo analizar los fundamentos teóricos, tecnológicos y los sistemas existentes relacionados con la farmacovigilancia digital y el desarrollo de plataformas de autorreporte clínico. 
-Se aborda el estudio de soluciones implementadas a nivel internacional, así como las tecnologías y estándares utilizados en sistemas de salud digital, con el propósito de establecer una base sólida que sustente el diseño e implementación del sistema propuesto.
-Asimismo, se revisan conceptos relacionados con el modelado de datos clínicos y estándares de interoperabilidad que garantizan la consistencia y calidad de la información.
 
-\section{Análisis de sistemas de autorreporte clínico existentes}
-\label{section:analisis_sistemas_autorreporte}
+El presente capítulo establece los fundamentos conceptuales y tecnológicos que sustentan el desarrollo del sistema. El estado del arte revisa las plataformas de farmacovigilancia digital existentes e identifica sus brechas. Los fundamentos de sistemas web y de bases de datos definen la arquitectura y los principios que garantizan la integridad de la información clínica. El capítulo concluye con un análisis comparativo de las tecnologías disponibles para la implementación, cuyos resultados orientan la selección del conjunto de herramientas del sistema.
 
-En la farmacovigilancia moderna, los sistemas de autorreporte clínico permiten registrar eventos adversos posteriores a la vacunación de forma estructurada. 
-Estas herramientas operan bajo dos modelos principales: la vigilancia pasiva y la vigilancia activa. El modelo pasivo depende exclusivamente de la iniciativa voluntaria de ciudadanos o profesionales para notificar un evento.
-Por el contrario, el modelo activo o proactivo establece un contacto directo con el usuario mediante encuestas digitales para recopilar datos de salud en tiempo casi real.
 
-Este apartado examina tres sistemas representativos a nivel internacional: VAERS, NotificaRAM y V-safe. Este análisis evalúa las características funcionales, los actores involucrados, las fortalezas y las limitaciones de los sistemas estudiados para identificar brechas de diseño que fundamenten la propuesta del sistema.
+\section{Marco Referencial (Estado del Arte)}
 
-\subsection{Vaccine Adverse Event Reporting System (VAERS)}
+El marco referencial de este trabajo examina soluciones existentes para la notificación de eventos adversos, desde plataformas genéricas hasta sistemas nacionales de farmacovigilancia, con el fin de identificar sus limitaciones y extraer buenas prácticas que orienten el diseño del sistema ESAVI del IFV.
 
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[scale=0.5]{Graphics/vaers-logo.png}
-%     \caption{Logotipo del sistema VAERS (vaers.hhs.gov)}
-%     \label{fig:figura1}
-% \end{figure}
+\subsection{Limitaciones de plataformas genéricas (Google Forms)}
 
-\textbf{VAERS} es el sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la \textit{Food and Drug Administration} (FDA), agencia reguladora de medicamentos y alimentos, y los \textit{Centers for Disease Control and Prevention} (CDC), organismo responsable del control y prevención de enfermedades \cite{fda_vaers}. 
-Su objetivo principal es detectar señales de seguridad, definidas como patrones inusuales o un volumen elevado de reportes que no fueron identificados durante los ensayos clínicos \cite{cdc_vaers}.
+El uso de plataformas de formularios en la nube como Google Forms, Microsoft Forms o JotForm podría considerarse una alternativa rápida para la captura de eventos adversos. Sin embargo, sus características las inhabilitan como solución para un sistema nacional de farmacovigilancia:
 
-El sistema permite la notificación por parte de profesionales de la salud, fabricantes y ciudadanos a través de formularios electrónicos disponibles en su plataforma web, así como mediante formatos descargables en PDF (véase Anexo \ref{app:vaers-form-oct2025}) \cite{vaers_official}.
+\begin{itemize}
 
+\item \textbf{Soberanía de los datos:} La información de salud reside en servidores externos bajo jurisdicciones extranjeras, vulnerando el principio de residencia de datos clínicos que exige el marco regulatorio nacional.
+
+\item \textbf{Validación clínica insuficiente:} Solo ofrecen validaciones básicas (campos obligatorios, formatos). Carecen de capacidad para integrar codificación clínica estandarizada o para implementar reglas de negocio complejas como la coherencia cronológica entre vacunación y aparición de síntomas.
+
+\item \textbf{Ausencia de control de acceso granular:} No permiten definir roles diferenciados (reportante, médico evaluador, jefe de vacunación) con permisos específicos, lo cual es indispensable en un flujo de farmacovigilancia.
+
+\item \textbf{Falta de trazabilidad:} No registran quién modificó un reporte ni cuándo, imposibilitando la auditoría de los datos.
+
+\item \textbf{Interoperabilidad nula:} Los datos requieren exportación manual a hojas de cálculo, impidiendo la integración automatizada con sistemas de información de salud.
+
+\end{itemize}
+
+En consecuencia, estas plataformas son adecuadas para encuestas, pero no para un sistema de autorreporte de ESAVI que requiere seguridad, estructuración, trazabilidad e interoperabilidad. Esta brecha justifica el desarrollo de una solución específica.
+
+\subsection{Análisis de sistemas de autorreporte de eventos adversos existentes}
+
+Los sistemas de autorreporte de eventos adversos operan bajo dos modelos. 
+La vigilancia pasiva depende de la iniciativa voluntaria del ciudadano o profesional para notificar un evento. 
+La vigilancia activa, en cambio, contacta proactivamente al usuario mediante encuestas digitales para recopilar datos en tiempo casi real.
+
+Este apartado examina cuatro sistemas —VAERS, NotificaRAM, V-safe y el formulario del CECMED— con el objetivo de identificar brechas de diseño que fundamenten la propuesta del sistema ESAVI-IFV.
+
+\subsubsection{Sistema de Notificación de Eventos Adversos a Vacunas (VAERS, por sus siglas en inglés)}
+
+\textbf{VAERS} es el sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la Administración de Alimentos y Medicamentos (FDA, por sus siglas en inglés), agencia reguladora de medicamentos y alimentos, y los Centros para el Control y la Prevención de Enfermedades (CDC, por sus siglas en inglés), organismo responsable del control y prevención de enfermedades \cite{fda_vaers}.
+Su objetivo principal es detectar señales de seguridad no identificados durante los ensayos clínicos \cite{cdc_vaers}.
+
+Permite la notificación voluntaria de eventos adversos por parte de profesionales de la salud, fabricantes y ciudadanos mediante formularios web y PDF descargables \cite{vaers_official}.
 Para garantizar la integridad del repositorio, la legislación estadounidense contempla sanciones civiles y penales ante el suministro intencional de información falsa en los reportes \cite{vaers_official}. 
 Esto contribuye a reducir la introducción de datos malintencionados en un sistema de acceso público.
 
-Los reportes alimentan la base de datos \textit{CDC WONDER (Wide-ranging Online Data for Epidemiologic Research)}, plataforma del CDC para el acceso público a datos epidemiológicos anonimizados, garantizando la transparencia mediante su disponibilidad abierta \cite{vaers_official}.
-Ante una señal de alerta, el monitoreo escala hacia sistemas de vigilancia activa y evaluación clínica como el \textit{Vaccine Safety Datalink} (VSD), red de vigilancia que integra datos de múltiples organizaciones sanitarias para el análisis de seguridad vacunal, y el proyecto \textit{Clinical Immunization Safety Assessment} (CISA), iniciativa orientada a la evaluación clínica especializada de eventos adversos asociados a la vacunación, con el objetivo de confirmar posibles riesgos \cite{cdc_vaers}.
+Los reportes alimentan la base de datos CDC WONDER\footnote{CDC WONDER (Wide-ranging Online Data for Epidemiologic Research): plataforma de los CDC para el acceso público a datos epidemiológicos anonimizados.}, garantizando la transparencia mediante su disponibilidad abierta \cite{vaers_official}. 
+Ante una señal de alerta, el monitoreo escala hacia sistemas complementarios de vigilancia activa y evaluación clínica como VSD\footnote{Vaccine Safety Datalink (VSD): red de vigilancia que integra datos de múltiples organizaciones sanitarias para el análisis de seguridad vacunal.} y el proyecto CISA\footnote{Clinical Immunization Safety Assessment (CISA): iniciativa orientada a la evaluación clínica especializada de eventos adversos asociados a la vacunación.} para confirmar posibles riesgos \cite{cdc_vaers}.
 
-\subsection{Sistema NotificaRAM de la Agencia Española de Medicamentos y Productos Sanitarios}
+El formulario consta de 28 secciones con un nivel de detalle que puede resultar abrumador para un usuario que reporta bajo condiciones de malestar físico. 
+Además, información que en el sistema de salud cubano resulta relevante para la evaluación clínica —como síntomas, su intensidad y desenlace— termina resumida en campos de texto libre, lo que genera datos heterogéneos y difíciles de analizar de forma automatizada.
 
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[scale=0.3]{Graphics/Logo_notifica_ram.png}
-%     \caption{Logotipo del sistema NotificaRAM (notificaram.es)}
-%     \label{fig:figura4}
-% \end{figure}
+
+\subsubsection{NotificaRAM}
 
 \textbf{NotificaRAM} es la plataforma oficial de farmacovigilancia en España para la notificación de sospechas de reacciones adversas a medicamentos \cite{aemps_manual_2025}.
 \textit{La Agencia Española de Medicamentos y Productos Sanitarios (AEMPS)} gestiona este portal en el marco del Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H) \cite{aemps_sefv_2025}.
 
 El sistema funciona de forma descentralizada, remitiendo los reportes a los Centros Autonómicos de Farmacovigilancia para su validación técnica inicial \cite{aemps_manual_2025}. 
-
-Tras esta evaluación, la base de datos \textit{FEDRA(Farmacovigilancia Española, Datos de Reacciones Adversas)}, sistema nacional de notificación y almacenamiento de sospechas de reacciones adversas a medicamentos en España, centraliza todos los registros del país \cite{aemps_fedra_2026}.
-
-Estos registros alimentan la plataforma europea \textit{EudraVigilance}, sistema de la Agencia Europea de Medicamentos (EMA) destinado a la gestión y análisis de notificaciones de sospechas de reacciones adversas a medicamentos, utilizada por las agencias reguladoras de la Unión Europea para la detección de señales de seguridad.
-
-Finalmente, la base de datos global \textit{VigiBase}, gestionada por el \textit{Centro de Monitoreo de Uppsala bajo la Organización Mundial de la Salud (OMS)}, consolida reportes de seguridad a nivel mundial para el monitoreo internacional de eventos adversos \cite{aemps_notificacion_2026}.
-
-\subsection{Sistema V-safe del Centers for Disease Control and Prevention}
+Tras esta evaluación, la base de datos \textit{FEDRA(Farmacovigilancia Española, Datos de Reacciones Adversas)}, sistema nacional de notificación y almacenamiento de sospechas de reacciones adversas a medicamentos, centraliza todos los registros del país \cite{aemps_fedra_2026}.
+Estos registros alimentan la plataforma europea EudraVigilance\footnote{EudraVigilance: sistema de la Agencia Europea de Medicamentos (EMA) para la gestión de notificaciones de reacciones adversas en la Unión Europea.} y la base de datos mundial VigiBase\footnote{VigiBase: base de datos global de reportes de seguridad, gestionada por el Centro de Monitoreo de Uppsala bajo la OMS.}, que consolidan reportes de múltiples países para la detección de señales de seguridad a nivel internacional \cite{aemps_notificacion_2026}.
 
 
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[scale=0.5]{Graphics/v-safe-logo.png}
-%     \caption{Logotipo del sistema V-safe (vsafe.cdc.gov)}
-%     \label{fig:figura5}
-% \end{figure}
+Para la identificación de medicamentos, NotificaRAM emplea un sistema de búsqueda por código que sugiere posibles valores y evita cargar catálogos extensos, aunque resulta poco práctico si el notificador desconoce el código. A pesar de esta validación puntual, el formulario aún conserva numerosos campos de texto libre. Al igual que otros sistemas pasivos, depende de la iniciativa voluntaria del notificador, lo que conlleva subregistro.
 
-Los Centers for Disease Control and Prevention (CDC) diseñaron \textbf{V-safe} como una herramienta digital para monitorear la seguridad vacunal en los Estados Unidos.
+\subsubsection{Formulario de notificación de \gls{ram} del \gls{cecmed} (Cuba)}
+
+El CECMED, como autoridad reguladora de Cuba, pone a disposición un formulario para la notificación voluntaria de sospechas de reacciones adversas a medicamentos (RAM), que abarca también a las vacunas como categoría de medicamento \cite{cecmed_ram}.
+A través de este formulario, el CECMED recolecta información sobre eventos adversos para alimentar la base nacional de farmacovigilancia y cumplir con su función de monitoreo continuo de la seguridad de los medicamentos comercializados en el país.
+
+El formulario exige pocos campos obligatorios, pero omite datos esenciales para la farmacovigilancia vacunal como el número de lote, la dosis o la fecha de administración. 
+Sus catálogos de medicamentos y reacciones adversas resultan extensos y complejos para un usuario sin formación sanitaria. 
+Tampoco solicita contacto del paciente, lo que imposibilita el seguimiento posterior. 
+Con estos datos, los reportes constituyen hechos aislados que permiten sospechar sobre un medicamento, pero resultan insuficientes para establecer relaciones de causalidad.
+
+\subsubsection{V-safe}
+
+Los \gls{cdc} diseñaron \textbf{V-safe} como una herramienta digital para monitorear la seguridad vacunal en los Estados Unidos.
 Tras su lanzamiento inicial en diciembre de 2020 para supervisar las vacunas contra la COVID-19, el sistema extendió su alcance a otras inmunizaciones, incluyendo aquellas contra el virus respiratorio sincitial (VRS) \cite{cdc_vsafe_portal}.
 
 A diferencia de los modelos de notificación espontánea, V-safe emplea un enfoque de vigilancia activa mediante el contacto proactivo con los usuarios. 
 El sistema envía encuestas digitales por mensajes de texto o correo electrónico para recopilar información directamente del paciente \cite{cdc_about_vsafe}.
+El seguimiento incluye encuestas diarias durante la primera semana posterior a la vacunación y encuestas semanales durante seis semanas adicionales \cite{cdc_vsafe_portal,vsafe_monitoring_article}. 
+Esta frecuencia de contacto, aunque sistemática, puede generar fatiga en el participante.
 
-El sistema realiza el seguimiento mediante encuestas diarias durante la primera semana posterior a la vacunación y, posteriormente, mediante encuestas semanales durante seis semanas adicionales \cite{cdc_vsafe_portal,vsafe_monitoring_article}.
-
-La Figura \ref{fig:vsafe_flujo} ilustra el flujo general de interacción del sistema, basado en el envío periódico de encuestas y la recopilación estructurada de datos reportados por los usuarios \cite{vsafe_monitoring_article}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=2.5]{Graphics/gr1_lrg.jpg}
-    \caption{Ejemplo del flujo de interacción del sistema V-safe mediante encuestas digitales}
-    \label{fig:vsafe_flujo}
-\end{figure}
-
-El funcionamiento detallado de la interfaz de usuario del sistema V-safe puede observarse en el Anexo~\ref{app:vsafe-form-ene2021}, donde se presentan capturas representativas del flujo de interacción, que muestran el reporte rápido, estructurado y de baja carga del estado de salud diario del usuario.
+El Anexo~\ref{app:vsafe-form-ene2021} recoge capturas representativas de la interfaz de usuario, que muestran un reporte rápido, estructurado y de baja carga sobre el estado de salud diario del usuario.
 
 V-safe integra sistemas de vigilancia pasiva: cuando un usuario reporta la necesidad de atención médica, el sistema facilita la generación de un reporte en VAERS mediante la precarga de datos \cite{cdc_about_vsafe}.
 Además, la plataforma publica los datos recopilados en formato anonimizado para su consulta en portales de acceso público.
 
 \subsection{Análisis comparativo de los sistemas estudiados}
 
-
-Este análisis compara los sistemas VAERS, V-safe y NotificaRAM en términos de su enfoque metodológico, grado de digitalización y mecanismos de captura de datos. 
-La Tabla \ref{tab:sistemas_comparacion} sintetiza estos criterios con el objetivo de evidenciar diferencias estructurales y brechas en los modelos actuales de farmacovigilancia.
-
+Este análisis compara los sistemas VAERS, NotificaRAM, V-safe y el formulario del CECMED en términos de su enfoque metodológico, actores involucrados, canales de notificación y mecanismos de captura de datos. La Tabla \ref{tab:sistemas_comparacion} sintetiza estos criterios con el objetivo de evidenciar diferencias estructurales en los modelos actuales de farmacovigilancia.
 
 \begin{table}[htbp]
-	\centering
-	\caption{Comparación de sistemas de autorreporte de eventos adversos}
-	\label{tab:sistemas_comparacion}
-	
-	\renewcommand{\arraystretch}{1.3}
-	
-	\begin{tabular}{p{3.2cm} p{4.3cm} p{4.3cm} p{4.3cm}}
-		
-		\textbf{Criterio} & \textbf{VAERS} & \textbf{NotificaRAM} & \textbf{V-safe} \\[6pt]
-		
+\centering
+\caption{Comparación de sistemas de autorreporte de eventos adversos}
+\label{tab:sistemas_comparacion}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{2.8cm} p{2.7cm} p{2.7cm} p{2.7cm} p{2.7cm}}
+
+\textbf{Criterio} & \textbf{VAERS} & \textbf{NotificaRAM} & \textbf{V-safe} & \textbf{CECMED}\\[6pt]
+
 		Tipo de vigilancia &
 		Pasiva  &
 		Pasiva  &
-		Activa  \\[6pt]
+		Activa  &
+		Pasiva \\[6pt]
 		\hline
 
 		Actores &
 		Profesionales de salud, fabricantes y ciudadanos &
 		Profesionales de salud y ciudadanos &
-		Usuarios vacunados registrados \\[6pt]
+		Usuarios vacunados registrados &
+		Profesionales, ciudadanos, industria y distribuidor\\[6pt]
         \hline
 		
 		Canal de notificación &
-		Formularios web y PDF descargables &
-		Formulario electrónico nacional &
-		Encuestas digitales (SMS y correo electrónico) \\[6pt]
+		Formularios web y PDF descargable &
+		Formulario web &
+		Encuestas digitales (SMS y correo electrónico) &
+		Formulario web\\[6pt]
         \hline
 		
-		Protección de datos &
-		Datos anonimizados accesibles vía CDC WONDER &
-		Marco europeo de protección de datos \cite{aemps_fedra_2026} &
-		Datos \gls{desidentificados} bajo políticas federales \\[6pt]
-        \hline
+		Validación clínica inicial &
+No &
+Sí (centros autonómicos) &
+No &
+No \\[6pt]
+\hline
 		
 		Estructuración del dato &
-		Predominio de texto libre; baja estandarización &
-		Formularios con campos definidos; control parcial &
-		Formularios digitales con validación y opciones predefinidas
+		Texto libre; baja estandarización &
+		Campos definidos; control parcial; búsqueda por código &
+		Formularios digitales con validación y opciones predefinidas &
+		Campos estructurados; catálogos extensos
 		\\[6pt]
         \hline
+
+
+		Retroalimentación al reportante &
+No &
+No &
+Sí (seguimiento longitudinal) &
+No \\[6pt]
+\hline
 		
-	
-	Fortalezas
-	& Alta cobertura poblacional; acceso público a los datos; detección temprana de señales  
-	& Integración en red nacional de farmacovigilancia; análisis coordinado; interoperabilidad con sistemas europeos  
-	& Recolección sistemática y periódica; datos en tiempo casi real; seguimiento longitudinal  \\[6pt]
-    \hline
-	
-	
-	Limitaciones
-	& Subregistro; sesgos de notificación; calidad variable de los datos; no permite establecer causalidad directa
-	& Subregistro; dependencia de la iniciativa del notificador; variabilidad en la calidad de los datos
-	& Dependencia de acceso a tecnología; participación voluntaria; posible fatiga del usuario; limitada representatividad
-    
+		
+	Limitaciones &
+Subregistro; formulario extenso (28 secciones); texto libre que dificulta el análisis automatizado &
+Subregistro; dependencia del notificador; búsqueda por código poco práctica sin conocerlo &
+Fatiga del usuario; limitada representatividad &
+Sin especificidad para vacunas; ambigüedad en roles; sin seguimiento; sin validación de coherencia \
+
 
 	\end{tabular}
 \end{table}
 
 
-Este análisis evidencia diferencias entre los modelos de notificación espontánea y las estrategias de vigilancia activa centradas en el usuario. 
-Mientras que VAERS y NotificaRAM permiten detectar señales mediante la participación voluntaria, V-safe demuestra la escalabilidad de la vigilancia activa al recolectar 151 millones de encuestas de 10 millones de usuarios registrados \cite{vsafe_monitoring_article}. 
-Este enfoque, junto con la aplicación de marcos legales de protección de datos, contribuye a la calidad y utilidad científica de la información recolectada.
 
-La interoperabilidad entre plataformas permite la transferencia automatizada de información, como la generación de reportes desde V-safe hacia VAERS y la integración de FEDRA con EudraVigilance. 
-Esto reduce la latencia y facilita el análisis de señales de seguridad.
+Todos comparten un rasgo común: son plataformas gubernamentales administradas por las entidades reguladoras de sus respectivos países —FDA y CDC en VAERS, AEMPS en NotificaRAM, CDC en V-safe y CECMED en Cuba—. VAERS, NotificaRAM y V-safe exigen al usuario la aceptación expresa de un aviso de privacidad; el formulario del CECMED, en cambio, no incluye este mecanismo.
 
-A pesar de los avances, los sistemas actuales presentan limitaciones estructurales relevantes, como el subregistro en modelos pasivos, la fatiga del participante en esquemas activos y la imposibilidad de establecer relaciones causales directas sin estudios clínicos complementarios. 
-Asimismo, la dependencia del acceso a tecnologías digitales introduce sesgos en la representatividad de los datos, especialmente en poblaciones con menor conectividad.
+En conjunto, los cuatro sistemas representan soluciones consolidadas de farmacovigilancia, pero ninguno fue diseñado para el contexto del sistema de salud cubano ni para los protocolos de un fabricante específico como el Instituto Finlay de Vacunas.
+Las brechas derivadas de esta falta de adecuación, así como las directrices de diseño que de ellas emanan, aparecen en la siguiente sección.
 
-Para el desarrollo de plataformas de autorreporte, resultan clave los siguientes aspectos:
+
+
+\subsection{Síntesis de brechas y directrices para el sistema de ESAVI-IFV}
+
+
+El análisis de los sistemas VAERS, NotificaRAM, V-safe y el formulario del CECMED ha permitido identificar un conjunto de brechas estructurales que limitan la aplicabilidad directa de estos modelos al contexto del sistema de salud cubano y, en particular, al Programa Nacional de Inmunización.
+
+\subsubsection{Brechas identificadas}
+
+\begin{enumerate}
+
+\item \textbf{Falta de validación clínica inicial:} VAERS, V-safe y el CECMED incorporan reportes sin revisión médica previa. Solo NotificaRAM realiza una validación descentralizada, pero su modelo autonómico no es directamente replicable en Cuba.
+
+\item \textbf{Estructuración insuficiente o inadecuada de los datos:} VAERS depende del texto libre; los catálogos del CECMED y la búsqueda por código de NotificaRAM resultan complejos para un usuario sin formación sanitaria. Estas estrategias generan datos heterogéneos o difíciles de capturar.
+
+\item \textbf{Falta de retroalimentación al reportante:} Salvo V-safe, ningún sistema informa al usuario sobre el resultado de su notificación ni le ofrece seguimiento, lo que reduce la confianza y la motivación para reportar.
+
+\item \textbf{Falta de especialización para un fabricante:} 
+Ningún sistema está diseñado para un fabricante específico. El CECMED incluye vacunas cubanas, pero dentro de un catálogo general de medicamentos, sin adaptarse a los protocolos particulares del Instituto Finlay de Vacunas.
+
+\item \textbf{Desalineación con el flujo de trabajo del MINSAP:} 
+El CECMED recoge provincia y municipio, pero no contempla las áreas de salud ni establece roles diferenciados: los reportes alimentan directamente la base nacional sin pasar por una validación clínica municipal. VAERS, NotificaRAM y V-safe carecen por completo de la estructura organizativa del sistema de salud cubano.
+
+\end{enumerate}
+
+\subsubsection{Directrices de diseño derivadas del análisis}
+
+A partir de las brechas identificadas, el análisis establece las siguientes directrices para el sistema ESAVI-IFV:
+
+\begin{enumerate}[label=\textbf{D-\arabic*}]
+\item \textbf{Validación clínica descentralizada:} Incorporar un flujo donde un médico evaluador del municipio correspondiente revise cada reporte y establezca la causalidad, adaptando el modelo de NotificaRAM a la estructura del MINSAP.
+
+\item \textbf{Captura de datos mínima pero suficiente:} Recoger los datos esenciales para la evaluación de causalidad —sujeto vacunado, vacuna, lote, dosis, evento adverso y reportante— organizados por secciones, como hacen VAERS y NotificaRAM.
+
+\item \textbf{Catálogos reducidos y especializados:} Limitar las vacunas a las del Instituto Finlay y del esquema nacional objeto de estudio, con eventos adversos en listas predefinidas, minimizando el texto libre.
+
+\item \textbf{Interfaz usable bajo malestar físico:} Formulario breve, con campos estructurados, que pueda completarse en pocos minutos.
+
+\item \textbf{Retroalimentación al reportante:} Informar al usuario sobre el estado de su reporte y el resultado de la evaluación médica, tomando como referencia el seguimiento de V-safe.
+
+\item \textbf{Consentimiento informado:} Incluir la aceptación expresa del uso de datos con fines de farmacovigilancia, como hacen VAERS, NotificaRAM y V-safe.
+
+\item \textbf{Alineación con el MINSAP:} Reflejar los niveles de consultorio, área de salud y municipio en los roles, permisos y flujos de trabajo.
+\end{enumerate}
+
+Estas directrices constituyen la base conceptual para el diseño del sistema ESAVI-IFV, cuyo desarrollo metodológico, arquitectónico y de base de datos aparece detallado en el Capítulo \ref{chapter:proposal}.
+
+
+\section{Fundamentos de sistemas web}
+
+Una vez identificadas las brechas de los sistemas de farmacovigilancia actuales y establecidas las directrices de diseño, corresponde definir las bases conceptuales que sustentarán la solución.
+
+El sistema propuesto pertenece al dominio de las aplicaciones web, un paradigma donde la lógica de negocio y la interfaz de usuario residen en componentes diferenciados que colaboran a través de una red. 
+Antes de analizar las tecnologías concretas disponibles para cada uno de estos componentes, es necesario establecer los fundamentos que describen su arquitectura, sus roles y sus mecanismos de comunicación.
+
+\subsection{Arquitectura cliente-servidor.}
+
+Las aplicaciones web modernas siguen el modelo cliente-servidor. 
+En este modelo, el sistema consta de dos componentes que residen en máquinas distintas y mantienen comunicación a través de una red. 
+El cliente —típicamente un navegador web— solicita recursos o servicios y presenta la información al usuario mediante una interfaz gráfica. 
+El servidor —una aplicación que funciona en una máquina remota— recibe esas solicitudes, procesa la lógica de negocio, consulta o modifica los datos y devuelve una respuesta. 
+
+\subsection{Interfaz de usuario y servidor.}
+
+En el lado del cliente opera la interfaz de usuario. 
+Constituye la capa del sistema con la que el usuario interactúa directamente: presenta la información, captura datos mediante formularios y guía la experiencia de navegación. 
+Funciona íntegramente en el navegador y no tiene acceso directo a la base de datos ni a la lógica de negocio. 
+En el lado del servidor opera la capa de servicios, que procesa las solicitudes del usuario, ejecuta la lógica de negocio y gestiona la persistencia de los datos. 
+Reside en un servidor remoto y expone sus servicios a través de una API (Application Programming Interface), un conjunto de reglas que define cómo otros programas pueden interactuar con él.
+
+\subsection{Comunicación mediante HTTP y REST.}
+
+La comunicación entre la interfaz de usuario y la capa de servicios ocurre mediante el protocolo HTTP (Hypertext Transfer Protocol), que establece un formato estandarizado para las solicitudes y respuestas. 
+Cada solicitud del cliente incluye un método HTTP que indica la operación deseada —GET para consultar, POST para crear, PUT para modificar, DELETE para eliminar— y una URL que identifica el recurso sobre el cual opera. 
+El servidor procesa la solicitud y devuelve un código de estado —200 para éxito, 201 para creación, 400 para error del cliente, 500 para error del servidor— junto con los datos solicitados.
+
+El estilo arquitectónico REST (Representational State Transfer) refina este modelo estableciendo que cada solicitud debe contener toda la información necesaria para procesarla, sin que el servidor necesite mantener el estado de la sesión entre peticiones. 
+Los datos viajan típicamente en formato JSON (JavaScript Object Notation), un formato ligero de texto que resulta legible tanto para humanos como para máquinas y que todos los lenguajes de programación modernos pueden interpretar.
+
+\subsection{Conceptos técnicos para el análisis de tecnologías}
+
+Para comparar las tecnologías de desarrollo, es necesario definir previamente algunos conceptos.
 
 \begin{itemize}
-   \item \textbf{Interoperabilidad:} Garantizar la integración con sistemas nacionales e internacionales de farmacovigilancia.
-    \item \textbf{Protección de datos:} Implementar mecanismos de anonimización o desidentificación que aseguren la confidencialidad de la información, en cumplimiento con los marcos regulatorios de protección de datos vigentes en cada país o región (por ejemplo, normativas nacionales aplicables en el contexto cubano).
-    \item \textbf{Calidad del dato:} Implementar esquemas de captura estructurada que garanticen la consistencia del formato de los datos y minimicen la pérdida de información relevante en los reportes.
-    \item \textbf{Interacción centrada en el usuario:} Diseñar flujos de contacto proactivo (SMS o correo electrónico) que requieran menos de dos minutos, facilitando el seguimiento longitudinal sin generar fatiga en el usuario.
+	\item Marco de trabajo (framework): conjunto de bibliotecas, herramientas y convenciones que proporcionan una estructura base para el desarrollo de aplicaciones.
+	\item Multiplataforma: capacidad de un entorno de desarrollo para ejecutarse en distintos sistemas operativos sin requerir modificaciones en el código fuente.
+	\item Entorno de ejecución (runtime): componente que ejecuta el código compilado y gestiona recursos como la memoria y los hilos de ejecución.
+	\item Middleware: componente de software que procesa una solicitud HTTP encadenándose con otros componentes para validarla, autenticarla o transformarla antes de que alcance la lógica de negocio.
+	\item Inyección de dependencias: patrón de diseño mediante el cual un objeto recibe sus dependencias desde el exterior en lugar de crearlas internamente.
 \end{itemize}
 
+\section{Fundamentos de bases de datos}
 
+El sistema ESAVI del IFV requiere almacenar datos clínicos de forma segura, consistente y trazable. 
+Para fundamentar las decisiones de diseño de la capa de datos, a continuación aparecen los conceptos esenciales que sustentan el modelo de base de datos seleccionado.
 
+\subsection{Modelo relacional}
 
+El modelo relacional organiza los datos en tablas (relaciones) compuestas por filas (tuplas) y columnas (atributos). Cada tabla representa una entidad del dominio y las relaciones quedan definidas mediante claves foráneas.
+Este modelo, propuesto por Codd en 1970, constituye la base de los sistemas de gestión de bases de datos relacionales (SGBDR) y sigue siendo el estándar para aplicaciones que requieren integridad y consistencia de los datos \cite{codd1970}.
 
+\subsection{Propiedades ACID}
 
+Las propiedades ACID garantizan la fiabilidad de las transacciones en una base de datos relacional \cite{ibm_acid_properties}:
 
+\begin{itemize}
+	\item \textbf{Atomicidad:} Una transacción ocurre por completo o no ocurre en absoluto. Si un fallo interrumpe el proceso, el sistema no almacena datos parciales.
+    \item \textbf{Consistencia:} Cada transacción lleva la base de datos de un estado válido a otro, respetando todas las reglas de integridad definidas.
+    \item \textbf{Aislamiento:} Las transacciones concurrentes no interfieren entre sí. El reporte de un usuario no afecta los datos de otro reporte en curso.
+    \item \textbf{Durabilidad:} Una vez confirmada una transacción, sus efectos persisten incluso ante fallos del sistema.
+\end{itemize}
 
+Estas propiedades son especialmente relevantes en un sistema de farmacovigilancia, donde la integridad de los reportes de eventos adversos tiene implicaciones para la seguridad de la población.
 
+\subsection{Propiedades BASE y teorema CAP}
 
+En contraste con el modelo ACID, las bases de datos NoSQL adoptan el modelo BASE \cite{moniruzzaman2013nosql}:
 
+\begin{itemize}
+    \item \textbf{Básicamente disponible (Basically Available):} el sistema garantiza disponibilidad de los datos en todo momento, aunque no necesariamente consistentes.
+    \item \textbf{Estado blando (Soft-state):} el estado del sistema puede cambiar con el tiempo, incluso sin entrada de datos.
+    \item \textbf{Consistencia eventual (Eventual consistency):} los datos alcanzarán un estado consistente en algún momento posterior, tras la propagación de las actualizaciones.
+\end{itemize}
 
+Esta elección responde al teorema CAP, el cual establece que un sistema distribuido solo puede garantizar simultáneamente dos de tres propiedades \cite{ibm_cap_theorem}: consistencia (todos los nodos ven los mismos datos al mismo tiempo), disponibilidad (el sistema responde a cada solicitud) y tolerancia a particiones (el sistema sigue operando con la red dividida).
+
+\subsection{Escalabilidad}
+
+La escalabilidad describe la capacidad de un sistema para manejar un incremento de carga sin degradar su rendimiento. Existen dos estrategias:
+
+\begin{itemize}
+    \item \textbf{Escalabilidad vertical:} aumentar los recursos hardware (RAM, CPU) del servidor existente. 
+    \item \textbf{Escalabilidad horizontal:} agregar más servidores al sistema y distribuir la carga entre ellos. 
+\end{itemize}
+
+\subsection{Normalización}
+
+La normalización es el proceso de organizar los datos para eliminar redundancias y dependencias inconsistentes \cite{codd1970}. 
+Consiste en aplicar un conjunto de reglas (formas normales) que evitan anomalías durante la inserción, actualización o eliminación de registros. 
+En un sistema de ESAVI, los datos del paciente y los datos de la vacuna residen en tablas separadas para evitar repetir información en cada reporte.
 
 
 \section{Análisis de tecnologías para la implementación del sistema propuesto}
 \label{section:analisis_tecnologias}
 
-El desarrollo de sistemas informáticos modernos orientados al dominio clínico requiere la selección de un conjunto de tecnologías que garanticen propiedades fundamentales como la confiabilidad, la integridad de los datos, la escalabilidad y la mantenibilidad del software. A diferencia de aplicaciones convencionales, en este tipo de sistemas resulta especialmente relevante la correcta gestión de la información, así como la capacidad de respuesta ante un crecimiento progresivo de usuarios y volumen de datos.
-
-En este sentido, el presente análisis se basa en el estudio de diferentes alternativas tecnológicas utilizadas en la construcción de sistemas modernos, abarcando tanto el desarrollo del backend como de las interfaces de usuario y los sistemas de gestión de bases de datos. 
+El desarrollo de sistemas informáticos orientados al dominio clínico requiere la selección de un conjunto de tecnologías que garanticen propiedades fundamentales como la confiabilidad, la integridad de los datos, la escalabilidad y la mantenibilidad del software. El presente análisis estudia diferentes alternativas tecnológicas utilizadas en la construcción de sistemas modernos, abarcando tanto el desarrollo de la capa de servicios como de la interfaz de usuario y los sistemas de gestión de bases de datos.
 
 \subsection{Criterios técnicos para la selección de tecnologías}
 \label{subsection:criterios}
 
-La selección de estas tecnologías no se realiza de manera arbitraria, sino a partir de criterios técnicos previamente definidos que permiten evaluar de forma objetiva las distintas opciones disponibles.
+La selección de estas tecnologías parte de criterios técnicos previamente definidos que permiten evaluar de forma objetiva las distintas opciones disponibles.
 
-En primer lugar, se considera la \textbf{eficiencia y el rendimiento}, entendidos como la capacidad de la tecnología para responder adecuadamente bajo cargas de trabajo variables, garantizando tiempos de respuesta adecuados en escenarios de uso intensivo.
-
-En segundo lugar, se evalúa la \textbf{escalabilidad}, referida a la capacidad del sistema para adaptarse al crecimiento en el número de usuarios y volumen de datos, tanto a nivel vertical como horizontal.
-
-Asimismo, se analiza la \textbf{mantenibilidad},  entendida como la facilidad para realizar modificaciones, extensiones o correcciones en el software sin afectar negativamente su funcionamiento global, en función del nivel de acoplamiento y la estructura arquitectónica.
-
-Otro criterio considerado es la \textbf{madurez tecnológica}, entendida como el nivel de estabilidad y uso comprobado de una tecnología, reflejado en su adopción en entornos reales, la calidad de su documentación y el soporte de su comunidad.
-
-Finalmente, se introduce el criterio de \textbf{adecuación al dominio clínico}, el cual evalúa la capacidad de la tecnología para garantizar propiedades críticas como la consistencia de los datos, la trazabilidad de la información y el soporte de operaciones transaccionales seguras.
+\begin{itemize}
+    \item \textbf{Eficiencia y rendimiento:} capacidad de la tecnología para responder adecuadamente bajo cargas de trabajo variables, garantizando tiempos de respuesta adecuados en escenarios de uso intensivo.
+    \item \textbf{Escalabilidad:} capacidad del sistema para adaptarse al crecimiento en el número de usuarios y volumen de datos, tanto a nivel vertical como horizontal.
+    \item \textbf{Mantenibilidad:} facilidad para realizar modificaciones, extensiones o correcciones en el software sin afectar negativamente su funcionamiento global.
+    \item \textbf{Madurez tecnológica:} nivel de estabilidad y uso comprobado de una tecnología, reflejado en su adopción en entornos reales, la calidad de su documentación y el soporte de su comunidad.
+    \item \textbf{Curva de aprendizaje:} esfuerzo requerido para que un desarrollador adquiera competencia en la tecnología y pueda contribuir al proyecto.
+\end{itemize}
 
 Estos criterios sirven como base para el análisis comparativo presentado en las secciones siguientes.
 
 
-\subsection{Tecnologías para el desarrollo del backend}
+\subsection{Tecnologías para el desarrollo de la capa de servicios}
 \label{subsection:backend}
 
-En el desarrollo de aplicaciones web modernas, la selección del framework de backend constituye un elemento clave para la construcción del sistema.
-En el contexto del sistema de farmacovigilancia, se seleccionan tres tecnologías representativas del ecosistema actual: .NET, Spring Boot y NestJS. 
-Esta selección se basa en su amplia adopción en entornos de desarrollo, su uso en aplicaciones de nivel empresarial y la diversidad de paradigmas tecnológicos que representan.
+Definida la capa de servicios en la sección anterior, corresponde ahora analizar las tecnologías disponibles para su implementación. 
+El objetivo no consiste en identificar la mejor solución en términos absolutos, sino en analizar tres marcos de trabajo —.NET, Spring Boot y NestJS— que representan paradigmas distintos dentro del ecosistema actual.
+Cada uno aporta fortalezas aplicables al sistema de farmacovigilancia, y la elección final dependerá de su ajuste a los criterios definidos.
 
-\subsubsection{.NET Core}
+\subsubsection{.NET}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/dotnetcore-original.png}
-    \caption{Logo de .NET.}
-    \label{fig:dotnet_core}
-\end{figure}
+.NET es un framework multiplataforma de código abierto mantenido por Microsoft que utiliza C\# como lenguaje de programación principal.
+Su entorno de ejecución traduce el código a instrucciones nativas mediante dos estrategias complementarias. 
+La compilación JIT (Just-In-Time) convierte el código a medida que la aplicación lo ejecuta. 
+La estrategia AOT (Ahead-Of-Time) realiza la conversión completa antes de la ejecución para reducir el tiempo de inicio y el consumo de memoria \cite{dotnet_official}.
 
-.NET (anteriormente .NET Core) es un framework multiplataforma de código abierto mantenido por Microsoft, orientado al desarrollo de aplicaciones backend modernas de alto rendimiento \cite{dotnet_official}.
+ASP.NET Core, su módulo para APIs REST, organiza el procesamiento de cada solicitud mediante un conjunto de middlewares encadenados que procesan la petición antes de generar la respuesta. 
+Este modelo evita la sobrecarga de hilos por conexión \cite{ms_aspnet_architecture}.
 
-Entre sus principales características se encuentra el soporte para la construcción de APIs REST \footnote{API REST es una interfaz HTTP que permite operar recursos entre cliente y el servidor mediante URI y métodos estándar como GET, POST, PUT y DELETE} mediante ASP.NET Core.
-Una particularidad de ASP.NET Core es su pipeline de solicitudes HTTP, en el cual cada petición pasa por una secuencia de componentes intermedios (middlewares) que permiten procesarla, validarla o modificarla antes de generar la respuesta \cite{ms_aspnet_architecture}.
-
-A diferencia de otros ecosistemas, incorpora de manera nativa un contenedor de inyección de dependencias (IServiceProvider), lo que permite que el propio framework gestione el ciclo de vida y la provisión de los componentes sin recurrir a bibliotecas de terceros \cite{ms_di_doc}. 
-Para la persistencia, utiliza Entity Framework Core, un mapeador objeto-relacional (ORM)\footnote{ORM (Object-Relational Mapping) es una técnica que permite interactuar con bases de datos relacionales mediante objetos del lenguaje de programación, evitando el uso directo de consultas SQL.} que permite trabajar con bases de datos relacionales mediante objetos del dominio, simplificando el acceso a los datos \cite{ef_core_doc}.
+Incorpora de manera nativa un contenedor de inyección de dependencias que gestiona el ciclo de vida de los componentes sin necesidad de bibliotecas externas \cite{ms_di_doc}. 
+Para el acceso a los datos, .NET integra Entity Framework Core. 
+Esta herramienta permite escribir consultas en el mismo lenguaje de programación sin necesidad de aprender un lenguaje de consulta separado, lo que reduce la curva de aprendizaje \cite{ef_core_doc}.
 
 \subsubsection{Spring Boot}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/spring-original.png}
-    \caption{Logo de Spring Boot}
-    \label{fig:spring_boot}
-\end{figure}
+Spring Boot es un framework basado en Java que opera sobre la Máquina Virtual de Java (JVM), un entorno que ejecuta el código compilado sobre una capa de abstracción independiente del sistema operativo. 
+Esta capa adicional simplifica el desarrollo, pero incrementa el consumo de memoria en estado de reposo y bajo carga en comparación con otros entornos de ejecución \cite{spring_official}.
+Utiliza el paradigma de Inversión de Control (IoC) para gestionar los componentes de la aplicación, y Spring MVC para implementar APIs REST con una estructura organizada en controladores, servicios y repositorios \cite{spring_in_action}. 
+Para la persistencia, integra Spring Data JPA, que abstrae el acceso a los datos y permite definir consultas mediante anotaciones directamente en el código, lo que reduce la complejidad del desarrollo.
 
-Spring Boot es un framework basado en Java, de código abierto, orientado a la construcción de aplicaciones backend mediante un enfoque de configuración automática y convenciones predefinidas \cite{spring_official}.
-
-Entre sus principales características se encuentra el uso del paradigma de Inversión de Control (IoC), mediante el cual el framework se encarga de la creación y gestión de los componentes de la aplicación, reduciendo el acoplamiento entre ellos.
-Asimismo, proporciona soporte para el desarrollo de servicios web mediante Spring MVC, facilitando la implementación de APIs REST con una estructura organizada \cite{spring_in_action}.
-Adicionalmente, Spring Boot puede integrarse con Spring Data JPA, lo que permite la interacción con bases de datos relacionales mediante abstracciones orientadas a objetos similares a otros ORM del ecosistema.
+El desarrollo con Spring Boot requiere instalar el entorno de desarrollo de Java, configurar un gestor de dependencias y familiarizarse con un ecosistema extenso de anotaciones, lo que incrementa la curva de aprendizaje en comparación con otros frameworks \cite{spring_in_action}.
 
 \subsubsection{NestJS}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/nestjs-original.png}
-    \caption{Logo de NestJS}
-    \label{fig:nest_js}
-\end{figure}
+NestJS es un framework basado en Node.js y TypeScript. 
+Funciona sobre el motor V8 de Google, que compila JavaScript a código máquina en tiempo de ejecución. 
 
-NestJS es un framework de desarrollo backend basado en Node.js y TypeScript, de código abierto, utilizado para la construcción de aplicaciones del lado del servidor y APIs REST \cite{nestjs_official}.
+Su modelo de concurrencia descansa en un bucle de eventos (event loop) de un solo hilo, lo que permite manejar miles de conexiones simultáneas sin crear un hilo por cada solicitud.
+Este diseño resulta muy eficiente en operaciones de entrada/salida (I/O) y favorece la escalabilidad en escenarios con alta concurrencia de conexiones ligeras, aunque pierde rendimiento en tareas intensivas en CPU \cite{nestjs_official}.
 
-Su arquitectura se organiza mediante módulos, los cuales agrupan controladores y servicios que gestionan la lógica de la aplicación.
-Utiliza TypeScript como lenguaje base, lo que permite tipado estático dentro del entorno de JavaScript.
-Se ejecuta sobre el modelo de Node.js basado en un bucle de eventos (event loop), lo que facilita el manejo concurrente de múltiples solicitudes mediante operaciones no bloqueantes.
-Además, incorpora un sistema de inyección de dependencias y puede integrarse con herramientas como TypeORM o Prisma para el acceso a bases de datos relacionales.
+La arquitectura del framework organiza la aplicación mediante módulos que agrupan controladores y servicios, e incorpora un sistema de inyección de dependencias propio. 
+A diferencia de .NET y Spring Boot, no incluye una herramienta de persistencia integrada, sino que delega esta responsabilidad en bibliotecas externas como TypeORM o Prisma, lo que añade una dependencia adicional y puede incrementar la curva de aprendizaje.
 
+\subsubsection{Comparación de las plataformas de desarrollo}
 
-\subsection{Comparación sobre las plataformas de desarrollo expuestas}
-
-A partir de las características técnicas descritas previamente, se realiza una comparación de las tecnologías backend seleccionadas (.NET, Spring Boot y NestJS) con base en los criterios definidos en la Sección~\ref{subsection:criterios}.
-
-La Tabla \ref{tab:comparacion_backend} resume la comparación realizada según los criterios establecidos.
+La Tabla \ref{tab:comparacion_backend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Comparación de tecnologías backend según criterios de evaluación}
+	\caption{Comparación de tecnologías para la capa de servicios según criterios de evaluación}
 	\label{tab:comparacion_backend}
-	
 	\renewcommand{\arraystretch}{1.3}
-	
 	\begin{tabular}{p{3.2cm} p{3.5cm} p{3.5cm} p{3.5cm}}
-		
 	\textbf{Criterio} & \textbf{.NET} & \textbf{Spring Boot} & \textbf{NestJS} \\[6pt]
-		
-		Eficiencia 
-& Alta (alto throughput, baja latencia, menor consumo de RAM) 
-& Alta (rendimiento estable, mayor consumo de memoria JVM) 
-& Media (eficiente en I/O, menor rendimiento en CPU intensivo) \\[6pt]
-		\hline
-
-		Escalabilidad 
-& Alta (pipeline ligero, alto rendimiento bajo carga y despliegue eficiente en contenedores) 
-& Muy alta (ecosistema maduro para arquitecturas distribuidas y estabilidad en alta concurrencia) 
-& Alta (alta concurrencia en I/O mediante modelo no bloqueante, modelo asíncrono basado en event loop) \\ [6pt]
-\hline 
-		
-		
-	Mantenibilidad 
-& Alta (DI nativo, arquitectura estructurada y tipada) 
-& Alta (IoC consolidado, ecosistema empresarial estandarizado) 
-& Media (modularidad flexible, ecosistema heterogéneo) \\
-\hline
-
-Madurez 
-& Muy alta (plataforma enterprise, soporte LTS) 
-& Muy alta (amplia adopción empresarial consolidada) 
-& Media (ecosistema en crecimiento) \\
-\hline
-
-Adecuación clínica 
-& Alta (EF Core, transacciones ACID, seguridad integrada) 
-& Alta (JPA/Hibernate, gestión transaccional robusta) 
-& Media (menor adopción en sistemas clínicos críticos) \\
-\hline
-
-Curva de aprendizaje
-& Media-Alta (herramientas integradas (Visual Studio), arquitectura homo)
-& Alta (ecosistema complejo, configuración extensa y uso intensivo de anotaciones)
-& Media-Baja (framework más accesible, pero con complejidad en asincronía y arquitectura modular) \\
-\hline
-
+		Eficiencia & Alta (alta tasa de transferencia, menor tiempo de procesamiento, menor consumo de RAM) & Alta (rendimiento estable, mayor consumo de memoria JVM) & Media (eficiente en I/O, menor rendimiento en CPU intensivo) \\[6pt] \hline
+		Escalabilidad & Alta (menor consumo de recursos por instancia, alto rendimiento bajo carga) & Muy alta (ecosistema maduro y ampliamente probado en arquitecturas distribuidas) & Alta (alta concurrencia en I/O mediante modelo no bloqueante) \\[6pt] \hline
+		Mantenibilidad & Alta (DI nativo, arquitectura estructurada y tipada) & Alta (IoC consolidado, ecosistema estandarizado) & Media (ecosistema heterogéneo) \\[6pt] \hline
+		Madurez & Muy alta (plataforma enterprise, soporte LTS) & Muy alta (amplia adopción empresarial) & Media (ecosistema en crecimiento) \\[6pt] \hline
+		Curva de aprendizaje & Media-Alta (herramientas integradas) & Alta (ecosistema complejo) & Media-Baja (framework accesible) \\[6pt] \hline
 	\end{tabular}
 \end{table}
 
+La valoración de este criterio encuentra respaldo en estudios que han medido el comportamiento de los frameworks bajo condiciones de carga controladas. 
+Godinho et al. (2024) compararon el rendimiento de APIs REST implementadas en .NET y Spring Boot mediante una suite de pruebas controladas. 
 
-
-
-
-\subsubsection{Justificación de los criterios de evaluación}
-
-A continuación, se presentan los fundamentos técnicos que sustentan la valoración asignada a cada criterio de la comparación.
-
-\paragraph{Eficiencia y rendimiento}
-
-La evaluación de este criterio se basa en estudios de rendimiento que analizan el comportamiento de APIs bajo escenarios de carga controlados. 
-En este contexto, Godinho et al. (2024) reportan diferencias significativas en el consumo de memoria entre .NET y Java, donde la implementación en Java presenta aproximadamente el doble de uso de RAM en estado de reposo (\textit{idle}), con valores de 1.40 GiB frente a 694 MiB en .NET \cite{performance_study}.
-
-En términos de rendimiento, los resultados de throughput indican que ASP.NET Core obtiene un mayor número de respuestas por segundo en escenarios de alta concurrencia. 
-De forma consistente, los benchmarks de TechEmpower \footnote{TechEmpower Framework Benchmarks es un conjunto de pruebas estandarizadas que evalúa el rendimiento de frameworks web bajo condiciones homogéneas de carga, permitiendo comparar métricas como throughput y latencia entre diferentes tecnologías como .NET, Java y Node.js.}
-confirman que .NET se mantiene entre las tecnologías con mejor desempeño en pruebas de múltiples consultas por solicitud, como se evidencia en la Figura \ref{fig:benchmark_rendimiento} \cite{techempower_benchmarks}.
+Sus resultados muestran que, en estado de reposo, Spring Boot consume aproximadamente el doble de memoria RAM que .NET (1.40 GiB frente a 694 MiB), mientras que el uso de CPU es similar en ambos \cite{performance_study}. 
+En cuanto al throughput —el número de respuestas por segundo que el servidor es capaz de procesar—, .NET supera consistentemente a Spring Boot bajo carga concurrente. 
+Esta ventaja también aparece en los benchmarks independientes de TechEmpower\footnote{TechEmpower Framework Benchmarks es un proyecto de código abierto que ejecuta pruebas estandarizadas sobre cientos de frameworks web. Evalúa múltiples escenarios —consultas a base de datos, serialización JSON, texto plano, entre otros— midiendo el rendimiento relativo de cada tecnología bajo condiciones homogéneas de carga \cite{techempower_benchmarks}.}, que sitúan a .NET por delante de Spring Boot y de NestsJs en el escenario de múltiples consultas por solicitud .
+La Figura \ref{fig:benchmark_rendimiento} muestra ambas métricas: .NET obtiene la mayor tasa de transferencia y el menor tiempo de procesamiento entre los tres frameworks, lo que fundamenta la valoración de este criterio.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.6]{Graphics/Cap2/bencharmk_definitivo.jpg}
-    \caption{Throughput (respuestas por segundo) en .NET, Spring Boot y Node.js (adaptado de TechEmpower Framework Benchmarks)}
+    \begin{minipage}[b]{0.50\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Graphics/Cap2/bencharmk_definitivo.jpg}
+        \textbf{(a)} Tasa de transferencia (respuestas por segundo)
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Graphics/Cap2/latencia.jpg}
+        \textbf{(b)} Tiempo de procesamiento para 20 consultas
+    \end{minipage}
+    \caption{Comparación de rendimiento entre .NET, Spring Boot y Node.js en el escenario de 20 consultas por solicitud (adaptado de TechEmpower Framework Benchmarks \cite{techempower_benchmarks})}
     \label{fig:benchmark_rendimiento}
 \end{figure}
 
 
-Asimismo, los resultados de latencia evidencian que .NET presenta tiempos de respuesta más estables bajo incremento de carga.
 
-En escenarios de estrés (\textit{POST}), la Figura \ref{fig:fg18} muestra que el consumo de memoria se mantiene consistente con pruebas previas, observándose que Java requiere aproximadamente el doble de RAM que .NET, mientras que el uso de CPU presenta diferencias mínimas entre ambos frameworks \cite{performance_study}.
+\subsubsection{Selección de la plataforma}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{Graphics/Cap2/fig19-6.jpg}
-    \caption{Prueba de estrés sobre operaciones POST: uso de memoria y CPU (adaptado de \textit{Performance Comparison of RESTful Web APIs using a Test Suite: .NET vs. Java Spring Boot} \cite{performance_study})}
-    \label{fig:fg18}
-\end{figure}
-
-
-
-\paragraph{Escalabilidad}
-
-A partir de la comparación, se observa que tanto .NET como Spring Boot presentan un comportamiento escalable robusto en entornos distribuidos, siendo ampliamente utilizados en arquitecturas de microservicios. 
-
-Por su parte, NestJS ofrece una alta capacidad de concurrencia en escenarios ligeros gracias a su modelo de ejecución asíncrono. 
-Sin embargo, los resultados de benchmarks indican que .NET y Spring Boot mantienen un comportamiento más consistente bajo cargas sostenidas \cite{techempower_benchmarks}.
-
-
-\paragraph{Mantenibilidad}
-
-De acuerdo con la Tabla correspondiente, .NET y Spring Boot presentan un nivel de mantenibilidad alto, principalmente debido a la consolidación de patrones arquitectónicos como IoC y la existencia de ecosistemas maduros que favorecen la estandarización del desarrollo y facilita las pruebas unitarias. 
-
-Por otro lado, NestJS presenta una mantenibilidad media, influenciada por la mayor variabilidad de su ecosistema y la dependencia de múltiples librerías externas en evolución constante.
-
-Adicionalmente, la curva de aprendizaje también influye en la mantenibilidad del sistema, ya que tecnologías con menor complejidad inicial facilitan la incorporación de nuevos desarrolladores y reducen el tiempo de adaptación al proyecto.
-
-
-\paragraph{Madurez tecnológica}
-
-.NET y Spring Boot presentan una madurez de grado empresarial consolidada, respaldada por su amplia adopción en sistemas productivos y su evolución sostenida a lo largo del tiempo, incluyendo soporte de largo plazo (LTS) en sus versiones actuales.
-
-.NET refuerza su estabilidad mediante su ciclo de lanzamientos LTS y su fuerte integración en entornos corporativos, mientras que Spring Boot se mantiene como el estándar de facto en el ecosistema Java para aplicaciones empresariales distribuidas.
-
-Por su parte, NestJS, aunque moderno y en crecimiento, presenta una madurez menor al estar basado en el ecosistema JavaScript/Node.js, caracterizado por ciclos de cambio más rápidos y menor estabilidad histórica en sistemas de misión crítica.
-
-\paragraph{Adecuación al dominio clínico}
-
-En sistemas de salud, la integridad, seguridad e interoperabilidad de los datos constituyen requisitos fundamentales debido a la naturaleza crítica de la información clínica.
-
-En este contexto, .NET proporciona soporte para APIs nativas de protección de datos y estándares como \textit{SMART on FHIR}\footnote{\textit{SMART on FHIR} (Substitutable Medical Applications and Reusable Technologies on Fast Healthcare Interoperability Resources) es un estándar que permite el desarrollo de aplicaciones interoperables en salud mediante acceso seguro a datos clínicos estructurados sobre FHIR.}, facilitando la integración con sistemas clínicos externos y el cumplimiento de normativas como HIPAA\footnote{HIPAA (Health Insurance Portability and Accountability Act) establece requisitos para la protección y confidencialidad de la información médica.} \cite{bhuptani_healthcare, smart_on_fhir_video}.
-
-Asimismo, su integración con Entity Framework Core permite garantizar propiedades transaccionales de tipo ACID, asegurando consistencia, integridad y trazabilidad en operaciones críticas como el registro y auditoría de eventos adversos.
-
-En el contexto del Instituto Finlay de Vacunas, esta madurez se evidencia en la adopción de plataformas como OpenClinica para la gestión de datos clínicos y el uso de herramientas de inteligencia de negocio como bambooBSC, ambas basadas en el ecosistema Java \cite{carbonell_cmi_finlay_2016}.
-
-Spring Boot presenta una alta adecuación al dominio clínico debido a su robustez transaccional y su amplio uso en sistemas empresariales del sector salud, aunque su capa de persistencia basada en JPA/Hibernate puede incrementar la complejidad en consultas avanzadas.
-
-Por su parte, NestJS presenta una adecuación moderada, debido a su menor adopción en sistemas clínicos críticos y a la dependencia de bibliotecas externas para garantizar funcionalidades de seguridad y cumplimiento normativo.
-
-
-\subsubsection{Selección de la plataforma para el sistema de farmacovigilancia}
-
-A partir del análisis realizado, se determina que \textbf{.NET} constituye la opción más adecuada para el sistema de farmacovigilancia por las siguientes razones:
+A partir del análisis realizado, .NET constituye la opción más adecuada para el sistema de farmacovigilancia por las siguientes razones:
 
 \begin{enumerate}
-    \item \textbf{Eficiencia de recursos:} Presenta un menor consumo de memoria y un alto rendimiento bajo carga en comparación con otras alternativas, lo que favorece su despliegue en entornos con recursos limitados \cite{performance_study}.
-    
-    \item \textbf{Fiabilidad en operación:} Mantiene un comportamiento estable bajo cargas sostenidas, garantizando la integridad de las transacciones críticas en el registro de eventos adversos \cite{performance_study}.
-    
-    \item \textbf{Seguridad y cumplimiento:} Dispone de mecanismos nativos para la protección de datos sensibles y cumplimiento de normativas del sector salud, lo que resulta esencial en sistemas clínicos \cite{bhuptani_healthcare}.
-    
-    \item \textbf{Mantenibilidad y cohesión del ecosistema:} Su arquitectura integrada, junto con herramientas unificadas y soporte de largo plazo (LTS), facilita la evolución controlada del sistema.
-    
-    \item \textbf{Adecuación al contexto de desarrollo:} La experiencia previa con el ecosistema .NET reduce la curva de aprendizaje y el riesgo de implementación, favoreciendo un desarrollo más eficiente y sostenible en el tiempo.
+    \item \textbf{Eficiencia de recursos:} menor consumo de memoria y alto rendimiento bajo carga, lo que favorece su despliegue en entornos con recursos limitados \cite{performance_study}.
+    \item \textbf{Fiabilidad en operación:} comportamiento estable bajo cargas sostenidas, que garantiza la integridad de las transacciones críticas \cite{performance_study}.
+    \item \textbf{Ecosistema integrado:} proporciona bibliotecas nativas para seguridad, persistencia y autenticación, lo que evita la dependencia de componentes externos y facilita la evolución del sistema con soporte a largo plazo.
+    \item \textbf{Adecuación al contexto:} la experiencia previa con el ecosistema .NET reduce la curva de aprendizaje y el riesgo de implementación.
 \end{enumerate}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%-------------------------------------------------
-
-\subsection{Tecnologías para el desarrollo del frontend}
+\subsection{Tecnologías para el desarrollo de la interfaz de usuario}
 \label{subsection:frontend}
 
-En el desarrollo de aplicaciones web modernas, la selección de la tecnología de frontend constituye un elemento clave para garantizar la correcta implementación de interfaces de usuario eficientes, escalables y coherentes con las necesidades del sistema.
-
-En este contexto, no se busca identificar exhaustivamente todas las alternativas existentes, sino seleccionar un conjunto representativo de tecnologías que permitan realizar un análisis comparativo basado en criterios técnicos relevantes para aplicaciones clínicas.
-
-En este sentido, se seleccionan React, Angular y Vue por representar tres enfoques distintos en el desarrollo frontend moderno.
+El análisis considera tres tecnologías representativas del desarrollo de interfaces de usuario modernas: React, Angular y Vue. La selección de estas tres responde a que representan enfoques distintos dentro del ecosistema actual —una biblioteca flexible, un framework integral y un marco progresivo—, lo que permite una comparación basada en los criterios definidos.
 
 \subsubsection{React}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/react-original-wordmark.png}
-    \caption{Logo de React}
-    \label{fig:react}
-\end{figure}
-
-React es una biblioteca de JavaScript desarrollada por Meta para la construcción de interfaces basadas en componentes reutilizables. Su modelo declarativo utiliza un Virtual DOM para optimizar la actualización de la interfaz mediante un proceso de reconciliación \cite{react_official}.
-
-Este mecanismo reduce las operaciones directas sobre el DOM real, mejorando el rendimiento en interfaces con alta frecuencia de cambios, tal como se ilustra en la Figura \ref{fig:virtual_dom}.
-
-Sin embargo, React requiere la integración de librerías externas para funcionalidades como enrutamiento y gestión de estado, lo que incrementa la complejidad arquitectónica del frontend.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.5]{Graphics/Cap2/virtual_dom.png}
-    \caption{Funcionamiento del Virtual DOM en React (adaptado de \textit{Virtual DOM in React JS}, GeeksforGeeks \cite{gfg_virtual_dom_react})}
-    \label{fig:virtual_dom}
-\end{figure}
-
-
+React es una biblioteca de JavaScript desarrollada por Meta para la construcción de interfaces mediante componentes reutilizables. 
+Su modelo declarativo opera sobre una representación virtual del documento (Virtual DOM). En lugar de manipular directamente la estructura del navegador, React aplica los cambios sobre esta representación virtual. A continuación, un algoritmo de reconciliación calcula la diferencia mínima con el estado anterior y actualiza solo los elementos modificados.
+Esta estrategia reduce las operaciones costosas de manipulación del documento y mejora el rendimiento en interfaces con alta frecuencia de cambios \cite{react_official}. 
+React no impone una estructura completa; el enrutamiento y la gestión de estado recaen en bibliotecas externas, lo que otorga flexibilidad a costa de una mayor dependencia del ecosistema.
 
 \subsubsection{Angular}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/angularjs-original.png}
-    \caption{Logo de Angular}
-    \label{fig:angular}
-\end{figure}
-
-Angular es un framework de desarrollo frontend basado en TypeScript, mantenido por Google, orientado a la construcción de aplicaciones web de gran escala mediante una arquitectura completamente integrada \cite{angular_official}.
-
-Su principal característica distintiva es el uso de \textit{two-way data binding}, el cual permite la sincronización automática entre el modelo de datos y la vista, reduciendo la necesidad de manipulación manual de la interfaz.
-Asimismo, su enfoque “opinionated” define una estructura de desarrollo estandarizada desde el inicio del proyecto, lo que favorece la consistencia arquitectónica en aplicaciones de gran escala.
-
-Además, Angular proporciona una solución integral que incluye enrutamiento, inyección de dependencias, manejo de formularios y herramientas de estructuración de aplicaciones.
-
+Angular es un framework de desarrollo de interfaces de usuario basado en TypeScript, mantenido por Google. 
+Utiliza un mecanismo de vinculación bidireccional que sincroniza automáticamente el modelo de datos con la vista sin necesidad de manipulación manual \cite{angular_official}.
+A diferencia de React, Angular constituye una solución integral que incluye enrutamiento, inyección de dependencias, manejo de formularios y herramientas de estructuración. 
+Su enfoque dirigido por convenciones define una arquitectura estandarizada desde el inicio del proyecto, lo que favorece la consistencia en aplicaciones de gran escala pero incrementa la curva de aprendizaje.
 
 \subsubsection{Vue}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/vuejs-original-wordmark.png}
-    \caption{Logo de Vue.js}
-    \label{fig:vue}
-\end{figure}
+Vue.js es un framework progresivo de JavaScript diseñado para la construcción de interfaces interactivas. 
+Su sistema de reactividad rastrea automáticamente las dependencias entre los datos y la vista, actualizando solo los componentes afectados cuando el estado cambia \cite{vue_official}. 
+Su diseño incremental permite adoptarlo de forma gradual: puede integrarse en proyectos existentes como una biblioteca ligera o utilizarse como framework completo, lo que reduce la curva de aprendizaje inicial.
+Su reducido tamaño lo hace adecuado para cargas rápidas en redes con conectividad limitada.
 
-Vue.js es un framework progresivo de JavaScript diseñado para la construcción de interfaces de usuario interactivas. 
-Su diseño incremental permite su adopción gradual, integrándose en proyectos existentes o utilizándose como framework completo \cite{vue_official}.
+\subsubsection{Comparación de los frameworks de frontend}
 
-Su principal característica es un sistema de reactividad que sincroniza de forma eficiente los cambios del estado con la interfaz de usuario, facilitando el desarrollo de interfaces declarativas.
-
-Vue combina principios presentes en frameworks como React y Angular, situándose como una alternativa intermedia en términos de flexibilidad y estructura.
-
-
-\subsection{Comparación sobre los frameworks de frontend expuestos}
-
-Aunque los criterios definidos son aplicables de forma general al sistema, su interpretación varía según la capa tecnológica analizada.
-
-En el frontend, la eficiencia se relaciona con el rendimiento en la actualización de la interfaz, la escalabilidad con la gestión de interfaces complejas basadas en componentes, y la adecuación al dominio clínico con la capacidad de soportar la captura, validación y visualización estructurada de datos.
-
+La Tabla \ref{tab:comparacion_frontend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}. 
+En la interfaz de usuario, la eficiencia corresponde a la velocidad de actualización de la vista, la escalabilidad a la gestión de componentes complejos, y la mantenibilidad a la estructura del código.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Comparación de tecnologías frontend según criterios de evaluación}
+	\caption{Comparación de tecnologías para la interfaz de usuario según criterios de evaluación}
 	\label{tab:comparacion_frontend}
-	
 	\renewcommand{\arraystretch}{1.3}
-	
 	\begin{tabular}{p{3.2cm} p{3.5cm} p{3.5cm} p{3.5cm}}
-		
 	\textbf{Criterio} & \textbf{React} & \textbf{Angular} & \textbf{Vue} \\[6pt]
-    
-		Renderizado 
-& Alto (Virtual DOM, reconciliación eficiente) 
-& Medio (change detection basado en zonas) 
-& Alto (reactividad basada en dependencias) \\
-\hline
-
-Escalabilidad (UI) 
-& Alta (componentes reutilizables) 
-& Muy alta (arquitectura modular integrada) 
-& Alta (reactividad y composición flexible) \\
-\hline
-
-Peso y Rendimiento 
-& Ligero (enfocado solo en la carga de vista, agilizando el tiempo de carga inicial) 
-& Pesado (framework pesado que incluye múltiples librerías integradas) 
-& Muy Ligero (20-30KB ideal para cargas rápidas en redes limitadas)  \\
-\hline
-
-Mantenibilidad 
-& Alta (componentes + ecosistema flexible) 
-& Muy alta (estructura integral y tipada) 
-& Alta (estructura simple y progresiva) \\
-\hline
-
-Curvas de Aprendizaje
-& Media (ecosistema flexible con integración de librerías externas y gestión del estado) 
-& Alta (framework integral con múltiples conceptos) 
-& Baja-Media (enfoque progresivo y sintaxis accesible) \\
-\hline
-
-Madurez 
-& Muy alta (amplia adopción y comunidad) 
-& Muy alta (uso empresarial consolidado) 
-& Alta (ecosistema en crecimiento) \\
-\hline
-
-Adecuación clínica (UI) 
-& Alta (gestión de estado y formularios dinámicos) 
-& Muy alta (formularios y validación integrados) 
-& Alta (reactividad y simplicidad en formularios) \\
-\hline
-
-
+		Eficiencia & Alta (representación virtual, actualización selectiva) & Media (detección de cambios por zonas) & Alta (reactividad basada en dependencias) \\ \hline
+		Escalabilidad & Alta (componentes reutilizables) & Muy alta (arquitectura modular integrada) & Alta (composición flexible) \\ \hline
+		Mantenibilidad & Alta (ecosistema flexible) & Muy alta (estructura tipada integral) & Alta (estructura progresiva) \\ \hline
+		Curva de aprendizaje & Media (dependencia de bibliotecas externas) & Alta (framework integral) & Baja-Media (adopción gradual) \\ \hline
+		Madurez & Muy alta (respaldada por Meta, amplia comunidad) & Muy alta (uso empresarial consolidado) & Alta (comunidad activa, ecosistema en crecimiento) \\ \hline
 	\end{tabular}
 \end{table}
 
 
-A partir de la Tabla \ref{tab:comparacion_frontend}, se identifican diferencias en los enfoques de construcción de interfaces. React y Vue priorizan mecanismos reactivos de actualización eficiente, mientras que Angular ofrece una solución más estructurada e integrada.
+\subsubsection{Selección del framework de frontend}
 
-Considerando los criterios evaluados, React presenta un equilibrio entre eficiencia, flexibilidad y mantenibilidad, lo cual resulta adecuado para aplicaciones basadas en componentes dinámicos.
-
-Dado que el sistema propuesto requiere interfaces altamente interactivas orientadas a formularios clínicos, se selecciona React como tecnología base para el desarrollo del frontend.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%-------------------------------------------------
+Considerando los criterios evaluados, React presenta un equilibrio entre eficiencia, flexibilidad y mantenibilidad. Su modelo basado en componentes reutilizables y su estrategia de actualización selectiva lo hacen adecuado para interfaces con formularios dinámicos como los requeridos por el sistema de farmacovigilancia. Su ecosistema de bibliotecas externas permite cubrir los requisitos de validación, visualización de datos y diseño responsivo sin la rigidez estructural de Angular ni la menor madurez de Vue. Por estas razones, React constituye la tecnología seleccionada para el desarrollo de la interfaz de usuario.
 
 \subsection{Sistemas de gestión de bases de datos}
 \label{subsection:bases_datos}
 
+Un sistema de gestión de bases de datos (SGBD) es un software encargado de gestionar el almacenamiento, la organización y la consulta de grandes volúmenes de información. 
+Para el sistema de farmacovigilancia, el análisis aborda primero los dos paradigmas predominantes —relacional y no relacional— y posteriormente los gestores concretos dentro del paradigma seleccionado.
 
-Un sistema de gestión de bases de datos (SGBD) es un software encargado de gestionar el almacenamiento, organización, consulta y acceso a grandes volúmenes de información para múltiples usuarios.
+\begin{itemize}
+\item \textbf{Bases de datos relacionales:} organizan la información en tablas con esquema rígido y utilizan el lenguaje de consulta estructurado (SQL, del inglés Structured Query Language) para acceder a los datos. Cumplen las propiedades ACID, lo que garantiza la integridad de los datos en operaciones críticas \cite{elmasri2016fundamentals}.
+\item \textbf{Bases de datos no relacionales (NoSQL, del inglés Not Only SQL):} operan con esquemas flexibles y priorizan la disponibilidad y el rendimiento sobre la consistencia inmediata, siguiendo el modelo BASE \cite{moniruzzaman2013nosql}. Son adecuadas para grandes volúmenes de datos no estructurados.
+\end{itemize}
 
-El uso de soluciones no estructuradas, como hojas de cálculo o registros sin esquema formal de datos, resulta inadecuado para sistemas de farmacovigilancia debido a la alta probabilidad de inconsistencias, duplicidad de datos y limitada capacidad de escalabilidad.
-
-En este sentido, el estado del arte identifica las bases de datos relacionales (SQL) y no relacionales (NoSQL) como los paradigmas predominantes. 
-Ambos enfoques permiten abordar diferentes necesidades, siendo ampliamente utilizados en sistemas clínicos y de salud digital.
-
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.8]{Graphics/Cap2/sgbd.jpg}
-    \caption{Ejemplos de sistemas de gestión de bases de datos relacionales y NoSQL}
-    \label{fig:mysql}
-\end{figure}
-
-\subsection{Análisis comparativo SQL vs NoSQL}
-
-A partir de la necesidad de analizar las diferencias entre ambos enfoques, se presenta una comparación entre los sistemas SQL y NoSQL en función de criterios técnicos relevantes.
 
 \begin{table}[htbp]
 	\centering
-    \caption{Comparación de paradigmas de bases de datos según criterios de evaluación}
-
+	\caption{Comparación de paradigmas de bases de datos según criterios de evaluación}
 	\label{tab:comparacion_db}
-	
 	\renewcommand{\arraystretch}{1.3}
-	
 	\begin{tabular}{p{3.2cm} p{6.0cm} p{6.0cm}}
-		
-	\textbf{Criterio} & \textbf{Relacional (SQL)} & \textbf{No Relacional (NoSQL)}\\[6pt]
-    
-		\textbf{Estructura de datos}
-        & Tablas con columnas y filas
-        & Modelos basados en documentos, pares clave-valor, familias de columnas o grafos
-        \\
-        \hline
-
-        \textbf{Esquema}
-        & Esquema rígido (definido antes de la inserción de datos) \cite{elmasri2016fundamentals}
-        & Esquema flexible (puede variar entre registros) \cite{moniruzzaman2013nosql}
-        \\
-        \hline
-
-
-        \textbf{Escalabilidad}
-        & Verticalmente escalable (aumento de recursos hardware del nodo)
-        & Horizontalmente escalable (agregando más nodos al sistema)
-        \\
-        \hline
-
-        \textbf{Integridad de los datos}
-        & Cumple con ACID (alta consistencia de los datos) \cite{ibm_acid_properties}
-        & Cumple con BASE (mayor disponibilidad, menor consistencia) \cite{ibm_cap_theorem}
-        \\
-        \hline
-
-        \textbf{Rendimiento}
-        & Alto en consultas complejas y operaciones transaccionales
-        & Alta en grandes volúmenes de datos y operaciones de lectura/escritura rápidas
-        \\
-        \hline
-
-        \textbf{Curva de aprendizaje}
-        & Media (requiere modelado relacional, normalización y dominio de SQL)
-        & Media-Baja (menor necesidad de esquemas rígido, aunque cada motor específico tiene su lenguaje de consulta)
-        \\
-
-	
+	\textbf{Criterio} & \textbf{Relacional (SQL)} & \textbf{No Relacional (NoSQL)} \\[6pt]
+		Estructura de datos & Tablas con columnas y filas & Modelos basados en documentos, pares clave-valor, familias de columnas o grafos \\ \hline
+		Esquema & Esquema rígido (definido antes de la inserción de datos) \cite{elmasri2016fundamentals} & Esquema flexible (puede variar entre registros) \cite{moniruzzaman2013nosql} \\ \hline
+		Escalabilidad & Verticalmente escalable (aumento de recursos hardware del nodo) & Horizontalmente escalable (agregando más nodos al sistema) \\ \hline
+		Integridad de los datos & Cumple con ACID (alta consistencia) \cite{ibm_acid_properties} & Cumple con BASE (mayor disponibilidad, menor consistencia) \cite{ibm_cap_theorem} \\ \hline
+		Rendimiento & Alto en consultas complejas y operaciones transaccionales & Alta en grandes volúmenes de datos y operaciones de lectura/escritura rápidas \\ \hline
+		Curva de aprendizaje & Media (requiere modelado relacional, normalización y dominio de SQL) & Media-Baja (menor necesidad de esquemas rígidos) \\ \hline
 	\end{tabular}
-    
+\end{table}
+
+En el sistema de farmacovigilancia, la prioridad es la integridad de la información clínica, no el manejo de grandes volúmenes de datos no estructurados. 
+Las propiedades ACID de las bases de datos relacionales aseguran que cada operación concluya sin inconsistencias, lo que resulta esencial cuando los datos alimentan directamente la toma de decisiones clínicas.
+Por esta razón, el paradigma relacional constituye la base del sistema. 
+Las bases de datos no relacionales mantienen su vigencia para escenarios complementarios —documentos, evidencias, fotografías o mecanismos de almacenamiento en caché— donde la flexibilidad de esquema y el rendimiento en lectura predominan sobre la consistencia transaccional.
+
+\subsubsection{Comparación de gestores de bases de datos relacionales}
+
+Una vez seleccionado el paradigma relacional, el análisis compara tres gestores —MySQL, PostgreSQL y SQL Server— que comparten un perfil adecuado para aplicaciones web multiusuario: todos operan como servicio independiente, admiten concurrencia y ofrecen integración con .NET \cite{microsoft_sql_comparison}. 
+
+La comparación valora cuatro criterios, resumidos en la Tabla \ref{tab:comparacion_sql}: 
+La integración con .NET determina la facilidad de conexión entre el gestor y el framework de desarrollo elegido, y evita configuraciones adicionales.
+La licencia condiciona la viabilidad económica del proyecto: una licencia comercial introduce costos que una solución de código abierto elimina. 
+El despliegue multiplataforma garantiza que el sistema pueda trasladarse entre entornos sin cambios en la configuración. 
+La curva de aprendizaje influye en la velocidad con que un desarrollador puede dominar la administración del gestor \cite{microsoft_sql_comparison}. 
+
+
+\begin{table}[H]
+	\centering
+	\caption{Comparación de gestores de bases de datos relacionales}
+	\label{tab:comparacion_sql}
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabular}{p{2.8cm} p{3.2cm} p{3.2cm} p{3.2cm} p{3.2cm}}
+	\textbf{Criterio} & \textbf{MySQL} & \textbf{PostgreSQL} & \textbf{SQL Server}  \\[6pt]
+		Integración con .NET & Alta (Pomelo) & Alta (Npgsql) & Nativa (Microsoft)  \\ \hline
+		Rendimiento & Alto en lectura & Alto en consultas complejas & Alto, optimizado para .NET  \\ \hline
+		Licencia & Código abierto (GPL) & Código abierto (PostgreSQL) & Comercial (Microsoft)  \\ \hline
+		Despliegue & Multiplataforma & Multiplataforma & Principalmente Windows \\ \hline
+		Curva de aprendizaje & Media & Media-Alta & Media \\ \hline
+	\end{tabular}
 \end{table}
 
 
-\paragraph{Estructura y esquema: La organización del dato clínico}
+SQL Server ofrece la integración más natural con .NET y Entity Framework por pertenecer al mismo ecosistema Microsoft, lo que aporta soporte nativo, documentación unificada y herramientas de desarrollo integradas. 
+Sin embargo, su licencia comercial introduce costos difíciles de justificar para un proyecto en fase de desarrollo, y su dependencia del entorno Windows limita la portabilidad del sistema. 
 
-Tal como indica la tabla comparativa, los sistemas relacionales (SQL) organiza la información en tablas rígidas con filas y columnas bien definidas.
-Este modelo exige un esquema fijo o conjunto de reglas preestablecidas antes de ingresar datos al sistema. 
-La rigidez estructural garantiza un formato idéntico para todos los registros, facilitando la validación y el cruce de información precisa entre diversas entidades.
-SQL ofrece una alta eficiencia en el procesamiento de consultas complejas y la gestión de relaciones estrictas entre datos interconectados, capacidades esenciales para asegurar la trazabilidad de la información almacenada.
+PostgreSQL ofrece la mayor potencia en consultas complejas y un ecosistema de extensiones que lo hacen preferible para aplicaciones con requisitos analíticos avanzados, aunque esta capacidad adicional incrementa su curva de aprendizaje y el consumo de recursos. 
 
+MySQL, aunque no alcanza la integración nativa de SQL Server ni la potencia analítica de PostgreSQL, ofrece un equilibrio adecuado para el sistema de farmacovigilancia: un proveedor consolidado para .NET (Pomelo), una licencia de código abierto que elimina los costos de licenciamiento, una compatibilidad multiplataforma que facilita el despliegue en cualquier entorno y una imagen de contenedor ligera que reduce el consumo de recursos durante el desarrollo. 
+Por estas razones, MySQL constituye el gestor seleccionado para el sistema.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.4]{Graphics/Cap2/estructura_sqlvsnosql2.png}
-    \caption{Ejemplos de estructuras de datos en SQL vs NoSQL}
-    \label{fig:estructura_sql}
-\end{figure}
+% \subsection{Otras herramientas y librerías}
 
-Por el contrario, los sistemas NoSQL operan con esquemas flexibles que omiten la estructura previa. 
-Esta maleabilidad permite integrar datos heterogéneos, como notas de voz o archivos multimedias, en su formato nativo sin alterar la base de datos.
-NoSQL sobresale por su alto rendimiento en la lectura y escritura rápida de grandes volúmenes de información que cambian con rapidez, una ventaja crítica para plataformas de monitoreo en tiempo real y el análisis de Big Data.
-
-\paragraph{Integridad y rendimiento: Confiabilidad frente a velocidad}
-
-SQL prioriza la integridad de los datos mediante el cumplimiento de las propiedades \gls{ACID}
-\footnote{ACID (Atmocity, Consistency, Isolation, Durability): Conjunto de propiedades que garantizan la fiabilidad de las transacciones. Para más detalle ver glosario: \gls{ACID}.}.
-Este enfoque permite que cada transacción sea ejecutada de forma segura y consistente, evitando la generación de datos corruptos, y facilita la ejecución de consultas complejas que involucran múltiples relaciones \cite{ibm_acid_properties}.
-
-El paradigma NoSQL prioriza la disponibilidad constante y el rendimiento superior al flexibilizar la sincronización inmediata de los registros entre sus nodos. 
-Esta arquitectura responde a las restricciones técnicas del teorema \gls{CAP}\footnote{Teorema CAP (Consistency, Availability, Partition Tolerance): Establece que en un sistema distribuido no es posible garantizar simultáneamente la disponibilidad, la consistencia y la tolerancia a particiones. Para más detalle ver glosario: \gls{CAP}}, el cual condiciona el diseño de sistemas distribuidos al obligar una elección entre la consistencia absoluta de los datos o la operatividad ininterrumpida ante fallos de comunicación \cite{ibm_cap_theorem}.
-En consecuencia, el sistema adopta el modelo \gls{BASE}\footnote{BASE (Basically Available, Soft-state, Eventual consistency): Paradigma que antepone la disponibilidad y el desempeño sobre la coherencia instantánea. Ver glosario: \gls{BASE}}, garantizando una respuesta operativa en todo momento mientras la información alcanza una consistencia eventual tras su propagación asíncrona por el \gls{cluster} (Ver glosario: \gls{cluster}).
-
-\paragraph{Escalabilidad: Crecimiento y capacidad del sistema:}
-
-Cada paradigma gestiona la estructura y dependencia de los datos de forma distinta, lo cual determina su estrategia de crecimiento.
-
-Como se analizó anteriormente, los sistemas relacionales (SQL) emplean esquemas rígidos y transacciones ACID para garantizar la integridad absoluta del dato.
-Esta arquitectura dificulta la partición de información entre múltiples servidores, ya que la trazabilidad y sincronización de múltiples acciones sobre diversas tablas dentro de una misma operación exigen una coordinación centralizada estricta para evitar inconsistencias \cite{uva_nosql_sql_2019}.
-Por ello, la mejora del rendimiento requiere la escalabilidad vertical, incrementando los recursos físicos (RAM o CPU) de un único nodo central. 
-Este modelo preserva la coherencia transcentralizada, pero introduce límites físicos finitos, ventanas de mantenimiento con interrupción del servicio y un punto único de fallo.
-
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.4]{Graphics/Cap2/escalado_db.png}
-    \caption{Esquema de escalabilidad vertical vs horizontal}
-    \label{fig:escalabilidad_sql}
-\end{figure}
-
-Por el contrario, los sistemas NoSQL emplean estructuras flexibles y almacenan datos con menor interdependencia entre registros. 
-Este diseño facilita la escalabilidad horizontal al repartir y replicar la información en múltiples servidores mediante técnicas nativas de fragmentación (\gls{Sharding}) \footnote{Ver glosario: \gls{Sharding}.}. 
-La priorización de la disponibilidad masiva, bajo el teorema CAP, permite un crecimiento elástico óptimo para gestionar flujos de datos no estructurados.
-No obstante, esta arquitectura incrementa la complejidad administrativa, genera sobrecarga en la red por la sincronización constante y sacrifica la consistencia inmediata de la información.
-
-
-En consecuencia, el grado de estructuración y relación de los datos determina la elección del modelo de crecimiento.
-Los sistemas relacionales aseguran la consistencia centralizada necesaria para operaciones críticas, mientras que los sistemas NoSQL gestionan eficientemente entornos distribuidos de alta demanda.
-
-
-
-\paragraph{Consideraciones sobre la elección del sistema de base de datos}
-
-En el contexto del sistema de autorreporte, la problemática principal no radica en el manejo de grandes volúmenes de datos, sino en la necesidad de garantizar la fiabilidad de la información clínica registrada.
-
-En este sentido, las bases de datos relacionales (SQL) resultan más adecuadas para el sistema propuesto, dado que permiten gestionar información estructurada con un alto grado de fiabilidad y control.
-
-Si bien existen diferencias entre los sistemas de gestión de bases de datos relacionales, estas se concentran principalmente en aspectos internos de implementación, capacidades avanzadas de consulta y mecanismos de optimización del rendimiento.
-No obstante, para el contexto abordado, dichas diferencias no resultan determinantes, ya que los requerimientos del sistema pueden ser satisfechos por los principales gestores relacionales disponibles.
-En consecuencia, la selección de MySQL se fundamenta en criterios prácticos como su madurez tecnológica, estabilidad, amplia disponibilidad de documentación y adecuación al entorno de desarrollo, lo que facilita su implementación y mantenimiento en el proyecto.
-
-Por su parte, las bases de datos NoSQL pueden emplearse de manera complementaria en escenarios específicos, como el manejo de evidencias multimedia, registros de eventos o mecanismos de almacenamiento en caché, donde se requiere mayor flexibilidad y rendimiento.
-
-
-
-
-%-------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% % hablaremos de las librerias de react para desarrollar graficos y formulario dinamicos
+% % hablaremos de las librerias de net para manejar bases de datos, para manejar seguridad
+% % alternativas de captcha entre Friendly Captcha, Google ReCaptcha y las de imágenes
 
 
 
 \section{Conclusiones del capítulo}
 \label{section:conclusiones_estado_arte}
 
-A partir del análisis realizado en el presente capítulo, se evidencia que los sistemas de autorreporte de eventos adversos asociados a vacunas constituyen herramientas fundamentales dentro de los procesos de farmacovigilancia moderna. 
-Sin embargo, los sistemas estudiados como VAERS, NotificaRAM y V-safe presentan limitaciones relacionadas con la heterogeneidad en la captura de datos, la dependencia de estructuras de reporte específicas y, en algunos casos, restricciones en la validación temprana de la información reportada.
+El presente capítulo estableció los fundamentos conceptuales y tecnológicos que sustentan el desarrollo del sistema de farmacovigilancia. El análisis del estado del arte identificó las brechas de los sistemas existentes y permitió extraer directrices de diseño que orientan la solución propuesta. Los fundamentos de sistemas web definieron la arquitectura cliente-servidor como modelo organizativo, y los fundamentos de bases de datos justificaron la elección del paradigma relacional a partir de las propiedades ACID.
 
-En cuanto a las tecnologías utilizadas para la implementación de sistemas de información en este dominio, se observa la existencia de múltiples alternativas consolidadas para el desarrollo del backend, frontend y la gestión de bases de datos. 
-No obstante, la selección de dichas tecnologías debe responder a criterios de robustez, escalabilidad, mantenibilidad y, especialmente, a la capacidad de garantizar la integridad de los datos en contextos clínicos.
-
-Asimismo, el análisis de los modelos de captura de datos clínicos evidencia que los enfoques estructurados y semi-estructurados constituyen las alternativas más adecuadas para sistemas de autorreporte, debido a su capacidad para reducir la ambigüedad en la información y facilitar su posterior procesamiento. 
-En particular, los modelos basados en formularios estructurados y formatos interoperables como los utilizados en sistemas de referencia permiten mejorar la calidad del dato desde su origen.
-
-Por otra parte, la incorporación de herramientas de validación reactiva en el punto de captura representa un elemento esencial para la reducción de errores en la entrada de datos, contribuyendo directamente a la consistencia de la información almacenada. 
-De forma complementaria, los mecanismos de integración y calidad de datos clínicos, apoyados en estándares como HL7 FHIR, MedDRA y la Clasificación Internacional de Enfermedades (CIE), permiten establecer un marco común para la representación y normalización de la información clínica.
-
-En conjunto, el estado del arte analizado permite identificar que la principal problemática en los sistemas actuales no radica únicamente en la disponibilidad de tecnologías, sino en la integración coherente de modelos de captura, validación, estandarización e interoperabilidad de datos clínicos. 
-Esta situación fundamenta la necesidad de proponer una solución que unifique estos elementos dentro de un modelo computacional consistente orientado al reporte estructurado de eventos adversos asociados a vacunas.
+El análisis comparativo de tecnologías permitió seleccionar el conjunto de herramientas que materializará el sistema. Para la capa de servicios, .NET ofreció el mejor equilibrio entre eficiencia, mantenibilidad y adecuación al contexto de desarrollo. Para la interfaz de usuario, React aportó flexibilidad y un ecosistema compatible con los requisitos del sistema. Para la persistencia, MySQL proporcionó una solución de código abierto, multiplataforma y con integración consolidada con .NET. Estas decisiones constituyen la base tecnológica sobre la cual el Capítulo \ref{chapter:proposal} desarrolla el diseño del sistema.
