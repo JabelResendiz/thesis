@@ -38,6 +38,7 @@ Representa a los jefes de vacunación registrados en el sistema.
 | `id_usuario`       | INT (11)     |  NO  | PK, FK | Referencia a la tabla `usuario`.          |
 | `id_municipio`     | INT (11)     |  NO  |   FK   | Municipio bajo su jurisdicción.           |
 | `id_administrador` | INT (11)     |  NO  |   FK   | Administrador responsable de su registro. |
+| `numero_registro_profesional` | VARCHAR(100) |  NO  |   UNI  | Número oficial otorgado por el MINSAP.         |
 
 **Reglas de negocio**
 
