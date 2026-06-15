@@ -1,0 +1,23 @@
+name: Compilar PDF manualmente
+
+on:
+  workflow_dispatch:  # <-- Esto permite ejecutarlo MANUALMENTE desde la pestaña Actions
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Compilar archivo LaTeX a PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: document/Thesis.tex   # <-- CAMBIA ESTO
+          working_directory: ./                         # <-- La raíz del repo
+
+      - name: Subir el PDF como artifact (para descargarlo)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mi-PDF
+          path: document/Thesis2.pdf       # <-- CAMBIA ESTO también
