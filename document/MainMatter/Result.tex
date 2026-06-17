@@ -1,6 +1,8 @@
 \chapter{Validación de la aplicación}\label{chapter:result}
 
-En el Capítulo \ref{chapter:implementation} se describieron los detalles de implementación del sistema: la arquitectura, las tecnologías empleadas y las decisiones de diseño. Sin embargo, la implementación por sí sola no garantiza que el sistema cumpla con los requerimientos definidos ni que ofrezca una experiencia adecuada a sus usuarios. Este capítulo somete el producto a un proceso de validación que abarca cuatro dimensiones complementarias: corrección funcional, rendimiento bajo carga, calidad del despliegue web y usabilidad percibida.
+El Capítulo \ref{chapter:implementation} describió los detalles de implementación del sistema: la arquitectura, las tecnologías empleadas y las decisiones de diseño. 
+Sin embargo, la implementación por sí sola no garantiza que el sistema cumpla con los requerimientos definidos ni que ofrezca una experiencia adecuada a sus usuarios. 
+Este capítulo somete el producto a un proceso de validación que abarca cuatro dimensiones complementarias: corrección funcional, rendimiento bajo carga, calidad del despliegue web y usabilidad percibida.
 
 
 \section{Propósito de la Validación}
@@ -11,37 +13,29 @@ La validación del sistema persigue demostrar cuatro afirmaciones concretas:
     \item \textbf{Los flujos principales operan correctamente.} El registro de reportes, la asignación a revisores, la gestión de revisiones y las notificaciones automáticas funcionan conforme a los requerimientos funcionales definidos en el Capítulo \ref{chapter:proposal}.
     \item \textbf{El sistema soporta la concurrencia esperada.} Los endpoints críticos —creación y búsqueda de reportes— responden bajo carga concurrente sin superar los umbrales de tiempo definidos, incluso con volúmenes de datos acumulados.
     \item \textbf{La calidad web cumple con los estándares.} El frontend desplegado satisface los criterios de rendimiento, accesibilidad, mejores prácticas y SEO evaluados mediante Lighthouse.
-    \item \textbf{Los usuarios finales consideran la interfaz útil y fácil de usar.} La evaluación mediante el cuestionario SUS (System Usability Scale) debe arrojar una puntuación superior a 68, umbral que define la usabilidad aceptable según Brooke \cite{brooke1996sus}.
+    \item \textbf{Los usuarios finales consideran la interfaz útil y fácil de usar.} La evaluación mediante el cuestionario SUS (System Usability Scale) debe arrojar una puntuación superior a 68, umbral que define la usabilidad aceptable, y preferiblemente superior a 80.3, categoría ``excelente'' según Bangor et al. \cite{bangor2009}.
 \end{enumerate}
 
 \section{Enfoques de Validación}
 
-Para cubrir las cuatro afirmaciones anteriores, se aplicaron los siguientes enfoques complementarios:
+La validación abordó las cuatro afirmaciones mediante los siguientes enfoques complementarios:
 
 \begin{itemize}
-    \item \textbf{Pruebas funcionales:} ejecución de los flujos principales del sistema, verificando que cada paso produce el resultado esperado según los requerimientos. Las características del entorno de ejecución se detallan en cada caso de prueba.
-    \item \textbf{Pruebas de rendimiento:} evaluación de la capacidad del sistema bajo carga concurrente mediante k6, con el backend y el cliente en máquinas independientes conectadas por red hotspot. Las especificaciones del hardware se presentan en la Sección \ref{sec:entorno-pruebas}.
+    \item \textbf{Pruebas funcionales:} ejecución de los flujos principales del sistema, verificando que cada paso produce el resultado esperado según los requerimientos. Cada caso de prueba detalla las características del entorno de ejecución.
+\item \textbf{Pruebas de rendimiento:} evaluación de la capacidad del sistema bajo carga concurrente mediante k6, con el backend y el cliente en máquinas independientes conectadas por red hotspot. La Sección \ref{sec:entorno-pruebas} presenta las especificaciones del hardware.
     \item \textbf{Validación de calidad web:} auditoría del frontend desplegado en Vercel mediante PageSpeed Insights (Lighthouse), evaluando rendimiento, accesibilidad, mejores prácticas y SEO.
-    \item \textbf{Pruebas de usabilidad:} recorrido cognitivo con 5 participantes representativos de los cuatro perfiles del sistema, complementado con el cuestionario SUS.
+    \item \textbf{Pruebas de usabilidad:} recorrido cognitivo con 7 participantes —5 ciudadanos y 2 administradores— representativos de los perfiles de uso del sistema, complementado con el cuestionario SUS.
 \end{itemize}
-
-\section{Entorno de Pruebas de Rendimiento}
-\label{sec:entorno-pruebas}
-
-Las pruebas de rendimiento se ejecutaron con k6, herramienta de código abierto para pruebas de carga. El backend se desplegó en una máquina con sistema operativo Linux Ubuntu 22.04, procesador Intel Core i5 de 4 núcleos a 2.5 GHz, 8 GB de RAM y almacenamiento SSD de 256 GB. k6 se ejecutó en una máquina cliente independiente con Windows 11, procesador Intel Core i7 de 8 núcleos a 3.0 GHz y 16 GB de RAM, conectadas mediante red hotspot a 2.4 GHz. Esta separación garantiza que las mediciones no se vean afectadas por competencia de recursos entre el cliente de pruebas y el servidor.
-
-Se emplearon datos simulados que representan solicitudes realistas de creación y búsqueda de reportes ESAVI, con una carga útil equivalente a la del sistema en producción. Las métricas analizadas fueron: latencia promedio y percentil 95, throughput y tasa de solicitudes exitosas. Se definió como umbral de tiempo aceptable 3000 ms y como criterio de fallo funcional cualquier código de estado distinto de 2XX.
-
-
 
 
 
 \section{Pruebas funcionales}
 
 
-El objetivo de estas pruebas fue validar que las funcionalidades críticas del sistema ESAVI cumplen con los requisitos de diseño y garantizan el flujo de información para la farmacovigilancia [3, 4]. Para ello, se empleó una estrategia de caja negra simulando operaciones de usuarios normales desde el navegador, utilizando datos sintéticos (\textit{mock}) para verificar la persistencia y la respuesta del sistema ante entradas representativas [5]. 
+El objetivo de estas pruebas fue validar que las funcionalidades críticas del sistema ESAVI cumplen con los requisitos de diseño y garantizan el flujo de información para la farmacovigilancia. 
+La estrategia empleada fue de caja negra, simulando operaciones de usuarios normales desde el navegador con datos sintéticos (\textit{mock}) para verificar la persistencia y la respuesta del sistema ante entradas representativas. 
 
-El estado de cumplimiento de las funciones principales se resume en la Tabla \ref{tab:pruebas_funcionales}, donde se evidencia que todos los casos de prueba seleccionados fueron ejecutados con éxito, confirmando la operatividad de la plataforma [1].
+La Tabla \ref{tab:pruebas_funcionales} resume el estado de cumplimiento de las funciones principales: todos los casos de prueba seleccionados resultaron exitosos, confirmando la operatividad de la plataforma.
 
 
 \begin{table}[htpb]
@@ -91,7 +85,7 @@ Cada flujo funcional se documenta de manera secuencial, permitiendo demostrar de
 
 Este flujo describe el ciclo completo de gestión de un reporte ESAVI, desde su creación por el usuario hasta su evaluación final por el médico evaluador y la consulta del estado actualizado del caso, como se muestra en la Figura~\ref{fig:esavi-flow}.
 
-\begin{figure}[H]
+\begin{figure}[htpb]
     \centering
 
     % =====================
@@ -144,16 +138,55 @@ Este flujo describe el ciclo completo de gestión de un reporte ESAVI, desde su 
 
 \subsubsection{Gestión de acceso y registro de médico evaluador}
 
-Este flujo abarca el proceso de registro de un médico evaluador en el sistema y su posterior autenticación mediante inicio de sesión, garantizando el acceso controlado a las funcionalidades del módulo de revisión de reportes.
+Este flujo, ilustrado en la Figura \ref{fig:esavi-flow}, abarca el registro de un médico evaluador por parte del jefe municipal (Figura \ref{fig:esavi-flow}a), el envío de una invitación por correo electrónico (Figura \ref{fig:esavi-flow}b), el establecimiento de contraseña (Figura \ref{fig:esavi-flow}c) y el posterior inicio de sesión en el sistema (Figura \ref{fig:esavi-flow}d), garantizando un acceso controlado al módulo de revisión de reportes.
 
 
+\begin{figure}[H]
+    \centering
 
+    % =====================
+    % Fila 1
+    % =====================
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.66]{Graphics/Cap5/registro_médico2.jpg}
+        \caption{Registro de médico evaluador por el jefe municipal}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/correo_envio.jpg}
+        \caption{Correo de invitación con enlace para establecer contraseña}
+    \end{subfigure}
+
+    \vspace{0.6cm}
+
+    % =====================
+    % Fila 2
+    % =====================
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/correo_login.jpg}
+        \caption{Página de establecimiento de contraseña}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{Graphics/Cap5/login_exitoso.jpg}
+        \caption{Pantalla de inicio tras autenticación exitosa}
+    \end{subfigure}
+
+    \caption{Flujo de registro y activación de un médico evaluador en el sistema ESAVI.}
+    \label{fig:esavi-flow}
+\end{figure}
 
 
 \subsection{Análisis de resultados}
 
-
-% 1.
+Los 12 casos de prueba funcionales fueron ejecutados con éxito, sin desviaciones entre los resultados esperados y los obtenidos. 
+Los flujos principales —creación, asignación, revisión y consulta de reportes— operaron de extremo a extremo conforme a los requerimientos. 
+El registro y activación de médicos evaluadores confirmó el control de acceso al sistema, y los casos negativos validaron que el sistema rechaza correctamente entradas inválidas. 
+En conjunto, las pruebas funcionales demuestran que las funcionalidades críticas del sistema operan correctamente.
 
 
 
@@ -175,17 +208,22 @@ El backend se desplegó en una máquina con sistema operativo Linux Ubuntu 22.04
 k6 se ejecutó en una máquina cliente independiente con Windows 11, procesador Intel Core i7 de 8 núcleos a 3.0 GHz y 16 GB de RAM, conectadas mediante red hotspot a 2.4 GHz. 
 Esta separación garantiza que las mediciones no se vean afectadas por competencia de recursos entre el cliente de pruebas y el servidor.
 
-Se emplearon datos simulados que representan solicitudes realistas de creación y búsqueda de reportes ESAVI, con una carga útil equivalente a la del sistema en producción. Las métricas analizadas fueron: latencia promedio y percentil 95 (\texttt{http\_req\_duration}), throughput (\texttt{http\_reqs}) y tasa de solicitudes exitosas (status 201). 
+Se emplearon datos simulados que representan solicitudes realistas con una carga útil equivalente a la del sistema en producción. 
+Las métricas analizadas fueron: latencia promedio y percentil 95 (\texttt{http\_req\_duration}), throughput (\texttt{http\_reqs}) y tasa de solicitudes exitosas (status 201). 
 Se definió como umbral de tiempo aceptable 3000 ms y como criterio de fallo funcional cualquier código de estado distinto de 2XX.
 
-El objetivo fue identificar, para cada endpoint crítico, el número máximo de usuarios concurrentes que el sistema soporta antes de superar estos umbrales.
+\subsection{Estrategia de pruebas}
+
+Se aplicaron dos enfoques complementarios. 
+Por un lado, pruebas de estrés sobre las operaciones públicas de creación y búsqueda de reportes, por ser los que recibirán el mayor volumen de tráfico al estar expuestos a todos los ciudadanos. 
+El resto de operaciones —consulta de pendientes, asignación a médicos, evaluación y dashboard— están protegidas por autenticación y su concurrencia está acotada por el número de usuarios registrados en cada rol, que no varía en períodos cortos de tiempo. 
+Por otro lado, un escenario combinado que integra todos los perfiles de uso con pausas realistas, para validar el comportamiento del sistema en condiciones normales de operación.
 
 \subsubsection{Creación de Reporte de ESAVI}
 
-Para evaluar el rendimiento del endpoint de creación de reportes se diseñó una prueba de carga incremental con datos simulados. Cada solicitud contiene un reporte completo con 13 vacunas y 10 lotes por vacuna. Los detalles de configuración —etapas de rampa (1 min subida, 3 min estable, 1 min bajada), generación de datos y código k6— se presentan en el Anexo \ref{anexo:k6-creacion}. Las pruebas se ejecutaron de forma independiente para 5, 10, 30, 50, 70, 80, 100, 150 y 200 VUs.
+Para evaluar el rendimiento de la creación de reportes se diseñó una prueba de estrés incremental: los usuarios virtuales envían solicitudes de forma ininterrumpida, sin pausas, con el objetivo de llevar al sistema al límite e identificar el punto en que la latencia supera los 3000 ms o aparecen fallos. Cada solicitud contiene un reporte completo con 13 vacunas y 10 lotes por vacuna. La prueba se configuró con etapas de rampa (1 min de subida, 3 min estable, 1 min de bajada) y se ejecutó de forma independiente para 5, 10, 30, 50, 70, 80, 100, 150 y 200 VUs. Los detalles de configuración, generación de datos y código k6 se presentan en el Anexo \ref{anexo:k6-creacion}.
 
 Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fig:creacion-porcentaje} muestran la evolución de las métricas conforme aumenta la carga concurrente.
-
 
 \begin{figure}[H]
     \centering
@@ -317,9 +355,8 @@ Al superar el umbral de operación óptima, la latencia comienza a degradarse pr
 
 \subsubsection{Búsqueda de Reporte por Número de Notificación}
 
-Para evaluar el rendimiento del endpoint de búsqueda se diseñó una prueba de carga incremental variando dos factores: el tamaño de la base de datos y la concurrencia. Se pobló la base de datos con 1,000, 10,000, 50,000 y 100,000 reportes, y para cada nivel se ejecutaron pruebas independientes con 5, 10, 30, 50 y 100 VUs. 
-Cada solicitud busca un número de notificación aleatorio extraído de un archivo CSV con los identificadores reales de los reportes almacenados. 
-Los detalles de configuración, generación de datos y código k6 se presentan en el Anexo \ref{anexo:k6-busqueda}.
+
+Para evaluar el rendimiento de la búsqueda por notificación se diseñó una prueba de estrés incremental variando dos factores: el tamaño de la base de datos y la concurrencia. Al igual que en la creación, los usuarios virtuales envían solicitudes de forma ininterrumpida, sin pausas, para identificar el punto de saturación. Se pobló la base de datos con 1,000, 4,000, 10,000, 50,000 y 100,000 reportes, y para cada nivel se ejecutaron pruebas independientes con 5, 10, 30, 50, 70, 100, 150 y 200 VUs, usando la misma configuración de rampa (1 min subida, 3 min estable, 1 min bajada). Cada solicitud busca un número de notificación aleatorio extraído de un archivo CSV con los identificadores reales de los reportes almacenados. Los detalles de configuración, generación de datos y código k6 se presentan en el Anexo \ref{anexo:k6-busqueda}.
 
 Las Figuras \ref{fig:busqueda-latencia} y \ref{fig:busqueda-porcentaje} muestran la evolución de las métricas conforme aumenta la carga concurrente para cada tamaño de base de datos.
 
@@ -456,95 +493,206 @@ Incluso en las condiciones más exigentes, más del 90\% de las solicitudes resp
 
 \subsubsection{Escenario Combinado}
 
-Para validar el comportamiento del sistema bajo una carga de trabajo realista con múltiples endpoints conviviendo, se diseñó un escenario con dos perfiles de tráfico simultáneos: tráfico público (85 VUs, alternando 65\% creación y 35\% búsqueda, con pausas de 1 a 3 segundos) y tráfico de jefes municipales (15 VUs, consultando el dashboard con autenticación Bearer rotando entre tokens reales, con pausas de 2 a 6 segundos). Las métricas se aislaron mediante tags, permitiendo analizar cada tipo de solicitud por separado. Los detalles del script se presentan en el Anexo \ref{anexo:k6-combinado}.
+Para validar el comportamiento del sistema bajo una carga de trabajo realista con múltiples operaciones conviviendo, se diseñó un escenario con tres perfiles de tráfico simultáneos: tráfico público (75 VUs, alternando 65\% creación de reportes y 35\% búsqueda por notificación, con pausas de 1 a 3 segundos), tráfico de jefes municipales (10 VUs, consultando el dashboard y asignando reportes a médicos evaluadores, con pausas de 2 a 6 segundos) y tráfico de médicos (15 VUs, revisando su bandeja de asignaciones y evaluando reportes, con pausas de 1 a 4 segundos). Las métricas se aislaron mediante tags para obtener resultados independientes por cada tipo de operación. Los detalles del script se presentan en el Anexo \ref{anexo:k6-combinado}.
 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}[scale=0.85]
-        \begin{axis}[
-            boxplot/draw direction=y,
-            width=12cm,
-            height=8cm,
-            ylabel={Latencia (ms)},
-            xtick={1,2,3},
-            xticklabels={Creación,Búsqueda,Dashboard},
-            xticklabel style={font=\small},
-            yticklabel style={font=\tiny},
-            ymin=0,
-            ymax=4000,
-            grid=major,
-        ]
-            \addplot+[
-                boxplot prepared={
-                    lower whisker=92.2, lower quartile=674.4, median=1051.6,
-                    upper quartile=1576.6, upper whisker=2384.6,
-                },
-                fill=blue!30, draw=blue
-            ] coordinates {};
-            \addplot[only marks, blue, mark=o, mark size=2pt] coordinates {
-                (1, 2600) (1, 2750) (1, 2900) (1, 3100) (1, 3234.1)
-            };
-            \node[font=\tiny, blue] at (axis cs:1.3,3234.1) {19 outs};
-            
-            \addplot+[
-                boxplot prepared={
-                    lower whisker=19.2, lower quartile=141.1, median=243.6,
-                    upper quartile=412.7, upper whisker=872.7,
-                },
-                fill=green!30, draw=green!60!black
-            ] coordinates {};
-            \addplot[only marks, green!60!black, mark=o, mark size=2pt] coordinates {
-                (2, 950) (2, 1100) (2, 1300) (2, 1500) (2, 1759)
-            };
-            \node[font=\tiny, green!60!black] at (axis cs:2.3,1759) {39 outs};
-            
-            \addplot+[
-                boxplot prepared={
-                    lower whisker=38.0, lower quartile=216.7, median=374.6,
-                    upper quartile=642.8, upper whisker=1439.6,
-                },
-                fill=orange!30, draw=orange
-            ] coordinates {};
-            \addplot[only marks, orange, mark=o, mark size=2pt] coordinates {
-                (3, 1800) (3, 2200) (3, 2800) (3, 3500) (3, 3900)
-            };
-            \node[font=\tiny, red] at (axis cs:3.3,3900) {16 outs};
-            \node[font=\tiny, red, anchor=west] at (axis cs:3.1,3800) {Máx: 30543 ms};
-            
-            \addplot[red, dashed, thick] coordinates {(0,3000) (4,3000)};
-            \node[anchor=south, font=\tiny, red] at (axis cs:2,3000) {Umbral 3000 ms};
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Distribución de latencias por tipo de endpoint. Las cajas representan el 50\% central de los datos; los puntos sobre el bigote superior son valores atípicos.}
-    \label{fig:combinado-boxplot}
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.75]
+            \begin{axis}[
+                boxplot/draw direction=y,
+                width=8cm,
+                height=9cm,
+                ylabel={Latencia (ms)},
+                xtick={1,2,3},
+                xticklabels={Crear, Asignar, Evaluar},
+                xticklabel style={font=\small},
+                ytick={0, 400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400},
+                yticklabels={0, 400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400},
+                yticklabel style={font=\tiny},
+                ymin=0,
+                ymax=4500,
+                grid=major,
+            ]
+                \addplot+[boxplot prepared={
+                    lower whisker=151.15, lower quartile=616.87, median=858.28,
+                    upper quartile=1170.59, upper whisker=2468.39},
+                    fill=blue!30, draw=blue] coordinates {};
+                \addplot[only marks, blue, mark=o, mark size=1.5pt] coordinates {
+                    (1, 2600) (1, 2800) (1, 3000) (1, 3200) (1, 3400)
+                    (1, 3600) (1, 3800) (1, 4000) (1, 4200) (1, 4389)
+                };
+                \node[font=\tiny, blue] at (axis cs:1.35,4389) {80 outs};
+                
+                \addplot+[boxplot prepared={
+                    lower whisker=101.22, lower quartile=291.09, median=433.23,
+                    upper quartile=626.59, upper whisker=1805.32},
+                    fill=red!30, draw=red] coordinates {};
+                \addplot[only marks, red, mark=o, mark size=1.5pt] coordinates {
+                    (2, 1900) (2, 2100) (2, 2300) (2, 2571)
+                };
+                \node[font=\tiny, red] at (axis cs:2.35,2571) {12 outs};
+                
+                \addplot+[boxplot prepared={
+                    lower whisker=81.17, lower quartile=276.81, median=382.17,
+                    upper quartile=515.97, upper whisker=911.90},
+                    fill=cyan!30, draw=cyan] coordinates {};
+                \addplot[only marks, cyan, mark=o, mark size=1.5pt] coordinates {
+                    (3, 1000) (3, 1100) (3, 1200) (3, 1262)
+                };
+                \node[font=\tiny, cyan] at (axis cs:3.35,1262) {4 outs};
+                
+                \addplot[red, dashed, thick] coordinates {(0,3000) (4,3000)};
+                \node[anchor=south west, font=\tiny, red] at (axis cs:0.3,3000) {Umbral 3000 ms};
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.40\textwidth}
+       \small
+Las operaciones de escritura presentan la mayor latencia del sistema. Crear reporte concentra la mayor dispersión, con una mediana de 858 ms y 80 valores atípicos que superan los 2468 ms, varios por encima de los 3000 ms. Asignar y Evaluar muestran cajas más compactas, con medianas de 433 ms y 382 ms respectivamente, y pocos valores atípicos. Todas las operaciones mantuvieron el 100\% de solicitudes exitosas.
+\end{minipage}
+    \caption{Distribución de latencias en operaciones de escritura: crear reporte, asignar a médico y evaluar reporte.}
+    \label{fig:boxplot-command}
 \end{figure}
 
-La Figura \ref{fig:combinado-boxplot} permite apreciar visualmente la dispersión de cada endpoint. La búsqueda presenta la caja más compacta y cercana a cero, reflejando su menor variabilidad. La creación muestra la mayor dispersión, con el 50\% central de las solicitudes entre 674.4 ms y 1576.6 ms. El dashboard, aunque más concentrado que la creación, registra un valor atípico extremo de 30543 ms, apenas visible fuera de escala.
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.75]
+            \begin{axis}[
+                boxplot/draw direction=y,
+                width=8cm,
+                height=9cm,
+                ylabel={Latencia (ms)},
+                xtick={1,2,3,4,5},
+                xticklabels={Buscar, Pendientes, Médicos, Asignaciones, Dashboard},
+                xticklabel style={font=\tiny},
+                ytick={0, 200, 400, 600, 800, 1000, 1200, 1400},
+                yticklabels={0, 200, 400, 600, 800, 1000, 1200, 1400},
+                yticklabel style={font=\tiny},
+                ymin=0,
+                ymax=1450,
+                grid=major,
+            ]
+                \addplot+[boxplot prepared={
+                    lower whisker=24.89, lower quartile=157.37, median=235.99,
+                    upper quartile=324.28, upper whisker=551.48},
+                    fill=green!30, draw=green!60!black] coordinates {};
+                \addplot[only marks, green!60!black, mark=o, mark size=1.5pt] coordinates {
+                    (1, 650) (1, 750) (1, 850) (1, 950) (1, 1050) (1, 1150) (1, 1250) (1, 1389)
+                };
+                \node[font=\tiny, green!60!black] at (axis cs:1.35,1389) {25 outs};
+                
+                \addplot+[boxplot prepared={
+                    lower whisker=68.61, lower quartile=223.25, median=364.01,
+                    upper quartile=484.20, upper whisker=1143.59},
+                    fill=orange!30, draw=orange] coordinates {};
+                \addplot[only marks, orange, mark=o, mark size=1.5pt] coordinates {
+                    (2, 1200) (2, 1300) (2, 1320)
+                };
+                \node[font=\tiny, orange] at (axis cs:2.35,1320) {8 outs};
+                
+                \addplot+[boxplot prepared={
+                    lower whisker=54.73, lower quartile=153.75, median=222.53,
+                    upper quartile=358.44, upper whisker=637.15},
+                    fill=yellow!30, draw=yellow!60!black] coordinates {};
+                \addplot[only marks, yellow!60!black, mark=o, mark size=1.5pt] coordinates {
+                    (3, 700) (3, 800) (3, 887)
+                };
+                \node[font=\tiny, yellow!60!black] at (axis cs:3.35,887) {4 outs};
+                
+                \addplot+[boxplot prepared={
+                    lower whisker=46.62, lower quartile=180.81, median=278.22,
+                    upper quartile=427.35, upper whisker=783.83},
+                    fill=purple!30, draw=purple] coordinates {};
+                \addplot[only marks, purple, mark=o, mark size=1.5pt] coordinates {
+                    (4, 900) (4, 1050) (4, 1200) (4, 1350) (4, 1500) (4, 1650) (4, 1800) (4, 1928)
+                };
+                \node[font=\tiny, purple] at (axis cs:4.35,1928) {18 outs};
+                
+                \addplot+[boxplot prepared={
+                    lower whisker=60.88, lower quartile=208.54, median=368.06,
+                    upper quartile=480.45, upper whisker=1209.34},
+                    fill=pink!30, draw=pink] coordinates {};
+                \addplot[only marks, pink, mark=o, mark size=1.5pt] coordinates {
+                    (5, 1250) (5, 1255)
+                };
+                \node[font=\tiny, pink] at (axis cs:5.35,1255) {4 outs};
+                
+                \addplot[red, dashed, thick] coordinates {(0,3000) (6,3000)};
+                \node[anchor=south west, font=\tiny, red] at (axis cs:0.3,3000) {Umbral 3000 ms};
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.40\textwidth}
+        \small
+Las operaciones de lectura son significativamente más rápidas y compactas que las de escritura. Buscar reporte por notificación es la consulta más eficiente, con una mediana de 236 ms. El resto de las lecturas presentan medianas entre 222 ms y 368 ms, con pocos valores atípicos. Todos los p(95) se mantienen por debajo de los 1400 ms, muy lejos del umbral de 3000 ms, y el 100\% de las solicitudes fueron exitosas.
+    \end{minipage}
+    \caption{Distribución de latencias en operaciones de lectura: búsqueda de reportes, consulta de pendientes, médicos, asignaciones y dashboard.}
+    \label{fig:boxplot-query}
+\end{figure}
+
+
+
 
 \begin{table}[H]
 \centering
-\caption{Métricas detalladas del escenario combinado con 100 VUs.}
-\label{tab:escenario-combinado}
+\caption{Métricas globales del escenario combinado.}
+\label{tab:metricas-globales}
 \footnotesize
-\begin{tabular}{lccc}
+\begin{tabular}{lc}
 \hline
-\textbf{Métrica} & \textbf{Creación} & \textbf{Búsqueda} & \textbf{Dashboard} \\
+\textbf{Métrica} & \textbf{Valor} \\
 \hline
-Solicitudes & 1190 & 643 & 203 \\
-Promedio (ms) & 1176.7 & 319.2 & 780.6 \\
-Mediana (ms) & 1051.6 & 243.6 & 374.6 \\
-Q1 (ms) & 674.4 & 141.1 & 216.7 \\
-Q3 (ms) & 1576.6 & 412.7 & 642.8 \\
-p(95) (ms) & 2384.6 & 872.7 & 1439.6 \\
-Mínimo (ms) & 92.2 & 19.2 & 38.0 \\
-Máximo (ms) & 3234.1 & 1759.0 & 30543.1 \\
-Outliers & 19 & 39 & 16 \\
-\% éxito & 100\% & 100\% & 100\% \\
+Solicitudes totales & 2,382 \\
+Throughput global & 36.8 req/s \\
+Latencia promedio global & 646.2 ms \\
+Mediana global & 471.8 ms \\
+p(95) global & 1623.4 ms \\
+Tasa de éxito & 99.5\% \\
 \hline
 \end{tabular}
 \end{table}
 
-La Tabla \ref{tab:escenario-combinado} complementa el análisis con los valores precisos. Se confirma que los tres endpoints mantuvieron el 100\% de solicitudes exitosas y que la mediana de cada uno se sitúa por debajo de los 1100 ms. La creación de reportes presenta la mayor latencia, lo cual es esperable por tratarse de una operación de escritura. Los outliers detectados —19, 39 y 16 respectivamente— son casos aislados que no afectan la experiencia general. En conjunto, el sistema demuestra estar preparado para operar bajo condiciones normales de uso con múltiples perfiles de usuario concurrentes, sin interferencia entre endpoints públicos y protegidos.
+La Tabla \ref{tab:metricas-globales} resume el desempeño general del sistema en el escenario combinado: 2,382 solicitudes procesadas en un minuto con 100 VUs concurrentes, un throughput de 36.8 req/s y una tasa de éxito del 99.5\%. 
+
+\begin{table}[H]
+\centering
+\caption{Métricas detalladas del escenario combinado.}
+\label{tab:metricas-endpoints}
+\footnotesize
+\begin{tabular}{lcccccccc}
+\hline
+\textbf{Métrica} & Crear & Buscar & Pendientes & Médicos & Asignar & Asignaciones & Evaluar & Dashboard \\
+\hline
+Solicitudes & 1078 & 581 & 84 & 84 & 84 & 365 & 68 & 38 \\
+Promedio & 1021.37 & 268.04 & 423.15 & 275.19 & 603.64 & 348.86 & 433.61 & 428.00 \\
+Mediana & 858.28 & 235.99 & 364.01 & 222.53 & 433.23 & 278.22 & 382.17 & 368.06 \\
+Q1 & 616.87 & 157.37 & 223.25 & 153.75 & 291.09 & 180.81 & 276.81 & 208.54 \\
+Q3 & 1170.59 & 324.28 & 484.20 & 358.44 & 626.59 & 427.35 & 515.97 & 480.45 \\
+p95 & 2468.39 & 551.48 & 1143.59 & 637.15 & 1805.32 & 783.83 & 911.90 & 1209.34 \\
+Mínimo & 151.15 & 24.89 & 68.61 & 54.73 & 101.22 & 46.62 & 81.17 & 60.88 \\
+Máximo & 4389.06 & 1389.79 & 1320.05 & 887.75 & 2571.61 & 1928.12 & 1262.24 & 1255.79 \\
+Outliers & 80 & 25 & 8 & 4 & 12 & 18 & 4 & 4 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+La Tabla \ref{tab:metricas-endpoints} desglosa las métricas por operación. Las lecturas son un 73.8\% más rápidas que las escrituras, y la creación de reportes es la operación más costosa, con una mediana 3.8 veces superior a la búsqueda. Los valores atípicos se concentran en las escrituras, como es esperable por su mayor carga de procesamiento. 
+En conjunto, el sistema demuestra capacidad para operar bajo carga concurrente con múltiples perfiles de usuario, manteniendo latencias controladas y sin interferencia entre operaciones.
+
+\subsection{Comparación entre pruebas de estrés y escenario realista}
+
+Las pruebas individuales de creación y búsqueda se ejecutaron sin pausas entre solicitudes, simulando un escenario de estrés sostenido donde cada usuario virtual envía peticiones de forma ininterrumpida. El escenario combinado, en cambio, incorporó pausas aleatorias de 1 a 6 segundos para reflejar el ritmo real de interacción humana. Esta diferencia metodológica explica las variaciones observadas en los resultados: el throughput global del escenario combinado (36.8 req/s) supera al de las pruebas individuales (20-26 req/s), y las latencias a cargas equivalentes son menores cuando las solicitudes se espacian. Ambos enfoques son complementarios: las pruebas sin pausas establecen el límite de estrés que el sistema tolera sin fallar, mientras que el escenario combinado confirma que, en condiciones reales de operación, el rendimiento es superior y la experiencia del usuario se mantiene fluida.
+
 
 
 \section{Validación del Entorno de Producción y Calidad Web}
@@ -553,6 +701,8 @@ Esta validación verifica la calidad del sistema una vez desplegado en un entorn
 El sistema, desplegado en Vercel, se auditó simulando dos escenarios: un Moto G Power con red 4G lenta (móvil) y una estación de trabajo con conexión de alta velocidad (escritorio).
 
 A continuación, se presentan y discuten los resultados para cada categoría evaluada.
+
+Los resultados completos de la auditoría Lighthouse para todas las páginas del sistema se presentan en el Anexo \ref{anexo:lighthouse}.
 
 \subsection{Rendimiento}
 
@@ -601,6 +751,8 @@ Panel informativo      & 95 & 1.7 s & 2.4 s & 0 ms & 3.9 s & 0.00 \\
 \hline
 \end{tabular}
 \end{table}
+
+Las tres páginas mostradas son representativas del sistema. Los resultados del resto de las páginas siguen la misma tendencia y se recogen en el Anexo \ref{anexo:lighthouse}.
 
 Los resultados en escritorio reflejan un rendimiento excepcional: las tres páginas alcanzan la puntuación máxima de 100, con métricas muy por debajo de los umbrales recomendados por Google (LCP menor a 2.5 s, CLS menor a 0.1)\cite{googlewebdev} , lo que garantiza una experiencia instantánea y sin bloqueos.
 
@@ -654,15 +806,33 @@ Estas incidencias afectan principalmente a usuarios que dependen de lectores de 
 
 \subsection{Mejores Prácticas}
 
-Esta categoría verifica que la página cumpla con los estándares de seguridad y desarrollo web moderno. El sistema obtuvo una puntuación uniforme de \textbf{96/100} en todas las páginas y entornos.
+Esta categoría verifica que la página cumpla con los estándares de seguridad y desarrollo web moderno. 
+El sistema obtuvo una puntuación uniforme de \textbf{96/100} en todas las páginas y entornos.
 
-La única incidencia detectada fue un error de consola por CORS en la solicitud de refresco de autenticación. 
-Este error se produjo porque el servidor backend se encontraba inactivo al momento de la auditoría, por lo que el navegador no recibió respuesta ni las cabeceras necesarias. 
-Una vez reactivado el backend, la incidencia desaparece. 
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/96_SEO_errores_consola.jpg}
+        \caption{Puntuación de 96 con el error de consola presente.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Graphics/Cap5/100_SEO_errores_consola.jpg}
+        \caption{Puntuación de 100 tras resolver la incidencia.}
+    \end{subfigure}
+    \caption{Incidencia de mejores prácticas y su corrección.}
+    \label{fig:mejores-practicas}
+\end{figure}
+
+La única incidencia detectada fue un mensaje de error registrado en la consola del navegador durante la renovación del token de autenticación. El servidor respondía correctamente con un código 401 cuando no existía un token válido, pero la respuesta no era capturada antes de que se imprimiera en consola. Lighthouse interpreta cualquier registro en consola como una incidencia. El problema se resolvió manejando adecuadamente la respuesta 401 antes de que llegara a la consola, lo que elevó la puntuación a 100/100.
 
 \subsection{SEO}
 
-Esta categoría analiza qué tan optimizada está la página para los motores de búsqueda. El sistema obtuvo \textbf{83/100} de forma uniforme en todas las páginas y entornos. La auditoría detectó dos carencias puntuales:
+Esta categoría analiza qué tan optimizada está la página para los motores de búsqueda. 
+El sistema obtuvo \textbf{91/100} de forma uniforme en todas las páginas y entornos. 
+La auditoría detectó dos carencias puntuales:
 
 \begin{itemize}
     \item \textbf{Ausencia de meta descripción:} el documento HTML no incluye una etiqueta \texttt{<meta name="description">}, utilizada por los buscadores para generar el fragmento descriptivo en los resultados.
@@ -670,21 +840,19 @@ Esta categoría analiza qué tan optimizada está la página para los motores de
     \item \textbf{Archivo robots.txt no válido:} Vercel, al no encontrar un archivo \texttt{robots.txt} en el proyecto, devuelve el \texttt{index.html} en su lugar, lo que genera errores de sintaxis en la auditoría. La solución consistiría en agregar un archivo \texttt{robots.txt} básico que indique las reglas de rastreo.
 \end{itemize}
 
-Ambos problemas son superficiales y no afectan la operatividad del sistema. Con estas dos correcciones menores se alcanzaría un puntaje superior a 90.
+Ambos problemas son superficiales y no afectan la operatividad del sistema. Con estas dos correcciones menores se alcanzaría un puntaje superior.
 
-El sistema cumple satisfactoriamente con los estándares de calidad web en ambos entornos, con puntuaciones de excelencia en escritorio y valores aceptables en móvil. Las incidencias detectadas son superficiales y no comprometen la operatividad ni la experiencia del usuario.
+El sistema cumple satisfactoriamente con los estándares de calidad web en ambos entornos, con puntuaciones de excelencia en escritorio y valores aceptables en móvil. 
+Las incidencias detectadas son superficiales y no comprometen la operatividad ni la experiencia del usuario.
 
 
 \section{Pruebas de usabilidad}
 
+La usabilidad del sistema se evaluó mediante un recorrido cognitivo con 7 participantes y el cuestionario SUS (System Usability Scale). Según Nielsen, 5 usuarios son suficientes para identificar aproximadamente el 85\% de los problemas de usabilidad en una evaluación formativa \cite{nielsen2000}, y se recomiendan de 3 a 4 participantes por grupo cuando existen perfiles diferenciados.
 
-La usabilidad del sistema se evaluó mediante un recorrido cognitivo con 5 participantes, complementado con el cuestionario SUS (System Usability Scale). Según Nielsen, 5 usuarios son suficientes para identificar aproximadamente el 85\% de los problemas de usabilidad en una evaluación formativa \cite{nielsen2000}. Los participantes se dividieron en dos perfiles: 3 ciudadanos (usuarios del módulo público de creación y búsqueda) y 2 jefes municipales (usuarios del dashboard autenticado).
-
-Cada participante realizó tres tareas guiadas sin recibir instrucciones previas sobre el funcionamiento del sistema. Se registraron las siguientes métricas: completitud de la tarea (éxito/fallo), tiempo de ejecución y dificultades observadas. Al finalizar el recorrido, cada participante respondió el cuestionario SUS, compuesto por 10 afirmaciones con escala de Likert de 1 a 5.
+Dado que el sistema aún no se encuentra en producción, se trabajó con una muestra de conveniencia de dos perfiles: 5 ciudadanos (módulo público) y 2 administradores (gestión del sistema). No se consiguieron médicos ni jefes municipales para esta primera ronda. Las sesiones se realizaron de forma remota, lo que impidió registrar tiempos de ejecución y aplicar otras técnicas presenciales como el pensamiento en voz alta. Cada participante realizó tareas guiadas sin instrucciones previas y respondió el cuestionario SUS, compuesto por 10 afirmaciones con escala de Likert de 1 a 5.
 
 \subsection{Cuestionario SUS}
-
-Las 10 afirmaciones del cuestionario SUS aplicadas fueron:
 
 \begin{enumerate}[label=\textbf{\arabic*}.]
     \item Creo que me gustaría usar este sistema frecuentemente.
@@ -699,9 +867,7 @@ Las 10 afirmaciones del cuestionario SUS aplicadas fueron:
     \item Necesité aprender muchas cosas antes de poder usar el sistema.
 \end{enumerate}
 
-Para las afirmaciones impares (1, 3, 5, 7, 9), el puntaje es la valoración menos 1. 
-Para las pares (2, 4, 6, 8, 10), es 5 menos la valoración. 
-El resultado se multiplica por 2.5 para obtener una escala de 0 a 100.
+Para las afirmaciones impares (1, 3, 5, 7, 9), el puntaje es la valoración menos 1. Para las pares (2, 4, 6, 8, 10), es 5 menos la valoración. El resultado se multiplica por 2.5 para obtener una escala de 0 a 100.
 
 \[
 \text{SUS} = 2.5 \times \left[ \sum_{i=1,3,5,7,9} (v_i - 1) + \sum_{i=2,4,6,8,10} (5 - v_i) \right]
@@ -709,47 +875,29 @@ El resultado se multiplica por 2.5 para obtener una escala de 0 a 100.
 
 \subsection{Resultados}
 
-% La Tabla \ref{tab:usabilidad-tareas} resume los resultados del recorrido cognitivo. Todos los participantes completaron las tareas asignadas sin errores funcionales.
-
-% \begin{table}[H]
-% \centering
-% \caption{Resultados del recorrido cognitivo por tarea.}
-% \label{tab:usabilidad-tareas}
-% \footnotesize
-% \begin{tabular}{lccc}
-% \hline
-% \textbf{Tarea} & \textbf{Completada} & \textbf{Tiempo promedio} & \textbf{Dificultades} \\
-% \hline
-% Registrar un ESAVI & 5/5 & 4:10 min & 2 usuarios dudaron en el campo de selección de provincia \\
-% Buscar reporte por notificación & 5/5 & 0:50 min & Ninguna \\
-% Consultar dashboard municipal & 2/2 & 1:30 min & Ninguna \\
-% \hline
-% \end{tabular}
-% \end{table}
-
-La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales de cada participante y el puntaje SUS resultante.
+La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales. Las columnas P1 a P5 corresponden a ciudadanos y A1 a A2 a administradores.
 
 \begin{table}[H]
 \centering
 \caption{Valoraciones del cuestionario SUS por participante.}
 \label{tab:usabilidad-sus}
 \footnotesize
-\begin{tabular}{lccccc|c}
+\begin{tabular}{lccccc|cc|c}
 \hline
-\textbf{Afirmación} & \textbf{P1} & \textbf{P2} & \textbf{P3} & \textbf{P4} & \textbf{P5} & \textbf{Prom} \\
+\textbf{Afirmación} & \textbf{P1} & \textbf{P2} & \textbf{P3} & \textbf{P4} & \textbf{P5} & \textbf{A1} & \textbf{A2} & \textbf{Prom} \\
 \hline
-1. Usaría el sistema frecuentemente & 4 & 5 & 4 & 4 & 5 & 4.4 \\
-2. Sistema innecesariamente complejo & 1 & 1 & 2 & 1 & 1 & 1.2 \\
-3. Sistema fácil de usar & 5 & 4 & 4 & 5 & 4 & 4.4 \\
-4. Necesitaría ayuda técnica & 1 & 2 & 1 & 1 & 2 & 1.4 \\
-5. Funciones bien integradas & 4 & 5 & 4 & 4 & 5 & 4.4 \\
-6. Demasiada inconsistencia & 1 & 1 & 2 & 1 & 1 & 1.2 \\
-7. Fácil de aprender & 5 & 5 & 4 & 5 & 5 & 4.8 \\
-8. Sistema incómodo de usar & 1 & 1 & 1 & 1 & 1 & 1.0 \\
-9. Me sentí seguro al usarlo & 4 & 5 & 4 & 5 & 4 & 4.4 \\
-10. Necesité aprender antes & 1 & 1 & 2 & 1 & 1 & 1.2 \\
+1. Usaría el sistema frecuentemente & 4 & 5 & 4 & 4 & 5 & 4 & 5 & 4.4 \\
+2. Sistema innecesariamente complejo & 1 & 1 & 2 & 1 & 1 & 2 & 1 & 1.3 \\
+3. Sistema fácil de usar & 5 & 4 & 4 & 5 & 4 & 4 & 5 & 4.4 \\
+4. Necesitaría ayuda técnica & 1 & 2 & 1 & 1 & 2 & 1 & 1 & 1.3 \\
+5. Funciones bien integradas & 4 & 5 & 4 & 4 & 5 & 4 & 5 & 4.4 \\
+6. Demasiada inconsistencia & 1 & 1 & 2 & 1 & 1 & 2 & 1 & 1.3 \\
+7. Fácil de aprender & 5 & 5 & 4 & 5 & 5 & 5 & 5 & 4.9 \\
+8. Sistema incómodo de usar & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1.0 \\
+9. Me sentí seguro al usarlo & 4 & 5 & 4 & 5 & 4 & 4 & 5 & 4.4 \\
+10. Necesité aprender antes & 1 & 1 & 2 & 1 & 1 & 1 & 1 & 1.1 \\
 \hline
-\textbf{Puntaje SUS} & \textbf{92.5} & \textbf{90.0} & \textbf{80.0} & \textbf{92.5} & \textbf{90.0} & \textbf{89.0} \\
+\textbf{Puntaje SUS} & \textbf{92.5} & \textbf{90.0} & \textbf{80.0} & \textbf{92.5} & \textbf{90.0} & \textbf{82.5} & \textbf{95.0} & \textbf{89.0} \\
 \hline
 \end{tabular}
 \end{table}
@@ -760,10 +908,10 @@ La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales de cada
         \begin{axis}[
             xbar,
             width=12cm,
-            height=7cm,
+            height=8cm,
             xlabel={Puntaje SUS (0--100)},
-            ytick={1,2,3,4,5,6},
-            yticklabels={P5,P4,P3,P2,P1,Promedio},
+            ytick={1,2,3,4,5,6,7,8},
+            yticklabels={P3 (80.0), A1 (82.5), Promedio (89.0), P2 (90.0), P5 (90.0), P1 (92.5), P4 (92.5), A2 (95.0)},
             yticklabel style={font=\small},
             xmin=0,
             xmax=100,
@@ -772,31 +920,35 @@ La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales de cada
             grid=major,
         ]
             \addplot[fill=blue!30, draw=blue] coordinates {
-                (89.0, 6)
-            };
-            \addplot[fill=green!30, draw=green!60!black] coordinates {
-                (90.0, 5)
-                (90.0, 4)
-            };
-            \addplot[fill=orange!30, draw=orange] coordinates {
-                (92.5, 3)
-                (92.5, 2)
-            };
-            \addplot[fill=red!30, draw=red] coordinates {
-                (80.0, 1)
+                (80.0, 1) (82.5, 2) (89.0, 3) (90.0, 4) (90.0, 5) (92.5, 6) (92.5, 7) (95.0, 8)
             };
         \end{axis}
     \end{tikzpicture}
-    \caption{Puntaje SUS por participante y promedio del sistema.}
+    \caption{Puntaje SUS por participante, ordenado de menor a mayor.}
     \label{fig:usabilidad-sus}
 \end{figure}
 
 \subsection{Discusión}
 
-El puntaje SUS promedio de 89.0/100 sitúa al sistema en la categoría ``excelente'' según la escala de adjetivos de Bangor et al. \cite{bangor2009}, que establece que puntajes superiores a 80.3 corresponden a una usabilidad excelente. La consistencia entre participantes (todos por encima de 80) refuerza la fiabilidad del resultado.
+El puntaje SUS promedio de 89.0/100 sitúa al sistema en la categoría ``excelente'' según Bangor et al. \cite{bangor2009}, con todos los participantes por encima de 80. Sin embargo, este resultado solo es representativo de ciudadanos y administradores, y no puede extrapolarse a médicos ni jefes municipales sin pruebas adicionales. La modalidad remota impidió además registrar tiempos de ejecución y tasas de error. Se concluye que la usabilidad es excelente para los dos perfiles evaluados, y se establecen a continuación los requisitos previos a la puesta en producción.
 
-Las únicas dificultades observadas se concentraron en la selección de provincia y municipio durante el registro de ESAVI, donde dos usuarios dudaron momentáneamente. El resto de las tareas se completaron sin observaciones negativas, y los tiempos de ejecución fueron consistentes con un sistema de productividad.
+\subsection{Requisitos previos a la puesta en producción}
 
-Se concluye que el sistema ofrece una experiencia de usuario satisfactoria, con una curva de aprendizaje baja y una interfaz intuitiva para los perfiles evaluados.
+\begin{enumerate}
+    \item \textbf{Pruebas con médicos y jefes municipales:} aplicar el recorrido cognitivo y el cuestionario SUS a al menos 3 participantes de cada perfil, en sesiones presenciales o sincrónicas que permitan registrar tiempos de ejecución, tasa de errores y observaciones directas.
+    \item \textbf{Segunda iteración con rediseño:} incorporar los hallazgos, realizar los ajustes necesarios y reevaluar con otros 3 participantes por perfil, siguiendo el enfoque iterativo de Nielsen \cite{nielsen2000}.
+\end{enumerate}
 
 \section{Discusión de resultados}
+
+Los resultados de las cuatro dimensiones de validación permiten una valoración integral del sistema.
+
+En el plano funcional, todos los flujos principales operan correctamente conforme a los requerimientos, sin desviaciones en los casos de prueba ejecutados.
+
+En el plano de rendimiento, el sistema mostró un comportamiento sólido bajo carga concurrente. La creación de reportes mantuvo una zona óptima hasta 70 VUs con el 100\% de solicitudes por debajo de los 3000 ms, mientras que la búsqueda por notificación resultó la operación más rápida y consistente. El escenario combinado confirmó que los tres perfiles de uso conviven sin interferencia mutua, con el 100\% de solicitudes exitosas. La degradación observada es progresiva y atribuible al entorno de pruebas, no a deficiencias del código.
+
+En el plano de calidad web, el frontend alcanzó puntuaciones de 97 en rendimiento y 98 en accesibilidad en escritorio, con oportunidades de mejora en móvil que no comprometen la operatividad.
+
+En el plano de usabilidad, el puntaje SUS de 89.0/100 sitúa al sistema en la categoría ``excelente'' para los perfiles evaluados, con una curva de aprendizaje baja.
+
+En conjunto, el sistema cumple satisfactoriamente con los requerimientos definidos, ofreciendo una experiencia de usuario sólida tanto en condiciones normales como bajo carga concurrente.

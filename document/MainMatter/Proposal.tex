@@ -567,342 +567,65 @@ La Figura \ref{fig:merx} presenta el diagrama MERX (Modelo Entidad-Relación Ext
 \begin{figure}[H]
     \centering
     \begin{adjustbox}{center, width=0.28\textwidth}
-        \includegraphics{Graphics/Cap3/merx2_sin_atributos (1).jpg}
+        % \includegraphics{Graphics/Cap3/merx2_sin_atributos (1).jpg}
+        \includegraphics{Graphics/Cap3/merx-modular.drawio.png}
     \end{adjustbox}
     \caption{Diagrama de modelo entidad-relación extendido (MERX). Fuente: elaboración propia.}
     \label{fig:merx}
 \end{figure}
 
 Para facilitar el análisis y la implementación del sistema, el diseño de la base de datos adopta una segmentación en cinco módulos funcionales. 
-Esta división permite una mejor comprensión de las dependencias de identificación y las reglas de negocio que rigen la trazabilidad de los reportes.
+El repositorio oficial del proyecto presenta el detalle exhaustivo de cada entidad, incluyendo tipos de datos, restricciones y diccionarios de atributos, para su consulta técnica\footnote{Diccionario de datos detallado: \url{https://jabelresendiz.github.io/thesis/}}.
 
 Todas las entidades del esquema emplean un identificador único universal (UUID, por \textit{Universally Unique Identifier}), compuesto por 32 dígitos hexadecimales y 4 guiones que suman 36 caracteres.
 Esta característica permite generar el identificador sin depender de una secuencia centralizada de base de datos. 
 Las tablas provincia y municipio constituyen la única excepción: emplean enteros autoincrementales por tratarse de catálogos geográficos con pocos registros y alta estabilidad, donde la simplicidad y el menor tamaño del identificador resultan más adecuados que las propiedades de un UUID.
 
-\subsection{Módulo 1: Gestión de Usuarios y Roles}
+Para acelerar las consultas, el diseño incorpora índices sobre campos de alta concurrencia como estados de reporte, fechas de creación e identificadores de búsqueda frecuente. 
+Un índice es una estructura auxiliar que permite al motor de base de datos localizar filas específicas sin necesidad de recorrer toda la tabla.
 
-Este módulo constituye la base de la seguridad y el control de acceso del sistema. 
-Tal como muestra la Figura \ref{fig:merx}, el diseño emplea una jerarquía de herencia donde la entidad usuario actúa como generalización, concentrando los atributos comunes a todos los perfiles del sistema. 
+\subsubsection{Módulo 1: Gestión de Usuarios y Roles}
+Este módulo establece la base de la seguridad y el control de acceso. 
+El diseño emplea una jerarquía de herencia donde la entidad \textit{usuario} concentra los atributos comunes, mientras que las tablas \textit{administrador}, \textit{jefe de vacunación municipal} y \textit{médico evaluador} resuelven la especialización técnica. 
+Para cumplir con las observaciones de diseño, la capa de aplicación garantiza la exclusividad de estos roles, impidiendo que una cuenta pertenezca a múltiples categorías simultáneamente. 
+El sistema protege las contraseñas mediante mecanismos de hashing criptográfico antes de persistirlas, asegurando que nunca almacene texto plano.
+El Capítulo \ref{chapter:implementation} detalla la implementación concreta de este mecanismo.
 
-A partir de esta entidad, el modelo diferencia tres roles: administrador, jefe de vacunación municipal y médico evaluador. 
-Esta especialización es total, ya que todo usuario pertenece obligatoriamente a uno de los tres subtipos, y exclusiva, dado que un usuario no puede registrar simultáneamente más de un rol en las tablas hijas.
+\subsubsection{Módulo 2: Gestión de Reportes}
+Este módulo constituye el eje central de la solución al integrar la información del sujeto vacunado y del reportante en cada notificación de evento adverso. 
+El diseño organiza los datos mediante una jerarquía de herencia basada en la entidad \textit{persona}, la cual centraliza la identidad inmutable del ciudadano (nombre completo, género y número de identidad). 
+Esta estructura permite que un mismo individuo asuma distintos roles de forma simultánea, figurando como sujeto en un reporte y como reportante en otro.
 
-La Figura \ref{fig:modulo_usuario} presenta la implementación relacional de esta jerarquía, donde pueden observarse las tablas que materializan el módulo y las relaciones existentes entre ellas.
+Para armonizar la protección de datos sensibles (\textbf{RNF-07}) con la necesidad de detectar reportes duplicados (\textbf{RF-11}), la infraestructura implementa un \textbf{blind index} (índice ciego) sobre el Número de Identidad. 
+Bajo este esquema, el sistema cifra el CI para su almacenamiento clínico protegido, pero genera y almacena un hash indexado de dicho valor. 
+Este mecanismo permite realizar búsquedas de coincidencia exacta para validar si el ciudadano ya cuenta con registros previos en la base de datos, garantizando un rendimiento óptimo (\textbf{RNF-05}) sin exponer el identificador en texto plano \cite{22, 78}.
 
-\begin{figure}[H]
-    \centering
-    \begin{adjustbox}{center, width=0.6\textwidth}
-        \includegraphics{Graphics/Cap3/modulo_usuario.jpg}
-    \end{adjustbox}
-    \caption{Módulo de tablas de Usuario. Fuente: elaboración propia.}
-    \label{fig:modulo_usuario}
-\end{figure}
+El diseño sitúa los datos de contacto (correo y teléfono) específicamente en las tablas hijas. 
+Esta decisión técnica resuelve la disparidad en las restricciones de nulidad: el sistema exige estos datos como obligatorios para el reportante, pero los mantiene como opcionales para el sujeto. 
+Así, el modelo aplica reglas de integridad precisas según cada rol y evita columnas nulables innecesarias en la entidad madre.
+Finalmente, el sistema asegura la unicidad de cada trámite mediante el número de recibo.
 
-La tabla usuario concentra los atributos comunes a todos los perfiles del sistema:
 
-\begin{itemize}
-    \item \textbf{Id\_Usuario:} identificador único generado automáticamente al momento del registro.
-    \item \textbf{Nombre:} nombre completo del usuario.
-    \item \textbf{Correo electrónico:} dirección de correo electrónico institucional, utilizada como credencial de acceso y medio de contacto oficial.
-    \item \textbf{Contraseña:} credencial de acceso que autentica al usuario en el sistema. El sistema la almacena de forma segura mediante mecanismos de hashing criptográfico. El Capítulo \ref{chapter:implementation} detalla la implementación concreta de este mecanismo.
-    \item \textbf{Id\_Rol (FK):} llave foránea que referencia a la tabla Rol, estableciendo el perfil funcional del usuario dentro del sistema. Cada usuario tiene asignado al menos un rol, siendo estos: Administrador, Jefe de Vacunación Municipal o Médico Evaluador.
-\end{itemize}
+\subsubsection{Módulo 3: Vacunación}
+El módulo de vacunación documenta los productos biológicos administrados y su procedencia. Un mismo reporte de evento adverso puede involucrar múltiples vacunaciones, ya sea por la administración de varias vacunas en una misma sesión o en un período cercano. Por ello, la entidad vacunación establece una relación de muchos a uno con reporte y vincula cada registro con los lotes, fabricantes y centros de salud correspondientes.
 
-La especialización de la entidad usuario queda resuelta mediante tablas independientes para cada subtipo, conectadas a través de una llave primaria que actúa como llave foránea hacia la tabla usuario.
-Este enfoque garantiza la relación uno a uno entre la entidad generalizada y cada una de sus especializaciones.
+El modelo relacional exige que toda vacunación esté vinculada obligatoriamente a un lote —restricción (1,1)—, lo cual impide almacenar un registro sin este dato. 
+Dado que el reportante puede desconocer el número de lote al momento de la notificación, el diseño incorpora la siguiente regla: al registrar una nueva vacuna, el sistema genera automáticamente un lote denominado \textbf{Desconocido} asociado a ella. 
+Este lote permite al reportante seleccionarlo cuando desconoce el dato real, satisfaciendo la restricción de obligatoriedad y manteniendo la trazabilidad hasta la vacuna correspondiente sin debilitar la integridad referencial.
 
-La entidad jefe de vacunación municipal contiene los atributos específicos de este rol:
 
-\begin{itemize}
-    \item \textbf{Id\_Usuario (PK, FK):} llave primaria que referencia a la tabla usuario, garantizando la relación uno a uno propia de la especialización.
-    \item \textbf{Id\_Municipio (FK):} llave foránea que referencia a la tabla municipio, la cual contiene a su vez una llave foránea hacia la tabla provincia. Esta relación permite ubicar geográficamente al jefe de vacunación y constituye la base para la aplicación de la regla de negocio RN1.
-    \item \textbf{Id\_Administrador (FK):} llave foránea que referencia a la tabla usuario, apuntando al administrador que registró al jefe de vacunación en el sistema. Este atributo permite la trazabilidad de las acciones de registro.
-\end{itemize}
+\subsubsection{Módulo 4: Evento Adverso}
+Este módulo constituye el núcleo clínico del sistema al registrar las manifestaciones detectadas tras la inmunización. 
+El diseño permite asociar múltiples eventos adversos a un mismo reporte, reconociendo la realidad médica donde un paciente presenta diversos síntomas simultáneos que requieren evaluación. 
+Para acelerar las consultas clínicas, el modelo incorpora índices sobre las columnas de desenlace, intensidad, nombre del síntoma y fechas.
 
-La tabla médico evaluador contiene:
+\subsubsection{Módulo 5: Asignación y Evaluación}
+El último módulo coordina el flujo de trabajo posterior a la notificación. 
+El sistema genera alertas automáticas para los jefes municipales, quienes distribuyen la carga de trabajo hacia los médicos evaluadores mediante la tabla de \textit{asignación}. 
 
-\begin{itemize}
-    \item \textbf{Id\_Usuario (PK, FK):} llave primaria que referencia a la tabla usuario, garantizando la relación uno a uno propia de la especialización.
-    \item \textbf{Id\_Jefe (FK):} llave foránea que referencia a la tabla jefe de vacunación municipal, indicando el jefe que registró al médico en el sistema. Dado que un jefe de vacunación solo puede agregar médicos evaluadores en los municipios bajo su jurisdicción, esta relación permite inferir el municipio al que pertenece el médico sin necesidad de una llave foránea explícita hacia la tabla municipio.
-    \item \textbf{Institución de Atención:} nombre de la institución de salud donde el médico desempeña sus funciones.
-    \item \textbf{Número de Registro Profesional:} número único e intransferible otorgado por el \gls{minsap} que acredita a cada profesional de la salud para el ejercicio legal de su profesión en el territorio nacional. El sistema lo define como único para evitar duplicidades y garantizar la identificación inequívoca de cada médico evaluador.
-    \item \textbf{Especialidad:} especialidad médica del evaluador. Este atributo toma valores de un catálogo predefinido que incluye, entre otras, Medicina General Integral, Neurología, Pediatría, Enfermería y demás especialidades afines a la farmacovigilancia.
-\end{itemize}
+El proceso culmina cuando el médico registra el dictamen clínico final en la tabla de \textit{evaluación}. 
+El diseño incorpora una escala de causalidad basada en los estándares de la Organización Mundial de la Salud (WHO-UMC), adaptada a las categorías específicas del Instituto Finlay de Vacunas. 
 
-
-\subsection{Módulo 2: Gestión de Reportes}
-
-Este módulo constituye el eje central del sistema, pues materializa la recogida de información tanto del sujeto vacunado como del reportante, dando origen a cada notificación de evento adverso. 
-Tal como muestra la Figura \ref{fig:merx}, la entidad reporte guarda relación directa con las entidades sujeto vacunado y reportante, de modo que un reporte recoge la información de un único sujeto vacunado y un único reportante.
-
-La Figura \ref{fig:modulo_reporte} presenta la implementación relacional de este módulo.
-
-\begin{figure}[H]
-    \centering
-    \begin{adjustbox}{center, width=0.6\textwidth}
-        \includegraphics{Graphics/Cap3/modelo_reporte.jpg}
-    \end{adjustbox}
-    \caption{Módulo de tablas de reportes, sujeto vacunado y reportante. Fuente: elaboración propia.}
-    \label{fig:modulo_reporte}
-\end{figure}
-
-La tabla reporte contiene los siguientes atributos:
-\begin{itemize}
-    \item \textbf{Id\_Reporte:} identificador único generado automáticamente al momento de la creación del reporte.
-    \item \textbf{Id\_Sujeto (FK):} llave foránea que referencia a la tabla sujeto vacunado, vinculando el reporte con los datos de la persona que recibió la vacuna y presentó el evento adverso.
-    \item \textbf{Id\_Reportante (FK):} llave foránea que referencia a la tabla reportante, identificando a la persona que notificó el evento adverso ante el sistema.
-    \item \textbf{Fecha\_Creación:} fecha y hora de registro de la notificación en el sistema.
-    \item \textbf{Estado\_Reporte:} fase del ciclo de vida del reporte dentro del flujo de trabajo. Los valores posibles son:
-        \begin{itemize}
-            \item \textbf{Enviado:} el reporte ha sido creado por el usuario reportante y registrado en el sistema.
-            \item \textbf{En revisión:} el reporte ha sido asignado a un médico evaluador para su análisis clínico.
-            \item \textbf{Aprobado:} el médico evaluador ha completado la revisión y considera que los datos son consistentes y el evento adverso está correctamente documentado.
-            \item \textbf{Rechazado:} el médico evaluador ha determinado que los datos presentan incoherencias, inconsistencias o información incorrecta que impide una evaluación fiable.
-            \item \textbf{Cerrado:} el reporte ha superado una etapa final de revisión temporal por parte del sistema y los administradores, dándose por concluido el proceso.
-        \end{itemize}
-    \item \textbf{Número de Recibo:} código alfanumérico único generado automáticamente que identifica de forma inequívoca cada reporte dentro del sistema. Su estructura responde al formato \texttt{AEFI-YYYYMMDD-XXXXXXXX}, donde \texttt{YYYYMMDD} representa la fecha de creación y el sufijo de ocho caracteres proviene de un algoritmo criptográficamente seguro para evitar duplicidades.
-\end{itemize}
-
-Los datos de las personas involucradas en el sistema quedan modelados mediante una jerarquía de herencia.
-La entidad persona actúa como generalización y concentra los atributos comunes a todo ciudadano registrado: número de identidad oficial emitido por la República de Cuba —que funciona como clave primaria natural—, nombre, género e Id\_Municipio (FK a la tabla municipio) al que pertenece.
-De esta entidad derivan dos roles: sujeto vacunado y reportante. A diferencia de la jerarquía de usuario, esta especialización es no exclusiva, ya que una misma persona puede figurar como sujeto vacunado en un reporte y como reportante en otro.
-
-La tabla sujeto vacunado contiene los atributos que permiten identificar y caracterizar a la persona que recibió la vacuna y experimentó el evento adverso:
-
-\begin{itemize}
-    \item \textbf{Número de Identidad (PK, FK):} llave primaria que referencia a la tabla Persona, materializando la relación uno a uno propia de la especialización.
-    \item \textbf{Embarazo:} indica si el sujeto cursa un estado de gestación al momento del reporte. Este atributo solo admite valor cuando el género registrado es femenino; para el género masculino, el sistema asigna automáticamente el valor no aplicable.   
-    \item \textbf{Contacto:} número telefónico o dirección de correo electrónico del sujeto. Su naturaleza es opcional.
-    \item \textbf{Dirección:} domicilio del sujeto vacunado. Atributo opcional de texto libre.
-    \item \textbf{Historia Médica:} antecedentes médicos relevantes del sujeto que puedan incidir en la evaluación del evento adverso. Atributo opcional de texto libre.
-\end{itemize}
-
-La tabla Reportante contiene los atributos que identifican a la persona que notifica el evento adverso ante el sistema:
-\begin{itemize}
-    \item \textbf{Número de Identidad (PK, FK):} llave primaria que referencia a la tabla Persona, materializando la relación uno a uno propia de la especialización.
-    \item \textbf{Relación con el Sujeto Vacunado:} vínculo existente entre el reportante y la persona que recibió la vacuna. Los valores permitidos son:
-        \begin{itemize}
-            \item \textbf{Uno mismo:} el reportante es el propio sujeto vacunado.
-            \item \textbf{Padre/Tutor/Cuidador:} el reportante es responsable legal o cuidador del sujeto vacunado.
-            \item \textbf{Profesional de salud:} el reportante es un profesional sanitario que atendió o tuvo conocimiento del evento adverso.
-            \item \textbf{Otro:} cualquier otra relación no contemplada en las categorías anteriores.
-        \end{itemize}
-    \item \textbf{Correo electrónico:} dirección de correo electrónico del reportante. Atributo obligatorio que sirve como medio de contacto para notificaciones sobre el estado del reporte.
-    \item \textbf{Número de teléfono:} número telefónico del reportante. Atributo obligatorio que garantiza una vía de comunicación alternativa en caso de requerirse información adicional durante la evaluación del reporte.
-\end{itemize}
-
-Cabe señalar que los atributos de correo electrónico y número de teléfono aparecen en ambas tablas hijas en lugar de residir en la entidad Persona. 
-Esta decisión responde a que sus restricciones de nulidad difieren según el rol: en Sujeto Vacunado ambos campos son opcionales, mientras que en Reportante son obligatorios. 
-De haberse ubicado en la tabla Persona, no habría forma de expresar a nivel de base de datos cuándo el valor es requerido y cuándo no, ya que una misma columna no puede ser simultáneamente nullable y not null según el contexto.
-
-
-\subsection{Módulo 3: Vacunación}
-
-Este módulo documenta la información relativa a las vacunas administradas al sujeto que pudieron dar origen al evento adverso notificado. 
-Tal como muestra la Figura \ref{fig:merx}, la entidad vacunación actúa como núcleo del módulo y establece una relación de muchos a uno con la entidad reporte, ya que un mismo reporte puede involucrar múltiples vacunaciones —bien por la administración de varias vacunas diferentes en una misma sesión o en un período cercano—. 
-Asimismo, vacunación mantiene vínculo con las entidades lote y centro de vacunación, mientras que lote guarda relación a su vez con vacuna y esta con promotor (fabricante).
-
-La Figura \ref{fig:modulo_vacunacion} presenta la implementación relacional de este módulo.
-
-\begin{figure}[H]
-    \centering
-    \begin{adjustbox}{center, width=0.7\textwidth}
-        \includegraphics{Graphics/Cap3/modelo_vacunación.jpg}
-    \end{adjustbox}
-    \caption{Módulo de tablas de vacunación. Fuente: elaboración propia.}
-    \label{fig:modulo_vacunacion}
-\end{figure}
-
-La tabla vacunación registra cada proceso de inmunización que el reportante completa en el formulario. Contiene los siguientes atributos:
-\begin{itemize}
-    \item \textbf{Id\_Vacunación (PK):} identificador único generado automáticamente.
-    \item \textbf{Id\_Reporte (FK):} llave foránea que referencia a la tabla reporte, estableciendo la relación uno a uno entre el evento adverso y la vacuna asociada.
-    \item \textbf{Id\_Lote (FK):} llave foránea que referencia a la tabla lote, identificando el lote específico de la vacuna administrada.
-    \item \textbf{Id\_Centro (FK):} llave foránea que referencia a la tabla centro de vacunación, indicando la institución donde ocurrió la administración.
-    \item \textbf{Sitio de Administración:} región anatómica donde ocurre la administración de la vacuna. El valor proviene de un conjunto finito de opciones definidas a nivel del sistema, equivalente a una enumeración (\textit{enum}) en la capa de dominio: brazo (izquierdo o derecho), muslo (izquierdo o derecho) y glúteo (izquierdo o derecho).
-    \item \textbf{Número de Dosis:} valor entero que indica el número ordinal de la dosis administrada. El valor proviene de un conjunto finito de opciones definidas a nivel del sistema: 1ra dosis, 2da dosis, 3ra dosis, refuerzo y dosis única.
-    \item \textbf{Fecha de Administración:} fecha en la que ocurrió la aplicación de la vacuna al sujeto.
-\end{itemize}
-
-Las tablas lote, vacuna, promotor y centro de vacunación constituyen catálogos del sistema cuya gestión (inserción, modificación y eliminación de registros) es responsabilidad del administrador.
-
-La tabla lote contiene:
-
-\begin{itemize}
-\item \textbf{Id\_Lote:} identificador único generado automáticamente.
-\item \textbf{Id\_Vacuna (FK):} llave foránea que referencia a la tabla vacuna, indicando a qué producto farmacéutico pertenece el lote.
-\item \textbf{Nombre del Lote:} código alfanumérico asignado por el fabricante que identifica el lote de producción específico.
-\end{itemize}
-
-
-La tabla vacuna presenta:
-
-\begin{itemize}
-    \item \textbf{Id\_Vacuna:} identificador único generado automáticamente.
-    \item \textbf{Id\_Promotor (FK):} llave foránea que referencia a la tabla promotor, identificando al fabricante de la vacuna.
-    \item \textbf{Nombre:} denominación comercial o científica de la vacuna.
-    \item \textbf{Tipo:} clasificación de la vacuna según su plataforma tecnológica. Los valores posibles son: ARN mensajero (mRNA), Vector viral (ViralVector), Subunidad proteica (ProteinSubunit), Virus inactivado (InactivatedVirus), Virus atenuado (LiveAttenuated), ADN (DNA), Conjugada (Conjugate) y Otro (Other).
-    \item \textbf{Descripción:} información complementaria sobre la vacuna. Atributo opcional de texto libre.
-    \item \textbf{Patología Objetivo:} enfermedad o condición clínica que la vacuna está destinada a prevenir. Atributo de texto libre completado por el administrador al momento de registrar la vacuna en el sistema.
-\end{itemize}
-
-La tabla centro de vacunación contiene:
-
-\begin{itemize}
-\item \textbf{Id\_Centro:} identificador único generado automáticamente.
-\item \textbf{Id\_Municipio (FK):} llave foránea que referencia a la tabla municipio, permitiendo ubicar geográficamente el centro.
-\item \textbf{Nombre:} denominación oficial del centro de vacunación.
-\item \textbf{Dirección:} ubicación física del centro.
-\end{itemize}
-
-La tabla promotor contiene:
-
-\begin{itemize}
-\item \textbf{Id\_Promotor:} identificador único generado automáticamente.
-\item \textbf{Nombre:} denominación del fabricante o entidad promotora de la vacuna.
-\item \textbf{País:} país de origen del fabricante.
-\end{itemize}
-
-
-Si bien el sistema está concebido principalmente para el análisis de vacunas administradas por el Instituto Finlay de Vacunas (IFV), los estudios de farmacovigilancia requieren contemplar la posibilidad de que el evento adverso esté asociado a vacunas de otros fabricantes. 
-En tales casos, no siempre está disponible el número de lote, ya sea porque el fabricante no comparte dicha información o porque el reportante desconoce el dato al momento de la notificación.
-
-Para evitar rupturas en la integridad referencial del modelo —donde una vacunación debe estar vinculada a un lote, y este a su vez a una vacuna— el diseño establece la siguiente regla: al incorporar una nueva vacuna al sistema, el sistema genera automáticamente un lote denominado \textbf{Desconocido} asociado a dicha vacuna.
-Este lote cumple una doble función:
-
-\begin{enumerate}
-\item Permitir que el usuario reportante lo seleccione cuando desconoce el número de lote de su vacunación, sin que ello impida completar el registro del reporte.
-\item Servir como lote por defecto para todas las vacunas que no pertenecen al IFV, evitando que queden vacunaciones sin lote asignado.
-\end{enumerate}
-
-
-Esta decisión garantiza la integridad del esquema relacional, ya que toda vacunación puede trazarse hasta la vacuna correspondiente, independientemente de la disponibilidad del dato del lote real.
-
-
-\subsection{Módulo 4: Evento Adverso}
-\label{subsection:modulo_evento}
-
-Este módulo constituye el núcleo clínico del sistema, pues documenta las manifestaciones clínicas posteriores a la vacunación que son objeto de evaluación. 
-Tal como revela la Figura \ref{fig:merx}, el modelo establece que un mismo reporte puede asociarse a múltiples eventos adversos, y cada evento adverso corresponde a un único síntoma. 
-Esta decisión de diseño responde a la realidad clínica, donde un sujeto vacunado puede experimentar simultáneamente varios eventos adversos de distinta naturaleza (fiebre, dolor local y cefalea, por ejemplo), y cada uno debe ser registrado y evaluado de forma independiente.
-
-La Figura \ref{fig:modulo_evento} presenta la implementación relacional de este módulo.
-
-\begin{figure}[H]
-    \centering
-    \begin{adjustbox}{center, width=0.8\textwidth}
-        \includegraphics{Graphics/Cap3/modelo_evento.jpg}
-    \end{adjustbox}
-    \caption{Módulo de tablas de evento adverso. Fuente: elaboración propia.}
-    \label{fig:modulo_evento}
-\end{figure}
-
-La tabla evento adverso registra cada manifestación clínica que el reportante completa en el formulario. Contiene los siguientes atributos:
-
-\begin{itemize}
-    \item \textbf{Id\_Evento\_Adverso:} identificador único generado automáticamente.
-    \item \textbf{Id\_Reporte (FK):} llave foránea que referencia a la tabla reporte, estableciendo la relación de muchos a uno que permite que un reporte contenga múltiples eventos adversos.
-    \item \textbf{Id\_Síntoma (FK):} llave foránea que referencia a la tabla síntoma, identificando la manifestación clínica específica que caracteriza este evento adverso. Cada evento adverso corresponde a un único síntoma.
-    \item \textbf{Fecha de Inicio:} fecha en que comenzó a manifestarse el evento adverso.
-    \item \textbf{Fecha de Fin:} fecha en que cesó el evento adverso. Atributo opcional, ya que al momento del reporte el evento puede estar aún en curso.
-    \item \textbf{Intensidad:} grado de afectación del evento adverso sobre las actividades diarias del sujeto. El valor proviene de un conjunto finito de tres niveles definidos a nivel del sistema:
-        \begin{itemize}
-        \item \textbf{Leve:} el sujeto puede realizar sus actividades diarias sin dificultad.
-        \item \textbf{Moderado:} el sujeto puede realizar sus actividades diarias pero con dificultad.
-        \item \textbf{Severo:} el evento adverso impide al sujeto realizar sus actividades diarias.
-        \end{itemize}
-    \item \textbf{Gravedad:} clasificación que determina si el evento adverso constituye un ESAVI de tipo serio. Su valor proviene automáticamente de los criterios de seriedad registrados: si cumple al menos uno de los siguientes, el evento clasifica como \textbf{Serio}; en caso contrario, como \textbf{No serio}. Los criterios son:
-        \begin{itemize}
-            \item Requirió visita médica.
-            \item Requirió atención en servicios de emergencia.
-            \item Requirió hospitalización.
-            \item Provocó incapacidad temporal.
-            \item Provocó la muerte del sujeto (en cuyo caso debe registrarse la fecha de fallecimiento).
-            \item Provocó una anomalía congénita posiblemente relacionada con la vacunación.
-        \end{itemize}
-    \item \textbf{Desenlace:} estado final del evento adverso al momento del reporte o de su cierre. El valor proviene de un dominio acotado de valores: recuperado totalmente, recuperado con secuela, aún recuperándose, aún sin recuperar, fallecimiento y no especificado.
-    \item \textbf{Descripción:} información adicional sobre el evento adverso que el reportante considere relevante para la evaluación clínica. Atributo opcional de texto libre donde pueden registrarse, por ejemplo, valores de temperatura corporal, mediciones realizadas, medicamentos administrados u otras observaciones pertinentes.
-    
-\end{itemize}
-
-La tabla síntoma constituye un catálogo del sistema cuya gestión (inserción, modificación y eliminación de registros) es responsabilidad exclusiva del administrador. Contiene los siguientes atributos:
-
-\begin{itemize}
-    \item \textbf{Id\_Síntoma:} identificador único generado automáticamente.
-    \item \textbf{Nombre:} denominación del síntoma o manifestación clínica.
-    \item \textbf{Categoría:} clasificación del síntoma según el sistema orgánico afectado. El administrador la selecciona de una lista de valores permitidos que incluye, entre otros: general, neurológico, muscular, respiratorio, gastrointestinal, dermatológico y cardiovascular.
-    \item \textbf{Descripción:} información complementaria sobre el síntoma que el administrador considere relevante para precisar su naturaleza. Atributo opcional de texto libre.
-\end{itemize}
-
-
-\subsection{Módulo 5: Asignación y Evaluación}
-
-Este módulo gestiona el flujo de trabajo que surge tras la creación de un reporte. 
-Un reporte puede generar múltiples alertas a lo largo de su ciclo de vida, aunque solo una permanece activa en cada momento para el jefe de vacunación correspondiente. 
-De igual forma, una alerta puede derivar en varias asignaciones, pero únicamente una asignación está vigente a la vez para un médico evaluador. 
-
-La Figura \ref{fig:modulo_alerta} detalla el esquema relacional de este módulo:
-
-\begin{figure}[H]
-    \centering
-    \begin{adjustbox}{center, width=0.6\textwidth}
-        \includegraphics{Graphics/Cap3/modelo_alerta.jpg}
-    \end{adjustbox}
-    \caption{Módulo de tablas de asignación y evaluación. Fuente: elaboración propia.}
-    \label{fig:modulo_alerta}
-\end{figure}
-
-
-La tabla alerta contiene:
-
-\begin{itemize}
-    \item \textbf{Id\_Alerta:} identificador único generado automáticamente.
-    \item \textbf{Id\_Reporte (FK):} llave foránea que referencia a la tabla reporte. Define unicidad, garantizando la relación uno a uno.
-    \item \textbf{Id\_Jefe (FK):} llave foránea que referencia a la tabla jefe de vacunación municipal, identificando al jefe notificado.
-    \item \textbf{Fecha\_Creación:} fecha y hora en la que ocurrió la generación automática de la alerta tras la creación del reporte.
-     \item \textbf{Estado de la alerta:} indica la vigencia operativa de la alerta dentro del proceso de gestión. Sus valores son: \textbf{Activa}, cuando el reporte asociado aún requiere atención o evaluación por parte del jefe de vacunación; e \textbf{Inhabilitada}, cuando el proceso de evaluación clínica asociado ha finalizado. Este atributo permite optimizar las consultas del panel de gestión al reducir la necesidad de realizar uniones adicionales con las entidades de asignación y evaluación clínica para determinar si una alerta debe permanecer visible.
-\end{itemize}
-
-La tabla asignación contiene:
-
-\begin{itemize}
-    \item \textbf{Id\_Asignación:} identificador único generado automáticamente.
-    \item \textbf{Id\_Alerta (FK):} llave foránea que referencia a la tabla alerta, estableciendo la relación que permite múltiples asignaciones para una misma alerta.
-    \item \textbf{Id\_Médico (FK):} llave foránea que referencia a la tabla médico evaluador, identificando al médico asignado.
-    \item \textbf{Fecha\_Asignación:} fecha y hora en la que ocurrió la asignación.
-    \item \textbf{Estado\_Asignación:} fase del ciclo de vida de la asignación dentro del flujo de trabajo. Los valores posibles son:
-        \begin{itemize}
-            \item \textbf{Pendiente:} la asignación ha sido creada y el médico aún no ha completado la evaluación.
-            \item \textbf{Completado:} el médico finalizó la evaluación y emitió un dictamen.
-            \item \textbf{Expirado:} el plazo establecido en \texttt{Fecha\_Fin} fue superado sin que el médico completara la evaluación.
-            \item \textbf{Cancelado:} el médico evaluador canceló la asignación por considerar que el reporte contiene información inconsistente o incoherente.
-        \end{itemize}
-    \item \textbf{Fecha\_Fin:} cumple una doble función según el estado de la asignación. Mientras la asignación permanece pendiente, indica la fecha y hora límite para que el médico complete la evaluación, calculada automáticamente según la gravedad del reporte. Una vez que la asignación alcanza un estado final (completado, expirado o cancelado), este campo refleja la fecha y hora en que ocurrió dicho evento.
-\end{itemize}
-
-La tabla evaluación contiene el dictamen clínico emitido por el médico evaluador. Contiene los siguientes atributos:
-
-\begin{itemize}
-    \item \textbf{Id\_Evaluación (PK):} identificador único generado automáticamente.
-    \item \textbf{Id\_Asignación (FK):} llave foránea que referencia a la tabla asignación. Definida como única para garantizar la relación uno a uno, impidiendo evaluaciones múltiples sobre una misma asignación.
-    \item \textbf{Causalidad:} grado de relación entre la vacuna administrada y el evento adverso, determinado por el médico evaluador según criterios de temporalidad y exclusión de otras causas. El sistema emplea una adaptación de la escala de la Organización Mundial de la Salud y el Uppsala Monitoring Centre (WHO-UMC) \cite{who-umc-causality}, reduciendo sus categorías de seis a cinco para alinearse con los criterios de registro empleados por el Instituto Finlay de Vacunas (IFV). Los posibles valores son:
-    \begin{itemize}
-        \item \textbf{Definitiva:} evento con una relación temporal plausible, que no puede ser explicado por otras enfermedades o medicamentos, y que responde satisfactoriamente a la retirada o reexposición.
-        \item \textbf{Probable:} evento con una relación temporal razonable, poco probable que sea atribuido a otras causas, sin necesidad de una prueba de reexposición.
-        \item \textbf{Posible:} evento con una relación temporal razonable, pero que también podría ser explicado por otras enfermedades o medicamentos concurrentes.
-        \item \textbf{Improbable:} evento con una relación temporal improbable (aunque no imposible) y con otras causas que ofrecen una explicación más plausible.
-        \item \textbf{No evaluable:} informe que sugiere una reacción adversa pero cuya información es insuficiente, contradictoria o no verificable para emitir un juicio.
-    \end{itemize}
-    \item \textbf{Significancia Clínica:} valoración del impacto clínico del evento adverso según su comportamiento esperado y severidad. Los valores de este catálogo constituyen una adaptación definida según las necesidades de registro y evaluación del Instituto Finlay de Vacunas (IFV):
-    \begin{itemize}
-        \item \textbf{Clínicamente significativo e inesperado:} evento no descrito previamente para esta vacuna y con repercusión clínica relevante.
-        \item \textbf{Evento esperado:} reacción ya documentada en el perfil de seguridad de la vacuna.
-        \item \textbf{Serio o potencialmente mortal:} evento que pone en riesgo la vida del sujeto.
-        \item \textbf{Evento menor:} reacción leve sin repercusión clínica significativa.
-    \end{itemize}
-    \item \textbf{Observaciones:} comentarios y fundamentos clínicos que sustentan el dictamen emitido. Atributo opcional de texto libre.
-\end{itemize}
 
 
 
@@ -910,76 +633,23 @@ La tabla evaluación contiene el dictamen clínico emitido por el médico evalua
 
 La normalización es el proceso de organizar los datos de una base de datos para eliminar redundancias y garantizar la integridad de la información. 
 Este proceso, estructurado en formas normales sucesivas, evita anomalías de inserción, actualización y borrado que comprometerían la fiabilidad del sistema \cite{codd1970}.
-
-El esquema relacional desarrollado fue verificado hasta alcanzar la Tercera Forma Normal (3FN), nivel que elimina las dependencias transitivas entre atributos no clave \cite{codd1971}. 
-La elección de la 3FN como nivel objetivo obedece a dos razones: elimina los problemas prácticos de redundancia sin introducir una fragmentación excesiva de tablas que afecte el rendimiento de las consultas, y constituye el nivel ampliamente aceptado en aplicaciones transaccionales como criterio de calidad suficiente \cite{date2012}.
-Formas normales superiores como Boyce-Codd (BCNF) y Cuarta Forma Normal (4FN) abordan casos específicos —dependencias donde todo determinante debe ser clave candidata y dependencias multivaluadas, respectivamente— que no aparecen en el dominio de este sistema \cite{silberschatz2019}.
-
-% \subsubsection*{Dependencias funcionales principales}
-
-% Una dependencia funcional $X \rightarrow Y$ establece que los valores del conjunto de atributos $X$ determinan unívocamente los valores de $Y$. 
-% A continuación son resumidas las dependencias que rigen el modelo
-
-% \begin{itemize}
-%     \item En \textbf{Usuario}: Id\_Usuario $\rightarrow$ \{Id\_rol, Nombre\_Usuario, Correo\_Electrónico, Contraseña\}.
-%     \item En \textbf{Persona}: CI $\rightarrow$ \{Nombre, Id\_Municipio, Género\}.
-%     \item En \textbf{Sujeto Vacunado}: CI $\rightarrow$ \{Embarazo, Dirección, Historia\_Clínica, Correo\_Electrónico, Número\_Teléfono\}.
-%     \item En \textbf{Reportante}: CI $\rightarrow$ \{Relación\_Sujeto\_Vacunado, Correo, Número\_Teléfono\}.
-%     \item En \textbf{Reporte}: Id\_Reporte $\rightarrow$ \{Id\_Sujeto, Id\_Reportante, Fecha\_Reporte, Estado, Número\_Recibo\}.
-%     \item En \textbf{Evento Adverso}: Id\_Evento\_Adverso $\rightarrow$ \{Id\_Reporte, Id\_Síntoma, Fecha\_Inicio, Fecha\_Fin, Intensidad, Desenlace, Descripción, Variables\_Gravedad \footnote{En el modelo real, la gravedad queda registra mediante un conjunto de atributos booleanos independientes (hospitalización, anemia, amenaza de muerte, discapacidad, anomalía congénita y otras condiciones clínicamente relevantes). Para el análisis de dependencias funcionales, estos atributos quedan agrupados bajo la notación \textit{Variables\_Gravedad}, ya que ninguno de ellos depende funcionalmente de otro y su tratamiento conjunto simplifica la representación sin pérdida de rigor.}\}.
-%     \item En \textbf{Vacunación}: Id\_Vacunación $\rightarrow$ \{Id\_Reporte, Id\_Lote, Id\_Centro, Sitio\_Administración, Número\_Dosis, Fecha\_Administración\}.
-%     \item En \textbf{Lote}: Id\_Lote $\rightarrow$ \{Id\_Vacuna, Número\_Lote\}.
-%     \item En \textbf{Vacuna}: Id\_Vacuna $\rightarrow$ \{Id\_Promotor,Nombre\_Vacuna, Tipo\_Vacuna, Descripción, Patología\_Objetivo\}.
-%     \item En \textbf{Centro de Vacunación}: Id\_centro\_vacunación $\rightarrow$ \{Id\_Municipio, Nombre\_Centro, Dirección\_Centro\}.
-%     \item En \textbf{Promotor}:Id\_Promotor $\rightarrow$ \{Nombre\_Promotor, País\_Promotor\}.
-%     \item En \textbf{Alerta}: Id\_Alerta $\rightarrow$ \{Id\_Reporte, Id\_Jefe\_Vacunación, Fecha\_Creación, Estado\_Alerta \}.
-%     \item En \textbf{Asignación}: Id\_Asignación $\rightarrow$ \{Id\_Alerta, Id\_Médico, Fecha\_Asignación, Estado\_Asignación, Fecha\_Fin\}.
-%     \item En \textbf{Evaluación}: Id\_Evaluación $\rightarrow$ \{Id\_Asignación, Causalidad, Significancia\_Clínica, Observaciones\}.
-% \end{itemize}
-
-
-\subsubsection*{Dependencias funcionales}
-
-Una dependencia funcional $X \rightarrow Y$ establece que los valores del conjunto de atributos $X$ determinan unívocamente los valores de $Y$. 
-Cuando $Y$ depende de $X$ y a su vez $Z$ depende de $Y$, ocurre una dependencia transitiva $X \rightarrow Y \rightarrow Z$, que la tercera forma normal busca eliminar.
-
-En el esquema diseñado, el atributo determinante de cada tabla es su clave primaria: un identificador único en las tablas transaccionales y de flujo de trabajo, y el número de identidad en la jerarquía de persona, sujeto vacunado y reportante. 
-Los atributos dependientes son todos aquellos que forman parte de la misma tabla y no constituyen la clave primaria, según la estructura presentada en las secciones anteriores. 
-Las dependencias entre tablas quedan modeladas mediante claves foráneas, reflejadas en el diagrama entidad-relación.
-
-
-\subsubsection*{Cumplimiento de las formas normales}
+El esquema relacional desarrollado alcanza la Tercera Forma Normal (3FN), nivel que constituye el estándar aceptado en aplicaciones transaccionales \cite{date2012}.
 
 \textbf{Primera Forma Normal (1FN).} Una tabla está en 1FN si en cada posición de fila y columna existe un único valor, nunca un conjunto de valores \cite{ibm-admin-guide}. 
 Todos los atributos definidos en el esquema contienen valores atómicos. 
 El análisis no identificó grupos repetidos ni atributos multivaluados que requirieran transformación.
 
 \textbf{Segunda Forma Normal (2FN).} La 2FN añade la condición de que todos los atributos que no forman parte de la clave primaria deben depender de todas las columnas de dicha clave  \cite{ibm-admin-guide}. 
-Dado que todas las tablas del esquema utilizan claves primarias simples (IDs en las tablas transaccionales y CI en la jerarquía de Sujeto), no existen condiciones para la aparición de dependencias parciales respecto a un subconjunto propio de la clave. 
+Dado que todas las tablas del esquema utilizan claves primarias simples (UUID), no existen condiciones para la aparición de dependencias parciales respecto a un subconjunto propio de la clave. 
 Por tanto, el cumplimiento de esta forma normal es inherente a la estructura del modelo.
 
 \textbf{Tercera Forma Normal (3FN).}  El tercer nivel exige que cada columna no clave proporcione un hecho independiente de otras columnas no clave y dependa únicamente de la clave primaria \cite{ibm-admin-guide}. 
 En otras palabras, no deben existir dependencias transitivas donde un atributo no clave dependa de otro atributo no clave que, a su vez, dependa de la clave \cite{ibm-third-normal-form}. 
-Tras el análisis de cada tabla del modelo:
+Las entidades de catálogo —Síntoma, Vacuna, Promotor, Centro de Vacunación, Municipio y Provincia— quedaron modeladas como tablas independientes, evitando que las tablas transaccionales contengan atributos descriptivos que dependan de claves foráneas en lugar de la clave primaria.
 
-\begin{itemize}
-    \item En \textbf{Reporte}, todos los atributos no clave (Id\_Sujeto, Id\_Reportante, Fecha\_Reporte, Estado, Número\_Recibo) dependen directamente de Id\_Reporte. Si bien Número\_Recibo es único y constituye una clave candidata, esto no viola la 3FN, ya que la restricción aplica únicamente a dependencias desde atributos no clave hacia otros atributos no clave. La restricción \texttt{UNIQUE} sobre Número\_Recibo formaliza esta condición en el esquema.
-    
-    \item En \textbf{Evento Adverso}, atributos como Intensidad, Gravedad y Desenlace dependen directamente de Id\_Evento\_Adverso. No existe una dependencia del tipo Intensidad $\rightarrow$ Gravedad ni Gravedad $\rightarrow$ Desenlace, por lo que no hay dependencia transitiva.
-    
-    \item En \textbf{Vacunación}, los atributos descriptivos del lote (como Nombre del Lote) residen en la tabla Lote, no en Vacunación. Esto evita la dependencia transitiva Id\_Vacunación $\rightarrow$ Id\_Lote $\rightarrow$ Nombre\_Lote.
-    
-    \item En \textbf{Asignación}, el atributo Estado depende directamente de Id\_Asignación. La Fecha\_Fin cumple una doble función según el contexto, pero no existe una dependencia del tipo Estado $\rightarrow$ Fecha\_Fin que determine el valor de esta última.
-    
-    \item En las jerarquías de herencia (\textbf{Usuario} $\rightarrow$ Jefe/Médico/Administrador y \textbf{Sujeto} $\rightarrow$ Sujeto Vacunado/Reportante), las tablas hijas tienen como clave primaria exactamente la misma clave que la tabla padre. Los atributos propios de cada subtipo dependen directamente de dicha clave, sin dependencias transitivas entre ellos.
+La elección de la 3FN como nivel objetivo responde a dos razones: elimina los problemas prácticos de redundancia sin introducir una fragmentación excesiva de tablas que afecte el rendimiento de las consultas, y constituye el nivel ampliamente aceptado en aplicaciones transaccionales como criterio de calidad suficiente \cite{date2012}. Formas normales superiores como Boyce-Codd (BCNF) y Cuarta Forma Normal (4FN) abordan casos específicos que no aparecen en el dominio de este sistema, por lo que no se justifica su aplicación \cite{silberschatz2019}.
 
-    \item Las entidades de catálogo (\textbf{Síntoma}, \textbf{Vacuna}, \textbf{Promotor}, \textbf{Centro de Vacunación}, \textbf{Municipio}, \textbf{Provincia}) quedaron modeladas como tablas independientes. Esta separación evita que las tablas transaccionales contengan dependencias transitivas hacia atributos descriptivos. Por ejemplo, si Nombre\_Municipio residiera en Sujeto Vacunado, existiría la dependencia transitiva CI $\rightarrow$ Id\_Municipio $\rightarrow$ Nombre\_Municipio. Al residir en la tabla Municipio, el esquema queda libre de esta dependencia \cite{silberschatz2019}.
-    
-\end{itemize}
-
-
-En conclusión, el esquema relacional satisface las tres formas normales definidas por Codd \cite{codd1970}\cite{codd1971}. 
-El análisis no identificó dependencias parciales ni transitivas que requirieran descomposición adicional, por lo que el diseño garantiza la integridad de los datos.
+En conclusión, el esquema relacional satisface las tres formas normales definidas por Codd \cite{codd1970, codd1971}. El análisis no identificó dependencias parciales ni transitivas que requirieran descomposición adicional, por lo que el diseño garantiza la integridad de los datos.
 
 
 \section{Conclusiones del capítulo}

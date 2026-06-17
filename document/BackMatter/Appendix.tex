@@ -478,3 +478,267 @@ La Tabla \ref{tab:anexo-busqueda} presenta los valores detallados obtenidos en c
 \hline
 \end{tabular}
 \end{table}
+
+\section{Prueba de carga: escenario combinado}
+\label{anexo:k6-combinado}
+
+\subsection{Configuración del entorno}
+
+El escenario combinado integra los tres perfiles de uso del sistema en una sola prueba: tráfico público (75 VUs, alternando 65\% creación de reportes y 35\% búsqueda por notificación, con pausas de 1 a 3 segundos), tráfico de jefes municipales (10 VUs, consultando el dashboard y asignando reportes a médicos, con pausas de 2 a 6 segundos) y tráfico de médicos (15 VUs, revisando su bandeja de asignaciones y evaluando reportes, con pausas de 1 a 4 segundos). Las pausas simulan el comportamiento humano real y evitan la saturación artificial. Las métricas se aislaron mediante tags para obtener resultados independientes por cada tipo de operación.
+
+Los mecanismos de CAPTCHA y limitación por IP se desactivaron temporalmente por las mismas razones expuestas en la prueba de búsqueda.
+
+\subsection{Ejecución y procesamiento}
+
+La prueba se ejecutó con el siguiente comando, generando dos archivos de salida:
+
+\begin{verbatim}
+k6 run --out json=raw.json --summary-export=summary.json mixted2.js
+\end{verbatim}
+
+El archivo \texttt{summary.json} contiene las métricas agregadas que el ecosistema de k6 calcula automáticamente: promedio, mediana, p(95), mínimo, máximo y número de solicitudes por cada tag definido. El archivo \texttt{raw.json} registra cada solicitud individual con su latencia y tag asociado. Este archivo crudo se procesó con un script de Python para calcular las métricas adicionales requeridas por los diagramas de caja: cuartiles (Q1, Q3) y valores atípicos (outliers), definidos como aquellas solicitudes cuya latencia supera Q3 + 1.5 $\times$ (Q3 $-$ Q1).
+
+\subsection{Script principal (mixted2.js)}
+
+\begin{lstlisting}[language=Java]
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+import papaparse from './papaparse.js';
+import { buildReport } from './create_report/base.js';
+
+const BASE_URL = 'http://192.168.XXX.XXX:5137/api';
+const csvData = papaparse.parse(open('./reports_1k.csv'), { header: true }).data;
+
+const DASHBOARD_ENDPOINTS = [
+    '/MunicipalDashboard/overview',
+    '/MunicipalDashboard/doctors-performance',
+    '/MunicipalDashboard/stats_municipal',
+];
+
+export const options = {
+    scenarios: {
+        trafico_publico: {
+            executor: 'constant-vus',
+            vus: 75,
+            duration: '1m',
+            exec: 'escenarioPublico',
+        },
+        trafico_jefes: {
+            executor: 'constant-vus',
+            vus: 10,
+            duration: '1m',
+            exec: 'escenarioJefes',
+        },
+        trafico_medicos: {
+            executor: 'constant-vus',
+            vus: 15,
+            duration: '1m',
+            exec: 'escenarioMedicos',
+        },
+    },
+    thresholds: {
+        'http_req_duration{name:CrearReporte}': ['p(95)<3000'],
+        'http_req_duration{name:BuscarReporte}': ['p(95)<3000'],
+        'http_req_duration{name:Dashboard_jefe}': ['p(95)<4000'],
+        // resto de thresholds por cada nombre relevante
+    },
+};
+
+export function escenarioPublico() {
+    const rand = Math.random();
+    if (rand < 0.65) {
+        const createReport = buildReport(__ITER);
+    } else {
+        const getReport = getReport(_ITER);
+    }
+    sleep(Math.random() * 2 + 1);
+}
+
+export function escenarioJefes() {
+    const rand = Math.random();
+
+    if (rand < 0.65) {
+        // Obtener reportes pendientes y evaluadores
+        const pendingRes = getReportsPendings(__ITER);
+
+        // asignar
+        const assignRes = assignReportToDoctor(__ITER);
+    } else {
+        const resDashboard = getDashboardData(__ITER);
+    }
+    sleep(Math.random() * 4 + 2);
+}
+
+export function escenarioMedicos() {
+
+    // buscar las asignaciones
+    const assignments = getMyAssignments(__ITER);
+
+    // evaluar
+    const evalRes = evaluateReport(__ITER, assignments);
+
+    sleep(Math.random() * 3 + 1);
+}
+\end{lstlisting}
+
+\subsection{Tabla de resultados completos}
+
+La Tabla \ref{tab:anexo-combinado} presenta las métricas detalladas obtenidas para cada operación en el escenario combinado.
+
+\begin{table}[H]
+\centering
+\caption{Resultados completos del escenario combinado con 100 VUs.}
+\label{tab:anexo-combinado}
+\footnotesize
+\begin{tabular}{lcccccccc}
+\hline
+\textbf{Métrica} & Crear & Buscar & Pendientes & Médicos & Asignar & Asignaciones & Evaluar & Dashboard \\
+\hline
+Solicitudes & 1078 & 581 & 84 & 84 & 84 & 365 & 68 & 38 \\
+Promedio (ms) & 1021.37 & 268.04 & 423.15 & 275.19 & 603.64 & 348.86 & 433.61 & 428.00 \\
+Mediana (ms) & 858.28 & 235.99 & 364.01 & 222.53 & 433.23 & 278.22 & 382.17 & 368.06 \\
+Q1 (ms) & 616.87 & 157.37 & 223.25 & 153.75 & 291.09 & 180.81 & 276.81 & 208.54 \\
+Q3 (ms) & 1170.59 & 324.28 & 484.20 & 358.44 & 626.59 & 427.35 & 515.97 & 480.45 \\
+p(95) (ms) & 2468.39 & 551.48 & 1143.59 & 637.15 & 1805.32 & 783.83 & 911.90 & 1209.34 \\
+Mínimo (ms) & 151.15 & 24.89 & 68.61 & 54.73 & 101.22 & 46.62 & 81.17 & 60.88 \\
+Máximo (ms) & 4389.06 & 1389.79 & 1320.05 & 887.75 & 2571.61 & 1928.12 & 1262.24 & 1255.79 \\
+Outliers & 80 & 25 & 8 & 4 & 12 & 18 & 4 & 4 \\
+\% éxito & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Resultados completos de la auditoría Lighthouse}
+\label{anexo:lighthouse}
+
+La Tabla \ref{tab:anexo-categorias} resume los puntajes por categoría para todas las páginas del sistema. En cada celda, el valor superior corresponde al entorno de escritorio y el inferior al móvil.
+
+
+\begin{table}[H]
+\centering
+\caption{Puntajes generales de Lighthouse para todas las páginas del sistema.}
+\label{tab:anexo-categorias}
+\footnotesize
+\begin{tabular}{lcccc}
+\hline
+\textbf{Página} & \textbf{Rendimiento} & \textbf{Accesibilidad} & \textbf{Recomendaciones} & \textbf{SEO} \\
+\hline
+Página principal (E)   & 100 & 98 & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Página principal (M)   & 90  & 93 & & \\ \hline
+Registro de ESAVI (E)  & 100 & 89 & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Registro de ESAVI (M)  & 96  & 89 & & \\ \hline
+Panel informativo (E)  & 100 & 98 & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Panel informativo (M)  & 95  & 95 & & \\ \hline
+Consulta de reportes (E) & [ ] & [ ] & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Consulta de reportes (M) & [ ] & [ ] & & \\ \hline
+Gestión de reportes (E)  & [ ] & [ ] & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Gestión de reportes (M)  & [ ] & [ ] & & \\ \hline
+Gestión de médicos (E)   & [ ] & [ ] & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Gestión de médicos (M)   & [ ] & [ ] & & \\ \hline
+Gestión de jefes (E)     & [ ] & [ ] & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Gestión de jefes (M)     & [ ] & [ ] & & \\ \hline
+Gestión de catálogo (E)  & 100 & 94 & \multirow{2}{*}{100} & \multirow{2}{*}{91} \\
+Gestión de catálogo (M)  & 95 & 94 & & \\ \hline
+Dashboard municipal (E)  & [ ] & [ ] & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Dashboard municipal (M)  & [ ] & [ ] & & \\ \hline
+Inicio de sesión (E)     & [ ] & [ ] & \multirow{2}{*}{96} & \multirow{2}{*}{91} \\
+Inicio de sesión (M)     & [ ] & [ ] & & \\ \hline
+\multicolumn{5}{l}{\footnotesize (E) = Escritorio, (M) = Móvil. Mejores Prácticas y SEO son uniformes en todas las páginas.} \\
+\end{tabular}
+\end{table}
+
+La Tabla \ref{tab:anexo-rendimiento} presenta las métricas de rendimiento detalladas para todas las páginas del sistema.
+
+\begin{table}[H]
+\centering
+\caption{Métricas de rendimiento para todas las páginas del sistema.}
+\label{tab:anexo-rendimiento}
+\footnotesize
+\begin{tabular}{lcccccccc}
+\hline
+\textbf{Página} & \textbf{Puntaje} & \textbf{FCP} & \textbf{LCP} & \textbf{TBT} & \textbf{SI} & \textbf{CLS} \\
+ & E / M & E / M & E / M & E / M & E / M & E / M \\
+\hline
+Página principal &
+    \makecell{100 \\ 90} &
+    \makecell{0.4 s \\ 2.2 s} &
+    \makecell{0.6 s \\ 2.9 s} &
+    \makecell{0 ms \\ 0 ms} &
+    \makecell{0.7 s \\ 4.6 s} &
+    \makecell{0.00 \\ 0.00} \\
+% \hline
+% Registro de ESAVI &
+%     \makecell{100 \\ 96} &
+%     \makecell{0.4 s \\ 1.7 s} &
+%     \makecell{0.6 s \\ 2.7 s} &
+%     \makecell{0 ms \\ 0 ms} &
+%     \makecell{0.6 s \\ 1.7 s} &
+%     \makecell{0.00 \\ 0.00} \\
+% \hline
+% Panel informativo &
+%     \makecell{100 \\ 95} &
+%     \makecell{0.4 s \\ 1.7 s} &
+%     \makecell{0.6 s \\ 2.4 s} &
+%     \makecell{0 ms \\ 0 ms} &
+%     \makecell{0.5 s \\ 3.9 s} &
+%     \makecell{0.00 \\ 0.00} \\
+% \hline
+% Consulta de reportes &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} \\
+% \hline
+% Gestión de reportes &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} \\
+% \hline
+% Gestión de médicos &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} \\
+% \hline
+% Gestión de jefes &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} \\
+\hline
+Gestión de catálogo &
+    \makecell{100 \\ 95} &
+    \makecell{0.4 s \\ 1.8 s} &
+    \makecell{0.4 s \\ 2.6 s} &
+    \makecell{0 ms \\ 70 ms} &
+    \makecell{0.6 s \\ 2.9 s} &
+    \makecell{0.029 \\ 0.00} \\
+% \hline
+% Dashboard municipal &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} \\
+% \hline
+% Inicio de sesión &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} &
+%     \makecell{[ ] \\ [ ]} \\
+\hline
+\multicolumn{8}{l}{\footnotesize En cada celda: valor superior = Escritorio (E), valor inferior = Móvil (M).} \\
+\end{tabular}
+\end{table}
