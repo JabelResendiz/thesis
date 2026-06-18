@@ -1,14 +1,18 @@
+
 \begin{resumen}
-	La implementación del sistema web para la gestión de ESAVI se fundamenta en una arquitectura modular basada en los principios de Clean Architecture, utilizando .NET 8 para el backend y React con TypeScript para el frontend. 
-	La solución integra mecanismos avanzados de seguridad, incluyendo autenticación mediante JWT con rotación de refresh tokens almacenados en cookies HttpOnly, limitación de velocidad (rate limiting) y protección contra ataques automatizados mediante Friendly CAPTCHA. 
-	Para optimizar la experiencia del usuario y la fiabilidad, se implementó una comunicación asíncrona empleando RabbitMQ y MassTransit, facilitando notificaciones automáticas vía correo electrónico y WhatsApp. 
-	El sistema garantiza la integridad y trazabilidad de los datos de farmacovigilancia mediante el uso del patrón Unit of Work y un registro de auditoría automatizado sobre una base de datos MySQL.
+La farmacovigilancia en Cuba depende de la notificación oportuna de eventos adversos posteriores a la vacunación, pero el Instituto Finlay de Vacunas carecía de un sistema web que automatizara el autorreporte ciudadano y la gestión de revisiones médicas. 
+Este trabajo presenta un sistema compuesto por una API REST segura y una aplicación SPA responsiva, desarrollados bajo los principios de la arquitectura limpia con .NET 8 y React con TypeScript. 
+La solución integra autenticación JWT con rotación de tokens, autorización por roles, CAPTCHA, rate limiting y notificaciones asíncronas mediante RabbitMQ. 
+La validación del sistema incluyó pruebas funcionales de caja negra, pruebas de rendimiento con k6 —que alcanzaron un throughput de 36.8 req/s con 100 usuarios concurrentes—, auditoría Lighthouse con puntuaciones de 97/100 en rendimiento y 98/100 en accesibilidad, y pruebas de usabilidad con un puntaje SUS de 90.0/100.
+Los resultados confirman que el sistema opera correctamente bajo carga concurrente y ofrece una experiencia de usuario satisfactoria para los perfiles evaluados.
+
+\vspace{0.5cm}
+\noindent\textbf{Palabras clave:} farmacovigilancia, ESAVI, arquitectura limpia, .NET, React, JWT, RabbitMQ, pruebas de rendimiento, usabilidad, Lighthouse.
 \end{resumen}
 
 \begin{abstract}
-	The implementation of the ESAVI management web system is based on a modular architecture following Clean Architecture principles. 
-	The backend was developed using .NET 8 and C\#, while the frontend was built as a Single Page Application (SPA) with React and TypeScript. 
-	The system features a robust security framework, including JWT authentication with Refresh Token rotation (HttpOnly cookies), IP-based rate limiting, and Friendly CAPTCHA protection for public endpoints. 
-	To ensure high availability and responsiveness, the solution incorporates asynchronous messaging via RabbitMQ and MassTransit for automated email and WhatsApp notifications. 
-	Data integrity and traceability are managed through Entity Framework Core, the Unit of Work pattern, and an automated Audit Log system.
+Pharmacovigilance in Cuba relies on the timely reporting of adverse events following immunization, yet the Finlay Vaccine Institute lacked a web-based system to automate citizen self-reporting and medical review management. This work presents a system composed of a secure REST API and a responsive SPA, developed under Clean Architecture principles with .NET 8 and React with TypeScript. The solution integrates JWT authentication with token rotation, role-based authorization, CAPTCHA, rate limiting, and asynchronous notifications via RabbitMQ. The system was validated through black-box functional testing, load testing with k6 —achieving a throughput of 36.8 req/s with 100 concurrent users—, a Lighthouse audit scoring 97/100 in performance and 98/100 in accessibility, and usability testing with a SUS score of 90.0/100. Results confirm that the system operates correctly under concurrent load and provides a satisfactory user experience for the evaluated profiles.
+
+\vspace{0.5cm}
+\noindent\textbf{Keywords:} pharmacovigilance, adverse events following immunization, Clean Architecture, .NET, React, JWT, RabbitMQ, performance testing, usability, Lighthouse.
 \end{abstract}

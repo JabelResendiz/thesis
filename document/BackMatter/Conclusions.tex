@@ -1,37 +1,30 @@
 \begin{conclusions}
-   
-% El desarrollo del sistema de autorreporte de eventos adversos a vacunas para el Instituto Finlay de Vacunas permitió materializar los objetivos planteados al inicio de este trabajo. A continuación se sintetizan los principales logros alcanzados:
 
-% \begin{itemize}
-%     \item \textbf{Se diseñó e implementó una arquitectura limpia en capas} que separa el dominio, la aplicación, la infraestructura y la presentación. Esta arquitectura permitió migrar entre proveedores de correo electrónico sin modificar la lógica de negocio e incorporar nuevos mecanismos de notificación sin afectar los casos de uso existentes.
-
-%     \item \textbf{Se desarrolló una API REST segura} con autenticación basada en JWT con refresh tokens en cookies HttpOnly, autorización por roles, protección contra ataques automatizados mediante CAPTCHA y rate limiting, y validación de solicitudes en dos niveles —formato y reglas de negocio—.
-
-%     \item \textbf{Se construyó un sistema de notificaciones asíncrono} que desacopla el envío de correos de la lógica de negocio mediante RabbitMQ, lo que permitió que el usuario reciba respuesta inmediata mientras las notificaciones se procesan en segundo plano.
-
-%     \item \textbf{Se implementó una interfaz de usuario responsiva} que permite a la población reportar eventos adversos sin autenticación previa, y al personal del IFV gestionar revisiones y asignaciones según su perfil, con validación en tiempo real y almacenamiento seguro del token de acceso.
-
-%     \item \textbf{Se contenerizó la solución con Docker} y se desplegó en Railway y Vercel para facilitar las pruebas remotas por parte de los investigadores del IFV, con la misma configuración prevista para la migración a servidores físicos institucionales.
-% \end{itemize}
-
-% La experiencia adquirida a lo largo de este proyecto abarcó desde el análisis de requisitos con expertos del dominio hasta la implementación de mecanismos de seguridad con fundamento criptográfico, pasando por la selección de tecnologías adecuadas al contexto cubano. El sistema resultante constituye una base funcional sobre la cual el Instituto Finlay puede construir las próximas iteraciones que se describen a continuación.
-
-
-El desarrollo del sistema permitió materializar los objetivos planteados al inicio de este trabajo. Los principales logros alcanzados fueron:
+El sistema desarrollado cumple con los objetivos trazados al inicio de este trabajo, integrando en un producto funcional las necesidades de farmacovigilancia del Instituto Finlay de Vacunas. 
+La validación realizada permite afirmar que:
 
 \begin{itemize}
-    \item \textbf{Una arquitectura limpia en capas} que separa el dominio, la aplicación, la infraestructura y la presentación, y permitió migrar entre proveedores de correo sin modificar la lógica de negocio.
+    \item \textbf{La arquitectura en capas demostró su valor práctico} al permitir la migración entre proveedores de correo sin modificar la lógica de negocio, reduciendo el acoplamiento entre componentes.
 
-    \item \textbf{Una API REST segura} con autenticación basada en JWT, autorización por roles, CAPTCHA, rate limiting y validación en dos niveles.
+    \item \textbf{La seguridad implementada supera los requisitos mínimos} para un sistema de este tipo: autenticación JWT con rotación de tokens, autorización por roles, CAPTCHA, rate limiting y validación en dos niveles. La necesidad de desactivar temporalmente el CAPTCHA y el rate limiting durante las pruebas de carga confirmó que estos mecanismos frenan efectivamente las operaciones automatizadas.
 
-    \item \textbf{Un sistema de notificaciones asíncrono} que desacopla el envío de correos mediante RabbitMQ, permitiendo que el usuario reciba respuesta inmediata.
+    \item \textbf{El sistema de notificaciones asíncrono} basado en RabbitMQ desacopla correctamente el envío de correos, permitiendo que el usuario reciba respuesta inmediata mientras el sistema procesa las notificaciones en segundo plano.
 
-    \item \textbf{Una interfaz de usuario responsiva} para que la población reporte eventos adversos y el personal del IFV gestione revisiones y asignaciones según su perfil.
+    \item \textbf{La interfaz de usuario obtuvo un puntaje SUS de 90.0/100} (categoría ``excelente''), con una curva de aprendizaje baja para los perfiles evaluados. Queda pendiente la validación con médicos y jefes municipales.
 
-    \item \textbf{La contenerización de la solución con Docker} y su despliegue en Railway y Vercel, con la misma configuración prevista para servidores físicos institucionales.
+    \item \textbf{Las pruebas de rendimiento establecieron que el sistema soporta hasta 70 usuarios concurrentes} sin degradación en la creación de reportes, y que la búsqueda por notificación mantiene medianas inferiores a 250 ms incluso con $10^4$ reportes acumulados.
+
+    \item \textbf{La calidad web del frontend} alcanzó puntuaciones de 97/100 en rendimiento y 98/100 en accesibilidad en escritorio, con oportunidades de mejora en la optimización de recursos estáticos para dispositivos móviles.
 \end{itemize}
 
-La experiencia abarcó desde el análisis de requisitos con expertos del dominio hasta la implementación de mecanismos de seguridad con fundamento criptográfico, pasando por la selección de tecnologías adecuadas al contexto cubano. El sistema resultante constituye una base funcional sobre la cual el Instituto Finlay puede construir las próximas iteraciones.
+A pesar de estos logros, el sistema presenta limitaciones que deben reconocerse:
 
+\begin{itemize}
+    \item Los servicios de prototipado EmailJS y OpenWA deberán ser reemplazados por soluciones institucionales antes de la puesta en producción.
+    \item Las pruebas de usabilidad no cubrieron a médicos ni jefes municipales, por lo que el puntaje SUS solo es representativo de ciudadanos y administradores.
+    \item Las pruebas de rendimiento transcurrieron sobre un entorno con recursos limitados y red hotspot, por lo que los umbrales obtenidos constituyen cotas inferiores conservadoras.
+    \item La auditoría Lighthouse identificó oportunidades de optimización de recursos estáticos —imágenes, JavaScript no utilizado y estilos— que afectan el rendimiento en dispositivos móviles.
+    \item La funcionalidad de duplicados descarta la copia sin fusionar datos adicionales que podrían enriquecer el reporte original.
+\end{itemize}
 
 \end{conclusions}

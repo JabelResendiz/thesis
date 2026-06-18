@@ -1,18 +1,22 @@
 \begin{recomendations}
 \label{ref:recomendations}
-    
-Más allá de los logros alcanzados, el proyecto deja abiertas varias líneas de evolución que permitirán al Instituto Finlay de Vacunas y a los desarrolladores que den continuidad al sistema llevarlo a su pleno potencial operativo. Se proponen las siguientes recomendaciones:
+
+Frente a las limitaciones identificadas, las siguientes acciones permitirán llevar el sistema a su pleno potencial operativo:
 
 \begin{enumerate}
-    \item \textbf{Migración a servidores físicos del Instituto Finlay.} Se recomienda al equipo de infraestructura del IFV trasladar el sistema desde los entornos de desarrollo (Railway y Vercel) a los servidores institucionales, utilizando la misma configuración de contenedores Docker y variables de entorno ya desarrollada. Esta migración garantizará el control sobre los datos de farmacovigilancia y eliminará la dependencia de plataformas externas.
+    \item \textbf{Migrar los canales de notificación a producción.} Reemplazar EmailJS y OpenWA por un servidor SMTP institucional y la API oficial de WhatsApp Business, incorporando SMS como canal complementario para usuarios sin datos móviles.
 
-    \item \textbf{Desarrollo de una aplicación móvil nativa.} Se recomienda al equipo de desarrollo evaluar la creación de una aplicación para iOS y Android que aproveche notificaciones push, acceso sin conexión a internet y una experiencia optimizada para pantallas táctiles. La API actual ya soporta esta evolución sin requerir modificaciones en el backend.
+    \item \textbf{Completar las pruebas de usabilidad con médicos y jefes municipales.} Aplicar el recorrido cognitivo y el cuestionario SUS a al menos 3 participantes de cada perfil en sesiones presenciales, registrando tiempos de ejecución y tasa de errores.
 
-    \item \textbf{Ampliación de los canales de notificación.} Se recomienda migrar progresivamente los servicios de notificación de prototipado a producción: un servidor SMTP institucional para el correo electrónico y la API oficial de WhatsApp Business para la mensajería. Adicionalmente, se sugiere incorporar SMS como canal complementario para alcanzar a usuarios sin acceso a datos móviles.
+    \item \textbf{Replicar las pruebas de rendimiento en infraestructura institucional.} Ejecutar nuevamente las pruebas de carga sobre los servidores físicos del IFV para obtener umbrales reales, sin las limitaciones del entorno de desarrollo.
 
-    \item \textbf{Fusión inteligente de duplicados:} Actualmente, al confirmar un duplicado, el sistema descarta la copia incluso si contiene datos adicionales que el original no tiene. Una mejora futura consistiría en implementar una estrategia de fusión que, al confirmar el duplicado, preserve los datos únicos de la copia en el reporte original, siempre bajo supervisión del jefe de vacunación.
+    \item \textbf{Optimizar los recursos estáticos del frontend.} Aplicar las mejoras detectadas por Lighthouse: compresión de imágenes a formatos WebP, eliminación de JavaScript no utilizado y precarga de estilos críticos.
+
+    \item \textbf{Implementar fusión inteligente de duplicados.} Al confirmar un duplicado, preservar los datos únicos de la copia en el reporte original, siempre bajo supervisión del jefe de vacunación.
+
+    \item \textbf{Migrar a servidores físicos del Instituto Finlay.} Trasladar el sistema desde Railway y Vercel a los servidores institucionales utilizando la misma configuración de contenedores Docker, garantizando el control sobre los datos de farmacovigilancia.
+
+    \item \textbf{Desarrollar una aplicación móvil nativa.} Evaluar la creación de una aplicación para iOS y Android que aproveche notificaciones push y acceso sin conexión, apoyándose en la API actual sin requerir modificaciones.
 \end{enumerate}
-
-Estas recomendaciones se dirigen tanto al personal técnico del IFV encargado de la infraestructura y el desarrollo como a los directivos responsables de autorizar los contratos de servicios y la asignación de recursos necesarios para cada etapa.
 
 \end{recomendations}

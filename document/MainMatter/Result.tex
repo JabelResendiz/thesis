@@ -76,14 +76,13 @@ CP12 & Consulta de número de notificación inexistente & Número no registrado 
 
 \subsection{Evidencias de ejecución}
 
+Esta sección presenta capturas de pantalla que evidencian la ejecución correcta de los principales flujos del sistema, validando la interacción entre el usuario y la interfaz.
 
-En esta sección se presentan capturas de pantalla que evidencian la ejecución correcta de los principales flujos del sistema, validando la interacción entre el usuario y la interfaz, así como la respuesta del servidor en tiempo real.
-
-Cada flujo funcional se documenta de manera secuencial, permitiendo demostrar de forma estructurada el comportamiento integral del sistema de extremo a extremo.
+Cada flujo funcional aparece documentado de manera secuencial, lo que permite demostrar de forma estructurada el comportamiento integral del sistema.
 
 \subsubsection{Flujo completo del manejo de reportes ESAVI}
 
-Este flujo describe el ciclo completo de gestión de un reporte ESAVI, desde su creación por el usuario hasta su evaluación final por el médico evaluador y la consulta del estado actualizado del caso, como se muestra en la Figura~\ref{fig:esavi-flow}.
+Este flujo describe el ciclo completo de gestión de un reporte ESAVI, desde su creación por el usuario hasta su evaluación final por el médico evaluador y la consulta del estado actualizado del caso, tal como aparece en la Figura~\ref{fig:esavi-flow}.
 
 \begin{figure}[htpb]
     \centering
@@ -138,7 +137,7 @@ Este flujo describe el ciclo completo de gestión de un reporte ESAVI, desde su 
 
 \subsubsection{Gestión de acceso y registro de médico evaluador}
 
-Este flujo, ilustrado en la Figura \ref{fig:esavi-flow}, abarca el registro de un médico evaluador por parte del jefe municipal (Figura \ref{fig:esavi-flow}a), el envío de una invitación por correo electrónico (Figura \ref{fig:esavi-flow}b), el establecimiento de contraseña (Figura \ref{fig:esavi-flow}c) y el posterior inicio de sesión en el sistema (Figura \ref{fig:esavi-flow}d), garantizando un acceso controlado al módulo de revisión de reportes.
+Este flujo, ilustrado en la Figura \ref{fig:esavi-flow2}, abarca el registro de un médico evaluador por parte del jefe municipal (Figura \ref{fig:esavi-flow2}a), el envío de una invitación por correo electrónico (Figura \ref{fig:esavi-flow2}b), el establecimiento de contraseña (Figura \ref{fig:esavi-flow2}c) y el posterior inicio de sesión en el sistema (Figura \ref{fig:esavi-flow2}d), garantizando un acceso controlado al módulo de revisión de reportes.
 
 
 \begin{figure}[H]
@@ -177,7 +176,7 @@ Este flujo, ilustrado en la Figura \ref{fig:esavi-flow}, abarca el registro de u
     \end{subfigure}
 
     \caption{Flujo de registro y activación de un médico evaluador en el sistema ESAVI.}
-    \label{fig:esavi-flow}
+    \label{fig:esavi-flow2}
 \end{figure}
 
 
@@ -203,25 +202,31 @@ En conjunto, las pruebas funcionales demuestran que las funcionalidades crítica
 
 \subsection{Entorno de Pruebas}
 
-Las pruebas de rendimiento se ejecutaron con k6, herramienta de código abierto para pruebas de carga. 
-El backend se desplegó en una máquina con sistema operativo Linux Ubuntu 22.04, procesador Intel Core i5 de 4 núcleos a 2.5 GHz, 8 GB de RAM y almacenamiento SSD de 256 GB. 
-k6 se ejecutó en una máquina cliente independiente con Windows 11, procesador Intel Core i7 de 8 núcleos a 3.0 GHz y 16 GB de RAM, conectadas mediante red hotspot a 2.4 GHz. 
-Esta separación garantiza que las mediciones no se vean afectadas por competencia de recursos entre el cliente de pruebas y el servidor.
+Las pruebas de rendimiento emplearon k6, herramienta de código abierto para pruebas de carga.
+El servidor operó sobre una máquina con Linux Ubuntu 22.04, procesador Intel Core i5 de 4 núcleos a 2.5 GHz, 8 GB de RAM y almacenamiento SSD de 256 GB.
+k6 corrió sobre una máquina cliente independiente con Windows 11, procesador Intel Core i7 de 8 núcleos a 3.0 GHz y 16 GB de RAM, conectadas mediante red hotspot a 2.4 GHz.
+Esta separación garantiza que las mediciones no sufran interferencias por competencia de recursos entre el cliente de pruebas y el servidor.
 
-Se emplearon datos simulados que representan solicitudes realistas con una carga útil equivalente a la del sistema en producción. 
+Los datos empleados fueron simulados, con una carga útil equivalente a la del sistema en producción.
 Las métricas analizadas fueron: latencia promedio y percentil 95 (\texttt{http\_req\_duration}), throughput (\texttt{http\_reqs}) y tasa de solicitudes exitosas (status 201). 
-Se definió como umbral de tiempo aceptable 3000 ms y como criterio de fallo funcional cualquier código de estado distinto de 2XX.
+El umbral de tiempo aceptable estuvo fijado en 3000 ms y cualquier código de estado distinto de 2XX contó como fallo funcional.
 
 \subsection{Estrategia de pruebas}
 
-Se aplicaron dos enfoques complementarios. 
+La estrategia combinó dos enfoques complementarios.
 Por un lado, pruebas de estrés sobre las operaciones públicas de creación y búsqueda de reportes, por ser los que recibirán el mayor volumen de tráfico al estar expuestos a todos los ciudadanos. 
 El resto de operaciones —consulta de pendientes, asignación a médicos, evaluación y dashboard— están protegidas por autenticación y su concurrencia está acotada por el número de usuarios registrados en cada rol, que no varía en períodos cortos de tiempo. 
 Por otro lado, un escenario combinado que integra todos los perfiles de uso con pausas realistas, para validar el comportamiento del sistema en condiciones normales de operación.
 
 \subsubsection{Creación de Reporte de ESAVI}
 
-Para evaluar el rendimiento de la creación de reportes se diseñó una prueba de estrés incremental: los usuarios virtuales envían solicitudes de forma ininterrumpida, sin pausas, con el objetivo de llevar al sistema al límite e identificar el punto en que la latencia supera los 3000 ms o aparecen fallos. Cada solicitud contiene un reporte completo con 13 vacunas y 10 lotes por vacuna. La prueba se configuró con etapas de rampa (1 min de subida, 3 min estable, 1 min de bajada) y se ejecutó de forma independiente para 5, 10, 30, 50, 70, 80, 100, 150 y 200 VUs. Los detalles de configuración, generación de datos y código k6 se presentan en el Anexo \ref{anexo:k6-creacion}.
+La evaluación del rendimiento de la creación de reportes empleó una prueba de estrés incremental: los usuarios virtuales envían solicitudes de forma ininterrumpida, sin pausas, con el objetivo de llevar al sistema al límite e identificar el punto en que la latencia supera los 3000 ms o aparecen fallos.
+Cada solicitud contiene un reporte completo con 13 vacunas y 10 lotes por vacuna. 
+La prueba adoptó etapas de rampa (1 min de subida, 3 min estable, 1 min de bajada) y repitió de forma independiente para 5, 10, 30, 50, 70, 80, 100, 150 y 200 VUs.
+Los detalles de configuración, generación de datos y código k6 aparecen en el Anexo \ref{anexo:k6-creacion}.
+
+Las métricas mostradas a continuación corresponden al tiempo de procesamiento del servidor, que en todos los niveles de carga representó más del 96\% de la latencia total. 
+El Anexo \ref{anexo:tabla_creacion_completa} recoge el desglose completo de los componentes de red.
 
 Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fig:creacion-porcentaje} muestran la evolución de las métricas conforme aumenta la carga concurrente.
 
@@ -245,13 +250,13 @@ Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fi
                 legend style={font=\tiny},
             ]
                 \addplot[mark=square, blue, thick] coordinates {
-                    (5, 106.6) (10, 188.6) (30, 304.1) (50, 546.2)
-                    (70, 975.6) (80, 1882.1) (100, 2246.9) (150, 4721.3) (200, 5404.2)
+                    (5, 102.7) (10, 182.5) (30, 298.5) (50, 530.8)
+                    (70, 952.0) (80, 1810.4) (100, 2228.2) (150, 4703.1) (200, 5393.7)
                 };
                 \addlegendentry{Promedio}
                 \addplot[mark=triangle, red, thick] coordinates {
-                    (5, 177.4) (10, 327.7) (30, 627.9) (50, 1192.8)
-                    (70, 2214.1) (80, 2956.2) (100, 4056.4) (150, 6728.2) (200, 8011.1)
+                    (5, 172.8) (10, 315.8) (30, 623.7) (50, 1158.1)
+                    (70, 2147.0) (80, 2851.3) (100, 4033.2) (150, 6706.2) (200, 8005.9)
                 };
                 \addlegendentry{p(95)}
                 \addplot[black, dashed, thick] coordinates {(5,3000) (200,3000)};
@@ -262,7 +267,7 @@ Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fi
     \hfill
     \begin{minipage}{0.40\textwidth}
         \small
-        Los resultados muestran tres zonas de comportamiento. Hasta 70 VUs, la latencia se mantiene por debajo de 1000 ms con el 100\% de las solicitudes respondiendo en menos de 3000 ms. A partir de 80 VUs aparece el primer punto de degradación: la latencia asciende a 1882 ms. Con 100 VUs alcanza 2246 ms, y con 200 VUs supera los 5400 ms.
+        Los resultados, medidos como tiempo de procesamiento del servidor, muestran tres zonas de comportamiento. Hasta 70 VUs, la latencia permanece por debajo de 1000 ms con el 100\% de las solicitudes respondiendo en menos de 3000 ms. A partir de 80 VUs surge el primer punto de degradación: la latencia asciende a 1810 ms. Con 100 VUs alcanza 2228 ms, y con 200 VUs supera los 5393 ms.
     \end{minipage}
     \caption{Evolución de la latencia según usuarios concurrentes.}
     \label{fig:creacion-latencia}
@@ -300,8 +305,8 @@ Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fi
     \hfill
     \begin{minipage}{0.40\textwidth}
         \small
-        El throughput se mantuvo estable entre 20 y 26 req/s en todos los niveles de carga. Esto indica que el sistema alcanzó su capacidad máxima de procesamiento sin degradar la tasa de solicitudes exitosas: los usuarios adicionales no aumentan el rendimiento, sino que se traducen en mayor latencia.
-    \end{minipage}
+        El throughput permaneció estable entre 20 y 26 req/s en todos los niveles de carga. Esto indica que el sistema alcanzó su capacidad máxima de procesamiento sin degradar la tasa de solicitudes exitosas: los usuarios adicionales no aumentan el rendimiento, sino que generan mayor latencia.
+\end{minipage}
     \caption{Evolución del throughput según usuarios concurrentes.}
     \label{fig:creacion-throughput}
 \end{figure}
@@ -342,21 +347,31 @@ Las Figuras \ref{fig:creacion-latencia}, \ref{fig:creacion-throughput} y \ref{fi
     \hfill
     \begin{minipage}{0.40\textwidth}
         \small
-        Hasta 70 VUs, el 100\% de las solicitudes responde en menos de 3000 ms. A partir de 80 VUs este porcentaje comienza a caer: 95.8\% con 80 VUs, 74.8\% con 100 VUs, y se desploma al 19.1\% y 10.7\% con 150 y 200 VUs respectivamente. En ningún momento se registraron errores funcionales (100\% status 201), lo que confirma que la degradación es atribuible a las limitaciones del entorno de pruebas y no a deficiencias del código.
+        Hasta 70 VUs, el 100\% de las solicitudes responde en menos de 3000 ms. 
+        A partir de 80 VUs este porcentaje comienza a caer: 95.8\% con 80 VUs, 74.8\% con 100 VUs, y desciende al 19.1\% y 10.7\% con 150 y 200 VUs respectivamente. 
+        En ningún momento ocurrieron errores funcionales (100\% status 201).
     \end{minipage}
     \caption{Porcentaje de solicitudes por debajo del umbral de 3000 ms.}
     \label{fig:creacion-porcentaje}
 \end{figure}
 
-La prueba de carga sobre el endpoint de creación de reportes permite concluir que el sistema ofrece un rendimiento sólido bajo concurrencia moderada, con una zona de operación óptima donde la experiencia de usuario se mantiene fluida y sin degradación. La prueba simula un escenario más exigente que el uso real —cada usuario virtual envía solicitudes de forma ininterrumpida—, por lo que los resultados representan una cota inferior conservadora de la capacidad real del sistema.
 
-Al superar el umbral de operación óptima, la latencia comienza a degradarse progresivamente, aunque sin comprometer la funcionalidad: en ningún nivel de carga se registraron errores, lo que confirma que las limitaciones observadas son atribuibles al entorno de pruebas y no a deficiencias del código desarrollado.
+La prueba de carga sobre la creación de reportes permite concluir que el sistema ofrece un rendimiento sólido bajo concurrencia moderada, con una zona de operación óptima hasta 70 VUs.
+La estabilización del throughput alrededor de 25 req/s, junto con el crecimiento de la latencia a partir de los 80 VUs, indica que el sistema alcanzó su punto de saturación. 
+Los recursos de CPU y las operaciones de entrada/salida operan al máximo, y las solicitudes adicionales quedan acumuladas en cola de espera.
+
+El desglose de los componentes de latencia —donde el procesamiento del servidor representa más del 96\% del total y la conexión de red menos de 5.4 ms— descarta la red hotspot como cuello de botella y confirma que la saturación proviene exclusivamente del servidor.
+La prueba simula un escenario más exigente que el uso real, por lo que los resultados representan una cota inferior conservadora de la capacidad del sistema. 
 
 
 \subsubsection{Búsqueda de Reporte por Número de Notificación}
 
 
-Para evaluar el rendimiento de la búsqueda por notificación se diseñó una prueba de estrés incremental variando dos factores: el tamaño de la base de datos y la concurrencia. Al igual que en la creación, los usuarios virtuales envían solicitudes de forma ininterrumpida, sin pausas, para identificar el punto de saturación. Se pobló la base de datos con 1,000, 4,000, 10,000, 50,000 y 100,000 reportes, y para cada nivel se ejecutaron pruebas independientes con 5, 10, 30, 50, 70, 100, 150 y 200 VUs, usando la misma configuración de rampa (1 min subida, 3 min estable, 1 min bajada). Cada solicitud busca un número de notificación aleatorio extraído de un archivo CSV con los identificadores reales de los reportes almacenados. Los detalles de configuración, generación de datos y código k6 se presentan en el Anexo \ref{anexo:k6-busqueda}.
+La evaluación del rendimiento de la búsqueda por notificación empleó una prueba de estrés incremental variando dos factores: el tamaño de la base de datos y la concurrencia. 
+Al igual que en la creación, los usuarios virtuales envían solicitudes de forma ininterrumpida, sin pausas, para identificar el punto de saturación. 
+La base de datos recibió 1,000, 4,000, 10,000, 50,000 y 100,000 reportes, y para cada nivel ejecutaron pruebas independientes con 5, 10, 30, 50, 70, 100, 150 y 200 VUs, usando la misma configuración de rampa (1 min subida, 3 min estable, 1 min bajada).
+Cada solicitud busca un número de notificación aleatorio extraído de un archivo CSV con los identificadores reales de los reportes almacenados. 
+Los detalles de configuración, generación de datos y código k6 aparecen en el Anexo \ref{anexo:k6-busqueda}.
 
 Las Figuras \ref{fig:busqueda-latencia} y \ref{fig:busqueda-porcentaje} muestran la evolución de las métricas conforme aumenta la carga concurrente para cada tamaño de base de datos.
 
@@ -421,7 +436,8 @@ Las Figuras \ref{fig:busqueda-latencia} y \ref{fig:busqueda-porcentaje} muestran
     \begin{minipage}{0.40\textwidth}
         \small
          
-Hasta 70 VUs, todas las curvas se mantienen agrupadas por debajo de 1000 ms, sin diferencias significativas entre tamaños de base de datos. A partir de 100 VUs las curvas comienzan a separarse: $10^3$, $4 \times 10^3$ y $10^4$ reportes se mantienen por debajo del umbral de 3000 ms incluso con 200 VUs, mientras que $5 \times 10^4$ lo supera con 200 VUs (3250 ms) y $10^5$ lo hace desde los 150 VUs (3100 ms). Esto evidencia que el volumen de datos impacta progresivamente en la latencia bajo alta concurrencia.
+Hasta 70 VUs, todas las curvas permanecen agrupadas por debajo de 1000 ms, sin diferencias significativas entre tamaños de base de datos. 
+A partir de 100 VUs las curvas comienzan a separarse: $10^3$, $4 \times 10^3$ y $10^4$ reportes permanecen por debajo del umbral de 3000 ms incluso con 200 VUs, mientras que $5 \times 10^4$ lo supera con 200 VUs (3250 ms) y $10^5$ lo hace desde los 150 VUs (3100 ms). Esto evidencia que el volumen de datos impacta progresivamente en la latencia bajo alta concurrencia.
     \end{minipage}
     \caption{Evolución del p(95) de latencia según usuarios concurrentes para 1,000, 4,000, 10,000, 50,000 y 100,000 reportes.}
     \label{fig:busqueda-latencia}
@@ -480,20 +496,28 @@ Hasta 70 VUs, todas las curvas se mantienen agrupadas por debajo de 1000 ms, sin
     \hfill
     \begin{minipage}{0.40\textwidth}
         \small
-        Con $10^3$, $4 \times 10^3$ y $10^4$ reportes, más del 97\% de las solicitudes responde por debajo de 3000 ms incluso con 200 VUs. Con $5 \times 10^4$ y $10^5$ reportes, el porcentaje desciende al 94.5\% y 92.3\% respectivamente con 200 VUs, manteniéndose siempre por encima del 90\%. En ningún nivel se registraron errores funcionales (100\% status 202).
+        Con $10^3$, $4 \times 10^3$ y $10^4$ reportes, más del 97\% de las solicitudes responde por debajo de 3000 ms incluso con 200 VUs. Con $5 \times 10^4$ y $10^5$ reportes, el porcentaje desciende al 94.5\% y 92.3\% respectivamente con 200 VUs, manteniéndose siempre por encima del 90\%. 
+        En ningún nivel ocurrieron errores funcionales (100\% status 202).
     \end{minipage}
     \caption{Porcentaje de solicitudes por debajo del umbral de 3000 ms según usuarios concurrentes y tamaño de base de datos.}
     \label{fig:busqueda-porcentaje}
 \end{figure}
 
 
-Los resultados confirman que la búsqueda por número de notificación es robusta tanto frente a la concurrencia como al crecimiento del volumen de datos. En todos los niveles evaluados —hasta 200 VUs y $10^5$ reportes— el sistema mantuvo una tasa de éxito del 100\% (status 202), sin registrar errores funcionales.
+Los resultados confirman que la búsqueda por número de notificación es robusta tanto frente a la concurrencia como al crecimiento del volumen de datos. 
+La consulta está respaldada por un índice B-Tree sobre la columna \texttt{notification\_number}, lo que explica por qué el aumento de reportes acumulados no afecta drásticamente la latencia.
+En todos los niveles evaluados —hasta 200 VUs y $10^5$ reportes— el sistema mantuvo una tasa de éxito del 100\% (status 202), sin registrar errores funcionales.
 
 Incluso en las condiciones más exigentes, más del 90\% de las solicitudes respondió por debajo del umbral de 3000 ms, lo que evidencia que la búsqueda está fortalecida para operar bajo alta concurrencia con grandes volúmenes de reportes acumulados. La degradación observada es progresiva y predecible, sin caídas abruptas, lo que permite anticipar el comportamiento del sistema ante escenarios de crecimiento futuro.
 
 \subsubsection{Escenario Combinado}
 
-Para validar el comportamiento del sistema bajo una carga de trabajo realista con múltiples operaciones conviviendo, se diseñó un escenario con tres perfiles de tráfico simultáneos: tráfico público (75 VUs, alternando 65\% creación de reportes y 35\% búsqueda por notificación, con pausas de 1 a 3 segundos), tráfico de jefes municipales (10 VUs, consultando el dashboard y asignando reportes a médicos evaluadores, con pausas de 2 a 6 segundos) y tráfico de médicos (15 VUs, revisando su bandeja de asignaciones y evaluando reportes, con pausas de 1 a 4 segundos). Las métricas se aislaron mediante tags para obtener resultados independientes por cada tipo de operación. Los detalles del script se presentan en el Anexo \ref{anexo:k6-combinado}.
+La validación del comportamiento del sistema bajo una carga de trabajo realista con múltiples operaciones conviviendo empleó un escenario con tres perfiles de tráfico simultáneos. 
+El perfil público aportó 75 VUs alternando 65\% creación de reportes y 35\% búsqueda por notificación, con pausas de 1 a 3 segundos. 
+Los jefes municipales aportaron 10 VUs consultando el dashboard y asignando reportes a médicos, con pausas de 2 a 6 segundos. 
+Los médicos aportaron 15 VUs revisando su bandeja de asignaciones y evaluando reportes, con pausas de 1 a 4 segundos.
+
+Las etiquetas permitieron aislar las métricas para obtener resultados independientes por cada tipo de operación. Los detalles del script aparecen en el Anexo \ref{anexo:k6-combinado}.
 
 \begin{figure}[H]
     \centering
@@ -633,7 +657,8 @@ Las operaciones de escritura presentan la mayor latencia del sistema. Crear repo
     \hfill
     \begin{minipage}{0.40\textwidth}
         \small
-Las operaciones de lectura son significativamente más rápidas y compactas que las de escritura. Buscar reporte por notificación es la consulta más eficiente, con una mediana de 236 ms. El resto de las lecturas presentan medianas entre 222 ms y 368 ms, con pocos valores atípicos. Todos los p(95) se mantienen por debajo de los 1400 ms, muy lejos del umbral de 3000 ms, y el 100\% de las solicitudes fueron exitosas.
+Las operaciones de lectura son significativamente más rápidas y compactas que las de escritura. Buscar reporte por notificación es la consulta más eficiente, con una mediana de 236 ms. El resto de las lecturas presentan medianas entre 222 ms y 368 ms, con pocos valores atípicos. 
+Todos los p(95) permanecen por debajo de los 1400 ms, muy lejos del umbral de 3000 ms, y el 100\% de las solicitudes fueron exitosas.
     \end{minipage}
     \caption{Distribución de latencias en operaciones de lectura: búsqueda de reportes, consulta de pendientes, médicos, asignaciones y dashboard.}
     \label{fig:boxplot-query}
@@ -686,23 +711,28 @@ Outliers & 80 & 25 & 8 & 4 & 12 & 18 & 4 & 4 \\
 \end{table}
 
 
-La Tabla \ref{tab:metricas-endpoints} desglosa las métricas por operación. Las lecturas son un 73.8\% más rápidas que las escrituras, y la creación de reportes es la operación más costosa, con una mediana 3.8 veces superior a la búsqueda. Los valores atípicos se concentran en las escrituras, como es esperable por su mayor carga de procesamiento. 
+La Tabla \ref{tab:metricas-endpoints} desglosa las métricas por operación. Las lecturas son un 73.8\% más rápidas que las escrituras, y la creación de reportes es la operación más costosa, con una mediana 3.8 veces superior a la búsqueda. 
+Los valores atípicos aparecen concentrados en las escrituras, como es esperable por su mayor carga de procesamiento. 
 En conjunto, el sistema demuestra capacidad para operar bajo carga concurrente con múltiples perfiles de usuario, manteniendo latencias controladas y sin interferencia entre operaciones.
 
 \subsection{Comparación entre pruebas de estrés y escenario realista}
 
-Las pruebas individuales de creación y búsqueda se ejecutaron sin pausas entre solicitudes, simulando un escenario de estrés sostenido donde cada usuario virtual envía peticiones de forma ininterrumpida. El escenario combinado, en cambio, incorporó pausas aleatorias de 1 a 6 segundos para reflejar el ritmo real de interacción humana. Esta diferencia metodológica explica las variaciones observadas en los resultados: el throughput global del escenario combinado (36.8 req/s) supera al de las pruebas individuales (20-26 req/s), y las latencias a cargas equivalentes son menores cuando las solicitudes se espacian. Ambos enfoques son complementarios: las pruebas sin pausas establecen el límite de estrés que el sistema tolera sin fallar, mientras que el escenario combinado confirma que, en condiciones reales de operación, el rendimiento es superior y la experiencia del usuario se mantiene fluida.
+Las pruebas individuales de creación y búsqueda transcurrieron sin pausas entre solicitudes, simulando un escenario de estrés sostenido donde cada usuario virtual envía peticiones de forma ininterrumpida. 
+El escenario combinado, en cambio, incorporó pausas aleatorias de 1 a 6 segundos para reflejar el ritmo real de interacción humana. 
+Esta diferencia metodológica explica las variaciones observadas en los resultados: el throughput global del escenario combinado (36.8 req/s) supera al de las pruebas individuales (20-26 req/s), y las latencias a cargas equivalentes disminuyen al espaciar las solicitudes.
+Ambos enfoques resultan complementarios: las pruebas sin pausas establecen el límite de estrés que el sistema tolera sin fallar, mientras que el escenario combinado confirma que, en condiciones reales de operación, el rendimiento es superior y la fluidez del sistema permanece.
 
 
 
 \section{Validación del Entorno de Producción y Calidad Web}
 
-Esta validación verifica la calidad del sistema una vez desplegado en un entorno real, considerando la experiencia del usuario final bajo distintas condiciones de conectividad. Para ello se empleó PageSpeed Insights, herramienta de Google que ejecuta el motor de auditoría Lighthouse y evalúa la calidad web con base en las métricas definidas en Web Vitals \cite{googlewebdev}. 
-El sistema, desplegado en Vercel, se auditó simulando dos escenarios: un Moto G Power con red 4G lenta (móvil) y una estación de trabajo con conexión de alta velocidad (escritorio).
+Esta validación verifica la calidad del sistema una vez desplegado en un entorno real, considerando la experiencia del usuario final bajo distintas condiciones de conectividad. 
+La auditoría utilizó PageSpeed Insights, herramienta de Google que ejecuta el motor Lighthouse y evalúa la calidad web con base en las métricas definidas en Web Vitals \cite{googlewebdev}.
+Desplegado en Vercel, simuló dos escenarios: un Moto G Power con red 4G lenta (móvil) y una estación de trabajo con conexión de alta velocidad (escritorio).
 
-A continuación, se presentan y discuten los resultados para cada categoría evaluada.
+Las secciones siguientes presentan y discuten los resultados para cada categoría evaluada.
 
-Los resultados completos de la auditoría Lighthouse para todas las páginas del sistema se presentan en el Anexo \ref{anexo:lighthouse}.
+El Anexo \ref{anexo:lighthouse} recoge los resultados completos de la auditoría Lighthouse para todas las páginas del sistema.
 
 \subsection{Rendimiento}
 
@@ -715,7 +745,7 @@ La categoría de rendimiento mide la velocidad de carga y la capacidad de respue
 
     \item \textbf{Tiempo Total de Bloqueo (TBT):} tiempo durante el cual el hilo principal del navegador permanece bloqueado e incapaz de responder a las interacciones del usuario.
 
-    \item \textbf{Índice de Velocidad (SI):} mide la rapidez con la que el contenido visible de la página se muestra progresivamente.
+    \item \textbf{Índice de Velocidad (SI):} mide la rapidez con la que el contenido visible de la página aparece progresivamente.
 
     \item \textbf{Desplazamiento Acumulado del Diseño (CLS):} cuantifica la estabilidad visual de la interfaz, reflejando los desplazamientos inesperados de los elementos durante la carga.
 \end{itemize}
@@ -752,23 +782,29 @@ Panel informativo      & 95 & 1.7 s & 2.4 s & 0 ms & 3.9 s & 0.00 \\
 \end{tabular}
 \end{table}
 
-Las tres páginas mostradas son representativas del sistema. Los resultados del resto de las páginas siguen la misma tendencia y se recogen en el Anexo \ref{anexo:lighthouse}.
+Las tres páginas mostradas son representativas del sistema. 
+El Anexo \ref{anexo:lighthouse} recoge los resultados del resto de las páginas, que siguen la misma tendencia.
 
 Los resultados en escritorio reflejan un rendimiento excepcional: las tres páginas alcanzan la puntuación máxima de 100, con métricas muy por debajo de los umbrales recomendados por Google (LCP menor a 2.5 s, CLS menor a 0.1)\cite{googlewebdev} , lo que garantiza una experiencia instantánea y sin bloqueos.
 
-En el entorno móvil, los puntajes se mantienen altos (90--96), aunque se observa un deterioro esperable por la simulación de red 4G lenta. La página principal es la más afectada, con un LCP de 2.9 s que supera ligeramente el umbral óptimo y un SI de 4.6 s que evidencia una carga progresiva más lenta. No obstante, el TBT nulo y el CLS perfecto se conservan en todas las páginas, lo que indica que la interfaz, una vez visible, responde sin demoras ni desplazamientos.
+En el entorno móvil, los puntajes persisten altos (90--96), aunque la simulación de red 4G lenta produce un deterioro esperable. 
+La página principal es la más afectada, con un LCP de 2.9 s que supera ligeramente el umbral óptimo y un SI de 4.6 s que evidencia una carga progresiva más lenta. 
+No obstante, todas las páginas mantienen el TBT nulo y el CLS perfecto, lo que indica que la interfaz, una vez visible, responde sin demoras ni desplazamientos.
 
 La auditoría de Lighthouse identificó los siguientes problemas que explican esta degradación en móvil:
 
 \begin{itemize}
     \item \textbf{Solicitudes que bloquean el renderizado:} la hoja de estilos principal (19.8 KiB) retrasa la renderización inicial en aproximadamente 300 ms. La solución pasaría por identificar y priorizar los estilos críticos necesarios para la primera visualización, difiriendo el resto.
 
-    \item \textbf{JavaScript no utilizado:} el archivo principal (131.1 KiB) contiene 54.6 KiB de código prescindible en la carga inicial. La mejora consistiría en analizar qué porciones de código requiere cada página y separarlas para que se descarguen solo cuando sean necesarias.
+    \item \textbf{JavaScript no utilizado:} el archivo principal (131.1 KiB) contiene 54.6 KiB de código prescindible en la carga inicial. 
+    La mejora consistiría en analizar qué porciones de código requiere cada página y separarlas para que descargarlas solo cuando resulten necesarias.
 
     \item \textbf{Cadena de dependencias de red:} la solicitud al backend de autenticación introduce una latencia de ruta crítica de 515 ms. La solución requeriría investigar mecanismos para reducir el tiempo de establecimiento de conexión con dicho origen.
 \end{itemize}
 
-Estas oportunidades de mejora no se corrigieron durante el desarrollo de esta tesis porque no constituyen fallas del sistema, sino optimizaciones de configuración del entorno de despliegue. Dado que los puntajes obtenidos ya son satisfactorios, se decidió priorizar la implementación de las funcionalidades principales. Su aplicación en trabajos futuros permitiría reducir el LCP móvil por debajo de 2.5 s y llevar el rendimiento por encima de 95 puntos en todos los escenarios.
+Estas oportunidades de mejora quedaron fuera del alcance de esta tesis porque no constituyen fallas del sistema, sino optimizaciones de configuración del entorno de despliegue.
+Dado que los puntajes obtenidos ya resultan satisfactorios, el desarrollo priorizó la implementación de las funcionalidades principales.
+Su aplicación en trabajos futuros permitiría reducir el LCP móvil por debajo de 2.5 s y llevar el rendimiento por encima de 95 puntos en todos los escenarios.
 
 \subsection{Accesibilidad}
 
@@ -826,7 +862,10 @@ El sistema obtuvo una puntuación uniforme de \textbf{96/100} en todas las pági
     \label{fig:mejores-practicas}
 \end{figure}
 
-La única incidencia detectada fue un mensaje de error registrado en la consola del navegador durante la renovación del token de autenticación. El servidor respondía correctamente con un código 401 cuando no existía un token válido, pero la respuesta no era capturada antes de que se imprimiera en consola. Lighthouse interpreta cualquier registro en consola como una incidencia. El problema se resolvió manejando adecuadamente la respuesta 401 antes de que llegara a la consola, lo que elevó la puntuación a 100/100.
+La única incidencia detectada fue un mensaje de error registrado en la consola del navegador durante la renovación del token de autenticación. 
+El servidor respondía correctamente con un código 401 cuando no existía un token válido, pero la respuesta no era capturada antes de imprimirse en consola.
+Lighthouse interpreta cualquier registro en consola como una incidencia. 
+El problema quedó resuelto al manejar adecuadamente la respuesta 401 antes de que llegara a la consola, lo que elevó la puntuación a 100/100.
 
 \subsection{SEO}
 
@@ -840,7 +879,8 @@ La auditoría detectó dos carencias puntuales:
     \item \textbf{Archivo robots.txt no válido:} Vercel, al no encontrar un archivo \texttt{robots.txt} en el proyecto, devuelve el \texttt{index.html} en su lugar, lo que genera errores de sintaxis en la auditoría. La solución consistiría en agregar un archivo \texttt{robots.txt} básico que indique las reglas de rastreo.
 \end{itemize}
 
-Ambos problemas son superficiales y no afectan la operatividad del sistema. Con estas dos correcciones menores se alcanzaría un puntaje superior.
+Ambos problemas son superficiales y no afectan la operatividad del sistema. 
+Con estas dos correcciones menores el puntaje alcanzaría un valor superior.
 
 El sistema cumple satisfactoriamente con los estándares de calidad web en ambos entornos, con puntuaciones de excelencia en escritorio y valores aceptables en móvil. 
 Las incidencias detectadas son superficiales y no comprometen la operatividad ni la experiencia del usuario.
@@ -848,9 +888,14 @@ Las incidencias detectadas son superficiales y no comprometen la operatividad ni
 
 \section{Pruebas de usabilidad}
 
-La usabilidad del sistema se evaluó mediante un recorrido cognitivo con 7 participantes y el cuestionario SUS (System Usability Scale). Según Nielsen, 5 usuarios son suficientes para identificar aproximadamente el 85\% de los problemas de usabilidad en una evaluación formativa \cite{nielsen2000}, y se recomiendan de 3 a 4 participantes por grupo cuando existen perfiles diferenciados.
+La evaluación de usabilidad del sistema empleó un recorrido cognitivo con 7 participantes y el cuestionario SUS (System Usability Scale).
+Según Nielsen, 5 usuarios bastan para identificar aproximadamente el 85\% de los problemas de usabilidad en una evaluación formativa \cite{nielsen2000}, y la recomendación asciende a 3 o 4 participantes por grupo cuando existen perfiles diferenciados.
 
-Dado que el sistema aún no se encuentra en producción, se trabajó con una muestra de conveniencia de dos perfiles: 5 ciudadanos (módulo público) y 2 administradores (gestión del sistema). No se consiguieron médicos ni jefes municipales para esta primera ronda. Las sesiones se realizaron de forma remota, lo que impidió registrar tiempos de ejecución y aplicar otras técnicas presenciales como el pensamiento en voz alta. Cada participante realizó tareas guiadas sin instrucciones previas y respondió el cuestionario SUS, compuesto por 10 afirmaciones con escala de Likert de 1 a 5.
+Dado que el sistema aún no está en producción, la muestra de conveniencia abarcó dos perfiles: 5 ciudadanos (módulo público) y 2 administradores (gestión del sistema). 
+No fue posible conseguir médicos ni jefes municipales para esta primera ronda. 
+Las sesiones transcurrieron de forma remota, lo que impidió registrar tiempos de ejecución y aplicar otras técnicas presenciales como el pensamiento en voz alta.
+
+Cada participante realizó tareas guiadas sin instrucciones previas y respondió el cuestionario SUS, compuesto por 10 afirmaciones con escala de Likert de 1 a 5.
 
 \subsection{Cuestionario SUS}
 
@@ -867,7 +912,8 @@ Dado que el sistema aún no se encuentra en producción, se trabajó con una mue
     \item Necesité aprender muchas cosas antes de poder usar el sistema.
 \end{enumerate}
 
-Para las afirmaciones impares (1, 3, 5, 7, 9), el puntaje es la valoración menos 1. Para las pares (2, 4, 6, 8, 10), es 5 menos la valoración. El resultado se multiplica por 2.5 para obtener una escala de 0 a 100.
+Para las afirmaciones impares (1, 3, 5, 7, 9), el puntaje es la valoración menos 1. Para las pares (2, 4, 6, 8, 10), es 5 menos la valoración. 
+Multiplicar el resultado por 2.5 produce una escala de 0 a 100.
 
 \[
 \text{SUS} = 2.5 \times \left[ \sum_{i=1,3,5,7,9} (v_i - 1) + \sum_{i=2,4,6,8,10} (5 - v_i) \right]
@@ -888,16 +934,16 @@ La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales. Las co
 \hline
 1. Usaría el sistema frecuentemente & 4 & 5 & 4 & 4 & 5 & 4 & 5 & 4.4 \\
 2. Sistema innecesariamente complejo & 1 & 1 & 2 & 1 & 1 & 2 & 1 & 1.3 \\
-3. Sistema fácil de usar & 5 & 4 & 4 & 5 & 4 & 4 & 5 & 4.4 \\
-4. Necesitaría ayuda técnica & 1 & 2 & 1 & 1 & 2 & 1 & 1 & 1.3 \\
-5. Funciones bien integradas & 4 & 5 & 4 & 4 & 5 & 4 & 5 & 4.4 \\
+3. Sistema fácil de usar & 5 & 4 & 4 & 5 & 4 & 4 & 4 & 4.3 \\
+4. Necesitaría ayuda técnica & 1 & 2 & 1 & 1 & 2 & 1 & 2 & 1.4 \\
+5. Funciones bien integradas & 4 & 5 & 4 & 4 & 5 & 4 & 4 & 4.3 \\
 6. Demasiada inconsistencia & 1 & 1 & 2 & 1 & 1 & 2 & 1 & 1.3 \\
 7. Fácil de aprender & 5 & 5 & 4 & 5 & 5 & 5 & 5 & 4.9 \\
 8. Sistema incómodo de usar & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1.0 \\
-9. Me sentí seguro al usarlo & 4 & 5 & 4 & 5 & 4 & 4 & 5 & 4.4 \\
+9. Me sentí seguro al usarlo & 4 & 5 & 4 & 5 & 4 & 4 & 4 & 4.3 \\
 10. Necesité aprender antes & 1 & 1 & 2 & 1 & 1 & 1 & 1 & 1.1 \\
 \hline
-\textbf{Puntaje SUS} & \textbf{92.5} & \textbf{90.0} & \textbf{80.0} & \textbf{92.5} & \textbf{90.0} & \textbf{82.5} & \textbf{95.0} & \textbf{89.0} \\
+\textbf{Puntaje SUS} & \textbf{92.5} & \textbf{95.0} & \textbf{80.0} & \textbf{95.0} & \textbf{92.5} & \textbf{85.0} & \textbf{90.0} & \textbf{90.0} \\
 \hline
 \end{tabular}
 \end{table}
@@ -911,7 +957,7 @@ La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales. Las co
             height=8cm,
             xlabel={Puntaje SUS (0--100)},
             ytick={1,2,3,4,5,6,7,8},
-            yticklabels={P3 (80.0), A1 (82.5), Promedio (89.0), P2 (90.0), P5 (90.0), P1 (92.5), P4 (92.5), A2 (95.0)},
+            yticklabels={P3 (80.0), A1 (85.0), Promedio (90.0), A2 (90.0), P1 (92.5), P5 (92.5), P2 (95.0), P4 (95.0)},
             yticklabel style={font=\small},
             xmin=0,
             xmax=100,
@@ -920,7 +966,7 @@ La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales. Las co
             grid=major,
         ]
             \addplot[fill=blue!30, draw=blue] coordinates {
-                (80.0, 1) (82.5, 2) (89.0, 3) (90.0, 4) (90.0, 5) (92.5, 6) (92.5, 7) (95.0, 8)
+                (80.0, 1) (85.0, 2) (90.0, 3) (90.0, 4) (92.5, 5) (92.5, 6) (95.0, 7) (95.0, 8)
             };
         \end{axis}
     \end{tikzpicture}
@@ -930,7 +976,9 @@ La Tabla \ref{tab:usabilidad-sus} presenta las valoraciones individuales. Las co
 
 \subsection{Discusión}
 
-El puntaje SUS promedio de 89.0/100 sitúa al sistema en la categoría ``excelente'' según Bangor et al. \cite{bangor2009}, con todos los participantes por encima de 80. Sin embargo, este resultado solo es representativo de ciudadanos y administradores, y no puede extrapolarse a médicos ni jefes municipales sin pruebas adicionales. La modalidad remota impidió además registrar tiempos de ejecución y tasas de error. Se concluye que la usabilidad es excelente para los dos perfiles evaluados, y se establecen a continuación los requisitos previos a la puesta en producción.
+El puntaje SUS promedio de 90.0/100 sitúa al sistema en la categoría ``excelente'' según Bangor et al. \cite{bangor2009}, con todos los participantes por encima de 80. Sin embargo, este resultado solo es representativo de ciudadanos y administradores, y no puede extrapolarse a médicos ni jefes municipales sin pruebas adicionales. La modalidad remota impidió además registrar tiempos de ejecución y tasas de error. 
+La conclusión es que la usabilidad resulta excelente para los dos perfiles evaluados. 
+La sección siguiente detalla los requisitos previos a la puesta en producción.
 
 \subsection{Requisitos previos a la puesta en producción}
 
@@ -945,10 +993,11 @@ Los resultados de las cuatro dimensiones de validación permiten una valoración
 
 En el plano funcional, todos los flujos principales operan correctamente conforme a los requerimientos, sin desviaciones en los casos de prueba ejecutados.
 
-En el plano de rendimiento, el sistema mostró un comportamiento sólido bajo carga concurrente. La creación de reportes mantuvo una zona óptima hasta 70 VUs con el 100\% de solicitudes por debajo de los 3000 ms, mientras que la búsqueda por notificación resultó la operación más rápida y consistente. El escenario combinado confirmó que los tres perfiles de uso conviven sin interferencia mutua, con el 100\% de solicitudes exitosas. La degradación observada es progresiva y atribuible al entorno de pruebas, no a deficiencias del código.
+En el plano de rendimiento, el sistema mostró un comportamiento sólido bajo carga concurrente. La creación de reportes mantuvo una zona óptima hasta 70 VUs con el 100\% de solicitudes por debajo de los 3000 ms, mientras que la búsqueda por notificación resultó la operación más rápida y consistente. El escenario combinado confirmó que los tres perfiles de uso conviven sin interferencia mutua, con el 100\% de solicitudes exitosas. 
+La degradación observada es progresiva y atribuible al entorno de pruebas, no a deficiencias del código.
 
 En el plano de calidad web, el frontend alcanzó puntuaciones de 97 en rendimiento y 98 en accesibilidad en escritorio, con oportunidades de mejora en móvil que no comprometen la operatividad.
 
-En el plano de usabilidad, el puntaje SUS de 89.0/100 sitúa al sistema en la categoría ``excelente'' para los perfiles evaluados, con una curva de aprendizaje baja.
+En el plano de usabilidad, el puntaje SUS de 90.0/100 sitúa al sistema en la categoría ``excelente'' para los perfiles evaluados, con una curva de aprendizaje baja.
 
 En conjunto, el sistema cumple satisfactoriamente con los requerimientos definidos, ofreciendo una experiencia de usuario sólida tanto en condiciones normales como bajo carga concurrente.
