@@ -184,10 +184,6 @@
   description={Principio formulado por Andrew Hunt y David Thomas que establece que cada pieza de conocimiento debe tener una representación única, inequívoca y autoritativa dentro del sistema. La duplicación de lógica aumenta el riesgo de inconsistencias cuando se requiere un cambio \cite{hunt1999}}
 }
 
-\newglossaryentry{Repository}{
-    name={Patrón Repository},
-    description={Patrón de diseño que abstrae el acceso a los datos mediante una interfaz, permitiendo desacoplar la lógica de negocio de la fuente de almacenamiento}
-}
 
 \newglossaryentry{SUS}{
     name={System Usability Scale (SUS)},
@@ -210,10 +206,10 @@
 }
 
 
-\newglossaryentry{hl7fhir}{
-    name={HL7/FHIR},
-    description={HL7 (Health Level Seven International) es el organismo de estandarización para el intercambio de información sanitaria. FHIR (Fast Healthcare Interoperability Resources) es un estándar moderno que define recursos y APIs REST para la interoperabilidad en salud}
-}
+% \newglossaryentry{hl7fhir}{
+%     name={HL7/FHIR},
+%     description={HL7 (Health Level Seven International) es el organismo de estandarización para el intercambio de información sanitaria. FHIR (Fast Healthcare Interoperability Resources) es un estándar moderno que define recursos y APIs REST para la interoperabilidad en salud}
+% }
 
 \newglossaryentry{captcha}{
     name={CAPTCHA},
@@ -244,6 +240,21 @@
 \newglossaryentry{hmac-sha256}{
     name={HMAC-SHA256},
     description={Hash-based Message Authentication Code con SHA-256. Mecanismo de criptografía simétrica que verifica simultáneamente la integridad y autenticidad de un mensaje. Combina una clave secreta compartida con el algoritmo de hash SHA-256 para producir un código de autenticación de longitud fija. Cualquier alteración del mensaje o uso de una clave incorrecta genera un código distinto, lo que permite detectar modificaciones no autorizadas. A diferencia de la criptografía asimétrica, emplea una única clave, lo que lo hace computacionalmente eficiente para operaciones como el hashing de contraseñas y la firma de tokens \cite{rfc2104}. SHA-256, estandarizado por el NIST, transforma cualquier entrada en una cadena de 256 bits de la cual resulta computacionalmente inviable reconstruir el dato original \cite{nist_sha256}}
+}
+
+\newglossaryentry{JWT}{
+    name={JWT (JSON Web Token)},
+    description={Estándar abierto definido en el RFC 7519 que permite transmitir información verificable entre dos partes mediante un token firmado digitalmente. Consta de tres secciones codificadas en Base64: encabezado, carga útil (con afirmaciones sobre el usuario) y firma \cite{rfc7519}}
+}
+
+\newglossaryentry{SPA}{
+    name={SPA (Single Page Application)},
+    description={Aplicación de Página Única. Arquitectura web que carga una sola página HTML y actualiza dinámicamente su contenido sin recargar el navegador, ofreciendo una experiencia de usuario más fluida}
+}
+
+\newglossaryentry{CQS}{
+    name={CQS (Command Query Separation)},
+    description={Principio de Separación de Comandos y Consultas, formulado por Bertrand Meyer. Establece que una operación debe ser un comando —modifica el estado sin retornar datos— o una consulta —retorna datos sin modificar el estado—, pero nunca ambas cosas \cite{Meyer1988}}
 }
 
 \printglossaries

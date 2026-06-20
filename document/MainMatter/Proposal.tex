@@ -202,7 +202,8 @@ El sistema deberá registrar las acciones relevantes realizadas por los usuarios
 
 
 \section{Diagrama de casos de uso}
-\ref{section:casos_uso}
+\label{section:casos_uso}
+
 Esta sección presenta las acciones que pueden realizar los distintos tipos de usuarios dentro de la plataforma, detalladas a través de un diagrama de casos de uso\footnote{Diagrama de casos de uso: Forma de diagrama de comportamiento UML mejorado. Sirve para especificar la comunicación y el comportamiento de un sistema mediante su interacción con los usuarios y/u otros sistemas.}. 
 El diagrama organiza las funcionalidades según el actor que las ejecuta y refleja las relaciones de extensión entre casos de uso.
 
@@ -524,13 +525,13 @@ La Figura \ref{fig:arquitectura} ilustra esta organización: las dependencias en
 La distribución de responsabilidades quedó establecida de la siguiente manera:
 
 \begin{itemize}
-    \item \textbf{Capa de Dominio:} Constituye el núcleo del sistema, sin dependencias externas. Aquí residen las entidades de negocio, enumeraciones para clasificación y eventos de dominio que modelan el comportamiento del reporte de ESAVI.
+    \item \textbf{Capa de dominio:} Constituye el núcleo del sistema, sin dependencias externas. Aquí residen las entidades de negocio, enumeraciones para clasificación y eventos de dominio que modelan el comportamiento del reporte de ESAVI.
     
    \item \textbf{Capa de aplicación:} Depende exclusivamente del dominio. Orquesta los casos de uso y contiene tanto sus interfaces como sus implementaciones, ya que el volumen de casos de uso no justifica una capa adicional. Define dos tipos de contrato: las interfaces de casos de uso, que la presentación consume sin conocer la lógica interna, y las interfaces de servicios de infraestructura —repositorios, envío de correo, mensajería—, cuyas implementaciones residen en la capa de infraestructura. También aloja los validadores que aplican las reglas de negocio antes de que una operación llegue al dominio.
    
    \item \textbf{Capa de infraestructura:} Depende de la capa de aplicación, a través de la cual accede indirectamente al dominio, respetando la regla de dependencia. Contiene las implementaciones concretas de las interfaces definidas en la aplicación: persistencia en base de datos, envío de correo, mensajería y seguridad. También configura los servicios externos que estas implementaciones requieren para operar.
    
-    \item \textbf{Capa de Presentación:} Depende exclusivamente de la capa de aplicación. Expone la funcionalidad del sistema a través de una API REST y traduce las peticiones externas en invocaciones a los casos de uso.
+    \item \textbf{Capa de presentación:} Depende exclusivamente de la capa de aplicación. Expone la funcionalidad del sistema a través de una API REST y traduce las peticiones externas en invocaciones a los casos de uso.
 \end{itemize}
 
 La estructura en capas resuelve la separación de responsabilidades, pero persisten desafíos que requieren mecanismos adicionales: abstraer el acceso a datos, mantener la atomicidad de las operaciones, desacoplar las capas entre sí y transformar objetos en los límites de cada una. Para abordarlos, el diseño incorpora los siguientes patrones:
@@ -550,7 +551,11 @@ La estructura en capas resuelve la separación de responsabilidades, pero persis
  
 \end{itemize}
 
+\subsubsection{Separación de comandos y consultas (CQS)}
 
+El diseño adopta el Principio de Separación de Comandos y Consultas (\gls{CQS}), formulado por Bertrand Meyer, que establece que una operación debe ser un comando —modifica el estado— o una consulta —retorna datos—, pero nunca ambas cosas \cite{Meyer1988}. A diferencia de CQRS\footnote{CQRS (Command Query Responsibility Segregation): patrón arquitectónico que separa el modelo de escritura del modelo de lectura, a menudo utilizando bases de datos distintas para cada uno.}, que separa los modelos de lectura y escritura a nivel arquitectónico, CQS opera a nivel de interfaz manteniendo un único modelo de dominio y una única base de datos, lo que reduce la complejidad sin sacrificar la claridad.
+
+Para el sistema ESAVI, esta separación facilita las pruebas unitarias y permite que cada interfaz evolucione según sus necesidades.
 El Capítulo \ref{chapter:implementation} detalla la implementación concreta de cada capa y de los patrones aquí enunciados.
 
 Una vez definida la arquitectura del sistema y los patrones que gestionan la persistencia, corresponde diseñar el modelo de datos a partir de las entidades del dominio. 
@@ -596,9 +601,9 @@ Este módulo constituye el eje central de la solución al integrar la informaci�
 El diseño organiza los datos mediante una jerarquía de herencia basada en la entidad \textit{persona}, la cual centraliza la identidad inmutable del ciudadano (nombre completo, género y número de identidad). 
 Esta estructura permite que un mismo individuo asuma distintos roles de forma simultánea, figurando como sujeto en un reporte y como reportante en otro.
 
-Para armonizar la protección de datos sensibles (\textbf{RNF-07}) con la necesidad de detectar reportes duplicados (\textbf{RF-11}), la infraestructura implementa un \textbf{blind index} (índice ciego) sobre el Número de Identidad. 
-Bajo este esquema, el sistema cifra el CI para su almacenamiento clínico protegido, pero genera y almacena un hash indexado de dicho valor. 
-Este mecanismo permite realizar búsquedas de coincidencia exacta para validar si el ciudadano ya cuenta con registros previos en la base de datos, garantizando un rendimiento óptimo (\textbf{RNF-05}) sin exponer el identificador en texto plano \cite{22, 78}.
+Para armonizar la protección de datos sensibles (\textbf{RNF-07}) con la necesidad de detectar reportes duplicados (\textbf{RF-11}), la infraestructura implementa un índice ciego (blind index) sobre el número de identidad. 
+Bajo este esquema, el sistema cifra el número para su almacenamiento clínico protegido, pero genera y almacena un hash indexado de dicho valor. 
+Este mecanismo permite realizar búsquedas de coincidencia exacta para validar si el ciudadano ya cuenta con registros previos en la base de datos, garantizando un rendimiento óptimo sin exponer el identificador en texto plano.
 
 El diseño sitúa los datos de contacto (correo y teléfono) específicamente en las tablas hijas. 
 Esta decisión técnica resuelve la disparidad en las restricciones de nulidad: el sistema exige estos datos como obligatorios para el reportante, pero los mantiene como opcionales para el sujeto. 

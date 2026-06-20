@@ -1,30 +1,59 @@
+% \begin{conclusions}
+
+% El sistema desarrollado cumple con los objetivos trazados y aporta soluciones concretas a los problemas que motivaron esta investigación:
+
+% \begin{itemize}
+%     \item El ciclo de notificación pasa de 15 días a inmediato: un reporte grave queda disponible para el jefe municipal en el instante en que el ciudadano lo envía, lo que acerca al IFV al estándar internacional de notificación expedita.
+%     \item La interfaz de autorreporte web elimina la barrera del papel. El puntaje SUS de 90/100 indica que no constituye un obstáculo para el ciudadano, aunque la validación del impacto real sobre la tasa de infranotificación requerirá un estudio de campo posterior.
+%     \item Cada reportante recibe un número de notificación único que le permite consultar el estado de su reporte, cerrando el ciclo de retroalimentación que el sistema anterior no ofrecía.
+% \end{itemize}
+
+% La validación realizada permite afirmar que:
+
+% \begin{itemize}
+%     \item \textbf{La arquitectura en capas demostró su valor práctico} al permitir la migración entre proveedores de correo sin modificar la lógica de negocio, reduciendo el acoplamiento entre componentes.
+
+%     \item \textbf{La seguridad implementada supera los requisitos mínimos} para un sistema de este tipo: autenticación JWT con rotación de tokens, autorización por roles, CAPTCHA, rate limiting y validación en dos niveles. La necesidad de desactivar temporalmente el CAPTCHA y el rate limiting durante las pruebas de carga confirmó que estos mecanismos frenan efectivamente las operaciones automatizadas.
+
+%     \item \textbf{El sistema de notificaciones asíncrono} basado en RabbitMQ desacopla correctamente el envío de correos, permitiendo que el usuario reciba respuesta inmediata mientras el sistema procesa las notificaciones en segundo plano.
+
+%     \item \textbf{La interfaz de usuario obtuvo un puntaje SUS de 90.0/100} (categoría ``excelente''), con una curva de aprendizaje baja para los perfiles evaluados. Queda pendiente la validación con médicos y jefes municipales.
+
+%     \item \textbf{Las pruebas de rendimiento establecieron que el sistema soporta hasta 70 usuarios concurrentes} sin degradación en la creación de reportes, y que la búsqueda por notificación mantiene medianas inferiores a 250 ms incluso con $10^4$ reportes acumulados.
+
+%     \item \textbf{La calidad web del frontend} alcanzó puntuaciones de 97/100 en rendimiento y 98/100 en accesibilidad en escritorio, con oportunidades de mejora en la optimización de recursos estáticos para dispositivos móviles.
+% \end{itemize}
+
+% A pesar de estos logros, el sistema presenta limitaciones que deben reconocerse:
+
+% \begin{itemize}
+%     \item Los servicios de prototipado EmailJS y OpenWA deberán ser reemplazados por soluciones institucionales antes de la puesta en producción.
+%     \item Las pruebas de usabilidad no cubrieron a médicos ni jefes municipales, por lo que el puntaje SUS solo es representativo de ciudadanos y administradores.
+%     \item Las pruebas de rendimiento transcurrieron sobre un entorno con recursos limitados y red hotspot, por lo que los umbrales obtenidos constituyen cotas inferiores conservadoras.
+%     \item La auditoría Lighthouse identificó oportunidades de optimización de recursos estáticos —imágenes, JavaScript no utilizado y estilos— que afectan el rendimiento en dispositivos móviles.
+%     \item La funcionalidad de duplicados descarta la copia sin fusionar datos adicionales que podrían enriquecer el reporte original.
+% \end{itemize}
+
+% \end{conclusions}
+
+
 \begin{conclusions}
 
-El sistema desarrollado cumple con los objetivos trazados al inicio de este trabajo, integrando en un producto funcional las necesidades de farmacovigilancia del Instituto Finlay de Vacunas. 
+El sistema desarrollado aporta soluciones concretas a los problemas que motivaron esta investigación:
+
+El ciclo de notificación pasa de 15 días a inmediato para eventos graves; la interfaz de autorreporte web elimina la barrera del papel, con un puntaje SUS de 90/100; y cada reportante recibe un número de notificación único que le permite consultar el estado de su reporte, cerrando el ciclo de retroalimentación que el sistema anterior no ofrecía.
+
+
 La validación realizada permite afirmar que:
 
 \begin{itemize}
-    \item \textbf{La arquitectura en capas demostró su valor práctico} al permitir la migración entre proveedores de correo sin modificar la lógica de negocio, reduciendo el acoplamiento entre componentes.
-
-    \item \textbf{La seguridad implementada supera los requisitos mínimos} para un sistema de este tipo: autenticación JWT con rotación de tokens, autorización por roles, CAPTCHA, rate limiting y validación en dos niveles. La necesidad de desactivar temporalmente el CAPTCHA y el rate limiting durante las pruebas de carga confirmó que estos mecanismos frenan efectivamente las operaciones automatizadas.
-
-    \item \textbf{El sistema de notificaciones asíncrono} basado en RabbitMQ desacopla correctamente el envío de correos, permitiendo que el usuario reciba respuesta inmediata mientras el sistema procesa las notificaciones en segundo plano.
-
-    \item \textbf{La interfaz de usuario obtuvo un puntaje SUS de 90.0/100} (categoría ``excelente''), con una curva de aprendizaje baja para los perfiles evaluados. Queda pendiente la validación con médicos y jefes municipales.
-
-    \item \textbf{Las pruebas de rendimiento establecieron que el sistema soporta hasta 70 usuarios concurrentes} sin degradación en la creación de reportes, y que la búsqueda por notificación mantiene medianas inferiores a 250 ms incluso con $10^4$ reportes acumulados.
-
-    \item \textbf{La calidad web del frontend} alcanzó puntuaciones de 97/100 en rendimiento y 98/100 en accesibilidad en escritorio, con oportunidades de mejora en la optimización de recursos estáticos para dispositivos móviles.
+    \item La arquitectura en capas demostró su valor práctico al permitir la migración entre proveedores de correo sin modificar la lógica de negocio.
+    \item La seguridad implementada —JWT con rotación de tokens, CAPTCHA, rate limiting y validación en dos niveles— supera los requisitos mínimos para un sistema de este tipo.
+    \item El sistema de notificaciones asíncrono basado en RabbitMQ desacopla correctamente el envío de correos.
+    \item Las pruebas de rendimiento confirmaron que el sistema soporta hasta 70 usuarios concurrentes sin degradación, con búsquedas inferiores a 250 ms incluso con $10^4$ reportes acumulados.
+    \item La calidad web del frontend alcanzó puntuaciones de 97/100 en rendimiento y 98/100 en accesibilidad en escritorio.
 \end{itemize}
 
-A pesar de estos logros, el sistema presenta limitaciones que deben reconocerse:
-
-\begin{itemize}
-    \item Los servicios de prototipado EmailJS y OpenWA deberán ser reemplazados por soluciones institucionales antes de la puesta en producción.
-    \item Las pruebas de usabilidad no cubrieron a médicos ni jefes municipales, por lo que el puntaje SUS solo es representativo de ciudadanos y administradores.
-    \item Las pruebas de rendimiento transcurrieron sobre un entorno con recursos limitados y red hotspot, por lo que los umbrales obtenidos constituyen cotas inferiores conservadoras.
-    \item La auditoría Lighthouse identificó oportunidades de optimización de recursos estáticos —imágenes, JavaScript no utilizado y estilos— que afectan el rendimiento en dispositivos móviles.
-    \item La funcionalidad de duplicados descarta la copia sin fusionar datos adicionales que podrían enriquecer el reporte original.
-\end{itemize}
+A pesar de estos logros, el sistema presenta limitaciones: los servicios de prototipado EmailJS y OpenWA deberán reemplazarse por soluciones institucionales antes de la puesta en producción, las pruebas de usabilidad no cubrieron a médicos ni jefes municipales, y la funcionalidad de duplicados descarta la copia sin fusionar datos adicionales.
 
 \end{conclusions}

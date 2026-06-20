@@ -228,10 +228,10 @@ El servidor —una aplicación que funciona en una máquina remota— recibe esa
 
 \subsection{Interfaz de usuario y servidor.}
 
-En el lado del cliente opera la interfaz de usuario. 
+En el lado del cliente opera la interfaz de usuario —denominada frontend en la literatura técnica—. 
 Constituye la capa del sistema con la que el usuario interactúa directamente: presenta la información, captura datos mediante formularios y guía la experiencia de navegación. 
 Funciona íntegramente en el navegador y no tiene acceso directo a la base de datos ni a la lógica de negocio. 
-En el lado del servidor opera la capa de servicios, que procesa las solicitudes del usuario, ejecuta la lógica de negocio y gestiona la persistencia de los datos. 
+En el lado del servidor opera la capa de servicios —conocida como backend—, que procesa las solicitudes del usuario, ejecuta la lógica de negocio y gestiona la persistencia de los datos. 
 Reside en un servidor remoto y expone sus servicios a través de una API (Application Programming Interface), un conjunto de reglas que define cómo otros programas pueden interactuar con él.
 
 \subsection{Comunicación mediante HTTP y REST.}
@@ -252,7 +252,7 @@ Para comparar las tecnologías de desarrollo, es necesario definir previamente a
 	\item Multiplataforma: capacidad de un entorno de desarrollo para ejecutarse en distintos sistemas operativos sin requerir modificaciones en el código fuente.
 	\item Entorno de ejecución (runtime): componente que ejecuta el código compilado y gestiona recursos como la memoria y los hilos de ejecución.
 	\item Middleware: componente de software que procesa una solicitud HTTP encadenándose con otros componentes para validarla, autenticarla o transformarla antes de que alcance la lógica de negocio.
-	\item Inyección de dependencias: patrón de diseño mediante el cual un objeto recibe sus dependencias desde el exterior en lugar de crearlas internamente.
+	\item Inyección de dependencias (DI): patrón de diseño mediante el cual un objeto recibe sus dependencias desde el exterior en lugar de crearlas internamente.
 \end{itemize}
 
 \section{Fundamentos de bases de datos}
@@ -451,7 +451,7 @@ Su sistema de reactividad rastrea automáticamente las dependencias entre los da
 Su diseño incremental permite adoptarlo de forma gradual: puede integrarse en proyectos existentes como una biblioteca ligera o utilizarse como framework completo, lo que reduce la curva de aprendizaje inicial.
 Su reducido tamaño lo hace adecuado para cargas rápidas en redes con conectividad limitada.
 
-\subsubsection{Comparación de los frameworks de frontend}
+\subsubsection{Comparación de los frameworks de interfaz de usuarios}
 
 La Tabla \ref{tab:comparacion_frontend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}. 
 En la interfaz de usuario, la eficiencia corresponde a la velocidad de actualización de la vista, la escalabilidad a la gestión de componentes complejos, y la mantenibilidad a la estructura del código.
@@ -472,7 +472,7 @@ En la interfaz de usuario, la eficiencia corresponde a la velocidad de actualiza
 \end{table}
 
 
-\subsubsection{Selección del framework de frontend}
+\subsubsection{Selección del framework de interfaz de usuario}
 
 Considerando los criterios evaluados, React presenta un equilibrio entre eficiencia, flexibilidad y mantenibilidad. Su modelo basado en componentes reutilizables y su estrategia de actualización selectiva lo hacen adecuado para interfaces con formularios dinámicos como los requeridos por el sistema de farmacovigilancia. Su ecosistema de bibliotecas externas permite cubrir los requisitos de validación, visualización de datos y diseño responsivo sin la rigidez estructural de Angular ni la menor madurez de Vue. Por estas razones, React constituye la tecnología seleccionada para el desarrollo de la interfaz de usuario.
 
