@@ -4,9 +4,9 @@
 \section{Introducción}
 
 Este capítulo describe los principales aspectos relacionados con la implementación del sistema web desarrollado para el autorreporte y la gestión operativa de \gls{esavi}. 
-El contenido aborda las tecnologías y herramientas incorporadas durante el desarrollo, la organización estructural de la solución y los mecanismos implementados tanto en el backend como en el frontend.
+El contenido aborda las tecnologías y herramientas incorporadas durante el desarrollo, la organización estructural de la solución y los mecanismos implementados tanto en la capa de servicios como en la interfaz de usuario.
 
-La implementación materializa las decisiones arquitectónicas definidas en el capítulo anterior mediante una arquitectura modular basada en los principios de Clean Architecture y Domain-Driven Design. 
+La implementación materializa las decisiones arquitectónicas definidas en el capítulo anterior mediante una arquitectura modular. 
 La solución integra mecanismos de autenticación, comunicación asíncrona, persistencia de datos y validación de información, con el propósito de garantizar escalabilidad, mantenibilidad y seguridad.
 
 Además, el capítulo expone los principales componentes funcionales de la plataforma, incluyendo el registro de reportes de ESAVI, la gestión de revisiones médicas, la asignación de responsables y el sistema de notificaciones. 
@@ -35,7 +35,7 @@ MySQL Workbench facilitó la administración visual de la base de datos, el dise
 
 \textbf{Railway.} El despliegue de la API, la base de datos MySQL y los servicios externos como RabbitMQ recayó en \textbf{Railway}, una plataforma como servicio que permite aprovisionar infraestructura en la nube y conectar el despliegue directamente con un repositorio de GitHub \cite{railway-docs}. Railway gestiona de forma automática las variables de entorno, los volúmenes de datos y la exposición de puertos, y activa una nueva construcción y publicación con cada cambio en la rama principal, lo que reduce significativamente el esfuerzo operativo durante el desarrollo \cite{railway-deployments}.
 
-\textbf{Vercel.} Para el \textit{frontend}, el despliegue recayó en \textbf{Vercel}, una plataforma optimizada para aplicaciones web modernas que ofrece integración continua con repositorios de GitHub y distribución global mediante una red de entrega de contenido \cite{vercel-docs}.
+\textbf{Vercel.} Para la interfaz de usuario, el despliegue recayó en \textbf{Vercel}, una plataforma optimizada para aplicaciones web modernas que ofrece integración continua con repositorios de GitHub y distribución global mediante una red de entrega de contenido \cite{vercel-docs}.
 
 Es importante señalar que tanto Railway como Vercel constituyen soluciones de desarrollo y demostración, adoptadas exclusivamente para facilitar que el equipo de investigadores del Instituto Finlay de Vacunas (IFV) y los tutores del proyecto pudieran observar los avances de forma remota y en tiempo real. La arquitectura del sistema está diseñada para migrar y contenerizar en servidores físicos dedicados del IFV cuando el proyecto transite a la etapa de producción, garantizando así el control institucional sobre los datos y la infraestructura.
 
@@ -49,7 +49,7 @@ Dicha integración permite crear, compilar y ejecutar aplicaciones directamente 
 GitHub proporciona un historial completo de cambios donde es posible consultar qué modificaciones ocurrieron, quién las hizo y por qué \cite{github-commits}. 
 Al tratarse de un sistema distribuido, cada copia local del repositorio contiene el historial completo del proyecto, lo que permite recuperar cualquier estado anterior del código sin depender del servidor central \cite{pro-git-distributed}.
 
-\textbf{Swagger (Swashbuckle).} Para documentar y probar la API, el proyecto incorporó \textbf{Swagger} a través de la librería Swashbuckle, que genera automáticamente una interfaz web con todos los endpoints, sus parámetros y permite ejecutar peticiones de prueba directamente desde el navegador \cite{swagger-ui}.
+\textbf{Swagger (Swashbuckle).} Para documentar y probar la API, el proyecto incorporó \textbf{Swagger} a través de la librería Swashbuckle, que genera automáticamente una interfaz web con todos las rutas, sus parámetros y permite ejecutar peticiones de prueba directamente desde el navegador \cite{swagger-ui}.
 
 
 
@@ -500,7 +500,7 @@ services.AddDbContext<FinlayDbContext>(options =>
 
 Sobre esta conexión, el contexto \texttt{FinlayDbContext} —la clase que representa la sesión con la base de datos— centraliza el acceso a todas las tablas del sistema. 
 El método \texttt{OnModelCreating} define las características de infraestructura de cada tabla mediante la API fluida de Entity Framework Core, sin decorar las clases del dominio con atributos propios de la persistencia \cite{microsoft_efcore}.
-Este método aplica las mismas restricciones definidas en el diseño de la base de datos (Sección \ref{section:db_design}): nulabilidad, longitudes máximas, llaves foráneas e índices\footnote{Un índice es una estructura de datos que permite al motor de base de datos localizar filas sin recorrer toda la tabla, de forma similar al índice alfabético de un libro. El sistema define índices sobre columnas consultadas con frecuencia.}.
+Este método aplica las mismas restricciones definidas en el diseño de la base de datos: nulabilidad, longitudes máximas, llaves foráneas e índices.
 Además, cada relación declara un comportamiento de borrado y actualización: \texttt{Cascade} propaga la operación cuando la entidad dependiente carece de sentido sin su principal, mientras que \texttt{Restrict} la bloquea si existen registros referenciados desde otra tabla. 
 El siguiente fragmento, correspondiente a la entidad \texttt{AefiReport}, ilustra estas decisiones:
 
@@ -803,7 +803,7 @@ Las respuestas siguen una estructura uniforme. Las operaciones exitosas retornan
 return StatusCode(StatusCodes.Status201Created, new
 {
     message = "Report successfully created",
-    data = result
+    data = notificationNumber
 });
 \end{lstlisting}
 
@@ -814,7 +814,7 @@ El atributo \texttt{[ApiController]} activa automáticamente la validación de l
 \subsubsection{Documentación de la API}
 
 Swagger, integrado mediante la librería Swashbuckle, genera automáticamente la documentación interactiva de la API.
-Swagger analiza los controladores, los modelos de solicitud y respuesta para producir una especificación OpenAPI completa y una interfaz web donde los desarrolladores pueden explorar los endpoints y realizar peticiones de prueba directamente desde el navegador.
+Swagger analiza los controladores, los modelos de solicitud y respuesta para producir una especificación OpenAPI completa y una interfaz web donde los desarrolladores pueden explorar las rutas y realizar peticiones de prueba directamente desde el navegador.
 
 La configuración ocurre en el método \texttt{AddPresentation} de la capa de API y la aplicación la expone solo en entorno de desarrollo:
 
@@ -862,7 +862,7 @@ Las siguientes subsecciones detallan la implementación de los mecanismos de aut
 
 \subsubsection{Autenticación basada en JWT y Refresh Token}
 
-El sistema emplea JSON Web Tokens (\gls{JWT}) como mecanismo de autenticación sin estado, combinado con tokens de actualización (refresh tokens) almacenados en cookies HttpOnly. Esta combinación responde a dos objetivos contrapuestos: el token de acceso tiene una vida útil corta para limitar el daño en caso de robo, pero el usuario no necesita iniciar sesión repetidamente.
+El sistema emplea \gls{JWT} como mecanismo de autenticación sin estado, combinado con tokens de actualización (refresh tokens) almacenados en cookies HttpOnly. Esta combinación responde a dos objetivos contrapuestos: el token de acceso tiene una vida útil corta para limitar el daño en caso de robo, pero el usuario no necesita iniciar sesión repetidamente.
 
 \paragraph{JSON Web Token (JWT)}
 
@@ -955,7 +955,7 @@ El cliente recibe el JWT en el cuerpo de la respuesta de inicio de sesión y lo 
 
 \subsubsection{Autorización basada en roles}
 
-Una vez que el middleware de autenticación valida el JWT y establece la identidad del usuario, el sistema delega el control de acceso en dos mecanismos complementarios: el atributo \texttt{[Authorize]} para restringir endpoints por rol, y un servicio de contexto de usuario para recuperar la identidad del usuario autenticado dentro de la capa de aplicación.
+Una vez que el middleware de autenticación valida el JWT y establece la identidad del usuario, el sistema delega el control de acceso en dos mecanismos complementarios: el atributo \texttt{[Authorize]} para restringir rutas por rol, y un servicio de contexto de usuario para recuperar la identidad del usuario autenticado dentro de la capa de aplicación.
 
 El atributo \texttt{[Authorize(Roles = "SectionResponsible")]} indica al middleware de autorización que solo los usuarios cuyo claim \texttt{Role} coincida con ese valor pueden ejecutar el método. Si el token no contiene el rol requerido, el middleware retorna automáticamente un código 403 (Forbidden) con un mensaje JSON, según la configuración establecida en el evento \texttt{OnForbidden} del JWT Bearer.
 
@@ -1033,16 +1033,16 @@ La entidad persona almacena dos campos derivados del número de identidad:
 Esta columna porta un índice que permite al motor de base de datos localizar el registro en tiempo logarítmico sin recorrer toda la tabla.
 \end{itemize}
 
-El servicio \texttt{EncryptionService} proporciona tres operaciones: \texttt{Encrypt} aplica AES-256 con un vector de inicialización aleatorio; \texttt{Decrypt} revierte el proceso para uso clínico autorizado; y \texttt{CreateBlindIndex} genera un hash HMACSHA256 determinista a partir del número de identidad. Cuando un ciudadano reporta un ESAVI, el sistema calcula el blind index y verifica si ya existe en la base de datos, sin exponer ni descifrar el identificador durante la consulta.
+El servicio \texttt{EncryptionService} proporciona tres operaciones: \texttt{Encrypt} aplica AES-256 con un vector de inicialización aleatorio; \texttt{Decrypt} revierte el proceso para uso clínico autorizado; y \texttt{CreateBlindIndex} genera un hash HMACSHA256 determinista a partir del número de identidad. Cuando un ciudadano reporta un ESAVI, el sistema calcula el índice ciego y verifica si ya existe en la base de datos, sin exponer ni descifrar el identificador durante la consulta.
 
-La separación de las claves de cifrado y de blind index garantiza que un atacante que comprometa una de ellas no pueda derivar la otra. 
-La clave de blind index reside fuera del código fuente, independiente de la clave de cifrado.
+La separación de las claves de cifrado y del índice ciego garantiza que un atacante que comprometa una de ellas no pueda derivar la otra. 
+La clave de índice ciego reside fuera del código fuente, independiente de la clave de cifrado.
 
 El sistema deriva el hash que alimenta el índice ciego del número de identidad en texto plano, antes de cifrarlo. Una corrupción del cifrado no afecta la integridad del índice. Ambas operaciones —cifrado y generación del hash— ocurren dentro de la misma transacción del Unit of Work, lo que garantiza su atomicidad: si cualquiera de las dos falla, ninguna persiste.
 
 \subsubsection{Validación de datos y protección ante ataques automatizados}
 
-Los endpoints públicos del sistema —inicio de sesión, registro de reportes, consulta por número de notificación— están expuestos a ataques automatizados que pueden saturar la base de datos con reportes falsos o probar credenciales por fuerza bruta. Como primera barrera, el sistema exige que cada solicitud incluya un token que demuestre que proviene de un humano.
+Las rutas públicas del sistema —inicio de sesión, registro de reportes, consulta por número de notificación— están expuestos a ataques automatizados que pueden saturar la base de datos con reportes falsos o probar credenciales por fuerza bruta. Como primera barrera, el sistema exige que cada solicitud incluya un token que demuestre que proviene de un humano.
 
 Entre los distintos tipos de CAPTCHA, el sistema opta por Friendly CAPTCHA, un servicio basado en prueba de trabajo (proof-of-work) que resuelve el desafío criptográfico en segundo plano sin interrumpir al usuario. La documentación oficial describe que este mecanismo exige al cliente resolver un cálculo criptográfico antes de enviar la solicitud, y que el servicio ajusta la dificultad del desafío en función del comportamiento del cliente para dificultar ataques automatizados \cite{friendlycaptcha}. 
 
@@ -1051,7 +1051,7 @@ La Figura \ref{fig:captcha_flow} ilustra el flujo de verificación: un widget �
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{Graphics/Cap4/captcha_completo.png}
-    \caption{Flujo de verificación de Friendly CAPTCHA en endpoints públicos.}
+    \caption{Flujo de verificación de Friendly CAPTCHA en rutas públicas. Fuente: elaboración propia.}
     \label{fig:captcha_flow}
 \end{figure}
 
@@ -1060,8 +1060,8 @@ La Figura \ref{fig:captcha_flow} ilustra el flujo de verificación: un widget �
 
 La limitación de velocidad (en inglés, \textit{\gls{rate limiting}}) restringe el número de solicitudes que un cliente puede realizar a la API en un período de tiempo determinado. Su propósito es proteger el sistema contra ataques de fuerza bruta, enumeración de recursos y denegación de servicio \cite{microsoft_rate_limiting}. Además, evita que picos de tráfico legítimo o bucles accidentales en el frontend consuman todos los recursos del servidor y degraden la experiencia del resto de usuarios.
 
-Los endpoints públicos del sistema ya cuentan con CAPTCHA como primera barrera, tal como detalló la sección anterior.
-El rate limiting actúa como segunda barrera: si un atacante resuelve el CAPTCHA para cada intento, el límite de solicitudes por minuto hace inviable cualquier ataque masivo. Para los endpoints protegidos con JWT, el rate limiting constituye la defensa principal contra el abuso por parte de usuarios autenticados o tokens comprometidos.
+Las rutas públicas del sistema ya cuentan con CAPTCHA como primera barrera, tal como detalló la sección anterior.
+El rate limiting actúa como segunda barrera: si un atacante resuelve el CAPTCHA para cada intento, el límite de solicitudes por minuto hace inviable cualquier ataque masivo. Para las rutas protegidas con JWT, el rate limiting constituye la defensa principal contra el abuso por parte de usuarios autenticados o tokens comprometidos.
 
 \paragraph{Limitación por IP y por sesión}
 
@@ -1073,13 +1073,13 @@ Una solicitud solo recibe procesamiento si el limitador global lo permite.
 
 \paragraph{Políticas complementarias por tipo de operación}
 
-Sobre esta base, el sistema añade políticas específicas que restringen aún más ciertos endpoints según la criticidad de la operación. 
+Sobre esta base, el sistema añade políticas específicas que restringen aún más ciertas rutas según la criticidad de la operación. 
 Cada política define un límite de solicitudes, una ventana de tiempo y un comportamiento de encolamiento. 
 La ventana fija restablece el contador al cumplirse el intervalo; la ventana deslizante distribuye el límite en segmentos para suavizar los picos de tráfico legítimo. 
 El encolamiento permite retener las solicitudes excedentes durante un breve período antes de rechazarlas, lo que evita que un pico puntual de actividad legítima genere errores inmediatos al cliente \cite{microsoft_rate_limiting}.
 
 \begin{itemize}
-    \item \texttt{Auth}: 3 solicitudes por minuto para endpoints de autenticación, sin encolamiento. Un usuario legítimo inicia sesión pocas veces al día; tres intentos por minuto bastan para la operación normal y hacen inviable un ataque de fuerza bruta incluso si el atacante resuelve el CAPTCHA en cada intento.
+    \item \texttt{Auth}: 3 solicitudes por minuto para rutas de autenticación, sin encolamiento. Un usuario legítimo inicia sesión pocas veces al día; tres intentos por minuto bastan para la operación normal y hacen inviable un ataque de fuerza bruta incluso si el atacante resuelve el CAPTCHA en cada intento.
     \item \texttt{Command}: 5 solicitudes por minuto para operaciones de escritura estándar, como la creación de reportes ESAVI, con cola de hasta 5 solicitudes. Equivale a un reporte cada 12 segundos, ritmo suficiente para un centro de salud con múltiples reportantes simultáneos.
     \item \texttt{ReportDaily}: 30 solicitudes por día para la creación de reportes desde una misma IP, mediante ventana deslizante de 24 horas dividida en 24 segmentos. Cubre la actividad diaria de un centro de salud activo y acota el daño máximo de un ataque automatizado a 30 reportes falsos, los cuales pueden identificarse y eliminarse manualmente.
     \item \texttt{CommandDaily}: 20 solicitudes por día para operaciones administrativas como la asignación de reportes o la finalización de revisiones médicas. Refleja el ritmo real de trabajo de un jefe de vacunación municipal o médico evaluador.
@@ -1111,10 +1111,10 @@ options.AddFixedWindowLimiter("Command", config =>
 
 
 
-\paragraph{Aplicación a endpoints}
-El atributo \texttt{[EnableRate\-Limiting]} aplica las políticas sobre controladores completos o endpoints específicos. Un mismo endpoint puede combinar múltiples políticas cuando requiere protección en distintas ventanas de tiempo. Por ejemplo, el controlador de autenticación declara únicamente \texttt{Auth} a nivel de clase:
+\paragraph{Aplicación a rutas}
+El atributo \texttt{[EnableRate\-Limiting]} aplica las políticas sobre controladores completos o rutas específicas. Un mismo endpoint puede combinar múltiples políticas cuando requiere protección en distintas ventanas de tiempo. Por ejemplo, el controlador de autenticación declara únicamente \texttt{Auth} a nivel de clase:
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Aplicación del rate limiting a controladores y endpoints}, label={lst:ratelimitingapplication}]
+\begin{lstlisting}[language={[Sharp]C}, caption={Aplicación del rate limiting a controladores y rutas}, label={lst:ratelimitingapplication}]
 [ApiController]
 [Route("api/[controller]")]
 [EnableRateLimiting("Auth")]
@@ -1181,7 +1181,7 @@ Los contextos globales de autenticación y reportes envuelven toda la aplicació
 El estado global de autenticación reside en un contexto de React que expone los datos del usuario, el estado de la sesión y las funciones de inicio y cierre de sesión. Al cargar la aplicación, este contexto intenta restaurar la sesión mediante el endpoint de refresco de token, lo que evita que el usuario deba iniciar sesión nuevamente si su token de acceso expiró.
 
 La comunicación con el backend recae en una instancia de Axios —biblioteca de JavaScript para realizar solicitudes HTTP— configurada con interceptores que gestionan automáticamente los tokens. 
-El interceptor de solicitud inyecta el encabezado de autorización con el token de acceso; el interceptor de respuesta detecta los códigos 401, intenta renovar el token y reenvía la solicitud original. El refresco excluye los endpoints de autenticación para evitar bucles y preserva los encabezados originales en el reintento. 
+El interceptor de solicitud inyecta el encabezado de autorización con el token de acceso; el interceptor de respuesta detecta los códigos 401, intenta renovar el token y reenvía la solicitud original. El refresco excluye las rutas de autenticación para evitar bucles y preserva los encabezados originales en el reintento. 
 Si la renovación falla, la sesión finaliza automáticamente y el usuario regresa a la página de inicio de sesión.
 
 \subsection{Almacenamiento del JWT en memoria}
@@ -1211,8 +1211,7 @@ Los componentes visuales emplean memoización para evitar renderizaciones innece
 \subsection{Manejo de autenticación en el cliente}
 
 Al iniciar sesión, el cliente decodifica el JWT para extraer el rol del usuario y mostrar únicamente las rutas y opciones correspondientes a ese perfil. 
-Esta diferenciación garantiza que cada perfil acceda exclusivamente a las funcionalidades que le corresponden, en cumplimiento de los requisitos de autorización definidos en el Capítulo \ref{chapter:proposal}.
-
+Esta diferenciación garantiza que cada perfil acceda exclusivamente a las funcionalidades que le corresponden.
 
 
 \subsection{Prevención de envíos duplicados}
@@ -1255,14 +1254,11 @@ idempotencyKeyRef.current = null; // liberar solo tras éxito
 \section{Despliegue de la solución}
 \label{section:deployment}
 
-El sistema utiliza dos entornos diferenciados. 
-Para desarrollo local, un archivo \texttt{docker-compose.yml} levanta los servicios de RabbitMQ y la API, mientras que la base de datos MySQL corre en el servidor local. 
-Para demostración y pruebas, Railway aloja la API y los servicios auxiliares, y Vercel la interfaz de usuario, plataformas descritas en la sección \ref{section:technologies}.
+El sistema utiliza dos entornos diferenciados. Para demostración y pruebas, Railway aloja la API y los servicios auxiliares, y Vercel la interfaz de usuario, plataformas descritas en la sección \ref{section:technologies}. La contenerización de la solución completa —MySQL, RabbitMQ y la API— reside en un archivo \texttt{docker-compose.yml} preparado para el despliegue en producción.
 
-La configuración descansa en un \texttt{Dockerfile} multietapa\footnote{Multietapa: técnica que divide la construcción en fases con imágenes base distintas, reduciendo el tamaño final.} que compila la aplicación en una imagen de SDK\footnote{SDK: imagen con compilador y herramientas de desarrollo.} y la publica en una imagen de runtime\footnote{Runtime: imagen solo con las bibliotecas para ejecutar la aplicación.}, y en variables de entorno que inyectan las credenciales de base de datos, las claves de JWT y las API keys de los servicios externos sin exponerlas en el código fuente.
+Un \texttt{Dockerfile} construye la API en dos etapas: una primera con la imagen de SDK\footnote{SDK: imagen con compilador y herramientas de desarrollo.} compila y publica la aplicación, y una segunda con la imagen de runtime\footnote{Runtime: imagen solo con las bibliotecas para ejecutar la aplicación.} ejecuta solo los binarios publicados. Las variables de entorno inyectan las credenciales de base de datos, las claves de JWT y las API keys de los servicios externos sin exponerlas en el código fuente.
 
-La migración a servidores físicos del Instituto Finlay, prevista para la etapa de producción, mantendrá la misma configuración de contenedores y variables de entorno, lo que garantiza que el entorno de producción sea idéntico al de desarrollo.
-
+La migración a servidores físicos del Instituto Finlay, prevista para la etapa de producción, mantendrá esta misma configuración de contenedores y variables de entorno.
 
 
 \section{Conclusiones del capítulo}

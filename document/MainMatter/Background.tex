@@ -39,7 +39,7 @@ Este apartado examina cuatro sistemas —VAERS, NotificaRAM, V-safe y el formula
 
 \subsubsection{Sistema de Notificación de Eventos Adversos a Vacunas (VAERS, por sus siglas en inglés)}
 
-\textbf{VAERS} es el sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la Administración de Alimentos y Medicamentos (FDA, por sus siglas en inglés), agencia reguladora de medicamentos y alimentos, y los Centros para el Control y la Prevención de Enfermedades (CDC, por sus siglas en inglés), organismo responsable del control y prevención de enfermedades \cite{fda_vaers}.
+\textbf{VAERS} es el sistema nacional de farmacovigilancia en los Estados Unidos, administrado por la Administración de Alimentos y Medicamentos (FDA, por sus siglas en inglés), agencia reguladora de medicamentos y alimentos, y los Centros para el Control y la Prevención de Enfermedades (CDC), organismo responsable del control y prevención de enfermedades \cite{fda_vaers}.
 Su objetivo principal es detectar señales de seguridad no identificados durante los ensayos clínicos \cite{cdc_vaers}.
 
 Permite la notificación voluntaria de eventos adversos por parte de profesionales de la salud, fabricantes y ciudadanos mediante formularios web y PDF descargables \cite{vaers_official}.
@@ -59,7 +59,7 @@ Además, información que en el sistema de salud cubano resulta relevante para l
 La Agencia Española de Medicamentos y Productos Sanitarios (AEMPS) gestiona este portal en el marco del Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H) \cite{aemps_sefv_2025}.
 
 El sistema funciona de forma descentralizada, remitiendo los reportes a los Centros Autonómicos de Farmacovigilancia para su validación técnica inicial \cite{aemps_manual_2025}. 
-Tras esta evaluación, la base de datos \textit{FEDRA(Farmacovigilancia Española, Datos de Reacciones Adversas)}, sistema nacional de notificación y almacenamiento de sospechas de reacciones adversas a medicamentos, centraliza todos los registros del país \cite{aemps_fedra_2026}.
+Tras esta evaluación, la base de datos FEDRA(Farmacovigilancia Española, Datos de Reacciones Adversas), sistema nacional de notificación y almacenamiento de sospechas de reacciones adversas a medicamentos, centraliza todos los registros del país \cite{aemps_fedra_2026}.
 Estos registros alimentan la plataforma europea EudraVigilance\footnote{EudraVigilance: sistema de la Agencia Europea de Medicamentos (EMA) para la gestión de notificaciones de reacciones adversas en la Unión Europea.} y la base de datos mundial VigiBase\footnote{VigiBase: base de datos global de reportes de seguridad, gestionada por el Centro de Monitoreo de Uppsala bajo la OMS.}, que consolidan reportes de múltiples países para la detección de señales de seguridad a nivel internacional \cite{aemps_notificacion_2026}.
 
 
@@ -96,13 +96,11 @@ Este análisis compara los sistemas VAERS, NotificaRAM, V-safe y el formulario d
 
 \begin{table}[htbp]
 \centering
-\caption{Comparación de sistemas de autorreporte de eventos adversos}
-\label{tab:sistemas_comparacion}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{2.8cm} p{2.7cm} p{2.7cm} p{2.7cm} p{2.7cm}}
-
+\begin{tabular}{|p{2.8cm}|p{2.7cm}|p{2.7cm}|p{2.7cm}|p{2.7cm}|}
+\hline
 \textbf{Criterio} & \textbf{VAERS} & \textbf{NotificaRAM} & \textbf{V-safe} & \textbf{CECMED}\\[6pt]
-
+\hline
 		Tipo de vigilancia &
 		Pasiva  &
 		Pasiva  &
@@ -152,10 +150,12 @@ No \\[6pt]
 Subregistro; formulario extenso (28 secciones); texto libre que dificulta el análisis automatizado &
 Subregistro; dependencia del notificador; búsqueda por código poco práctica sin conocerlo &
 Fatiga del usuario; limitada representatividad &
-Sin especificidad para vacunas; ambigüedad en roles; sin seguimiento; sin validación de coherencia \
+Sin especificidad para vacunas; ambigüedad en roles; sin seguimiento; sin validación de coherencia \\
 
-
-	\end{tabular}
+\hline
+\end{tabular}
+\caption{Comparación de sistemas de autorreporte de eventos adversos}
+\label{tab:sistemas_comparacion}
 \end{table}
 
 
@@ -281,7 +281,7 @@ Estas propiedades son especialmente relevantes en un sistema de farmacovigilanci
 
 \subsection{Propiedades BASE y teorema CAP}
 
-En contraste con el modelo ACID, las bases de datos NoSQL adoptan el modelo BASE \cite{moniruzzaman2013nosql}:
+En contraste con el modelo ACID, algunas bases de datos adoptan el modelo BASE \cite{moniruzzaman2013nosql}:
 
 \begin{itemize}
     \item \textbf{Básicamente disponible (Basically Available):} el sistema garantiza disponibilidad de los datos en todo momento, aunque no necesariamente consistentes.
@@ -378,8 +378,10 @@ La Tabla \ref{tab:comparacion_backend} resume la comparación realizada según l
 	\caption{Comparación de tecnologías para la capa de servicios según criterios de evaluación}
 	\label{tab:comparacion_backend}
 	\renewcommand{\arraystretch}{1.3}
-	\begin{tabular}{p{3.2cm} p{3.5cm} p{3.5cm} p{3.5cm}}
+	\begin{tabular}{|p{3.2cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+	\hline
 	\textbf{Criterio} & \textbf{.NET} & \textbf{Spring Boot} & \textbf{NestJS} \\[6pt]
+	\hline
 		Eficiencia & Alta (alta tasa de transferencia, menor tiempo de procesamiento, menor consumo de RAM) & Alta (rendimiento estable, mayor consumo de memoria JVM) & Media (eficiente en I/O, menor rendimiento en CPU intensivo) \\[6pt] \hline
 		Escalabilidad & Alta (menor consumo de recursos por instancia, alto rendimiento bajo carga) & Muy alta (ecosistema maduro y ampliamente probado en arquitecturas distribuidas) & Alta (alta concurrencia en I/O mediante modelo no bloqueante) \\[6pt] \hline
 		Mantenibilidad & Alta (DI nativo, arquitectura estructurada y tipada) & Alta (IoC consolidado, ecosistema estandarizado) & Media (ecosistema heterogéneo) \\[6pt] \hline
@@ -462,8 +464,10 @@ En la interfaz de usuario, la eficiencia corresponde a la velocidad de actualiza
 	\caption{Comparación de tecnologías para la interfaz de usuario según criterios de evaluación}
 	\label{tab:comparacion_frontend}
 	\renewcommand{\arraystretch}{1.3}
-	\begin{tabular}{p{3.2cm} p{3.5cm} p{3.5cm} p{3.5cm}}
+	\begin{tabular}{|p{3.2cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+	\hline
 	\textbf{Criterio} & \textbf{React} & \textbf{Angular} & \textbf{Vue} \\[6pt]
+	\hline
 		Eficiencia & Alta (representación virtual, actualización selectiva) & Media (detección de cambios por zonas) & Alta (reactividad basada en dependencias) \\ \hline
 		Escalabilidad & Alta (componentes reutilizables) & Muy alta (arquitectura modular integrada) & Alta (composición flexible) \\ \hline
 		Mantenibilidad & Alta (ecosistema flexible) & Muy alta (estructura tipada integral) & Alta (estructura progresiva) \\ \hline
@@ -494,8 +498,10 @@ Para el sistema de farmacovigilancia, el análisis aborda primero los dos paradi
 	\caption{Comparación de paradigmas de bases de datos según criterios de evaluación}
 	\label{tab:comparacion_db}
 	\renewcommand{\arraystretch}{1.3}
-	\begin{tabular}{p{3.2cm} p{6.0cm} p{6.0cm}}
-	\textbf{Criterio} & \textbf{Relacional (SQL)} & \textbf{No Relacional (NoSQL)} \\[6pt]
+	\begin{tabular}{|p{3.2cm}|p{6.0cm}|p{6.0cm}|}
+		\hline
+	\textbf{Criterio} & \textbf{Relacional (SQL)} & \textbf{No Relacional (NoSQL)} \\[4pt]
+	\hline
 		Estructura de datos & Tablas con columnas y filas & Modelos basados en documentos, pares clave-valor, familias de columnas o grafos \\ \hline
 		Esquema & Esquema rígido (definido antes de la inserción de datos) \cite{elmasri2016fundamentals} & Esquema flexible (puede variar entre registros) \cite{moniruzzaman2013nosql} \\ \hline
 		Escalabilidad & Verticalmente escalable (aumento de recursos hardware del nodo) & Horizontalmente escalable (agregando más nodos al sistema) \\ \hline
@@ -526,8 +532,10 @@ La curva de aprendizaje influye en la velocidad con que un desarrollador puede d
 	\caption{Comparación de gestores de bases de datos relacionales}
 	\label{tab:comparacion_sql}
 	\renewcommand{\arraystretch}{1.3}
-	\begin{tabular}{p{2.8cm} p{3.2cm} p{3.2cm} p{3.2cm} p{3.2cm}}
+	\begin{tabular}{|p{2.8cm}| p{3.2cm}| p{3.2cm}| p{3.2cm}| p{3.2cm}|}
+		\hline
 	\textbf{Criterio} & \textbf{MySQL} & \textbf{PostgreSQL} & \textbf{SQL Server}  \\[6pt]
+	\hline
 		Integración con .NET & Alta (Pomelo) & Alta (Npgsql) & Nativa (Microsoft)  \\ \hline
 		Rendimiento & Alto en lectura & Alto en consultas complejas & Alto, optimizado para .NET  \\ \hline
 		Licencia & Código abierto (GPL) & Código abierto (PostgreSQL) & Comercial (Microsoft)  \\ \hline

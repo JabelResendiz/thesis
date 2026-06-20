@@ -11,7 +11,7 @@ La validación del sistema persigue demostrar cuatro afirmaciones concretas:
 
 \begin{enumerate}
     \item \textbf{Los flujos principales operan correctamente.} El registro de reportes, la asignación a revisores, la gestión de revisiones y las notificaciones automáticas funcionan conforme a los requerimientos funcionales definidos en el Capítulo \ref{chapter:proposal}.
-    \item \textbf{El sistema soporta la concurrencia esperada.} Los endpoints críticos —creación y búsqueda de reportes— responden bajo carga concurrente sin superar los umbrales de tiempo definidos, incluso con volúmenes de datos acumulados.
+    \item \textbf{El sistema soporta la concurrencia esperada.} Las rutas críticas —creación y búsqueda de reportes— responden bajo carga concurrente sin superar los umbrales de tiempo definidos, incluso con volúmenes de datos acumulados.
     \item \textbf{La calidad web cumple con los estándares.} El frontend desplegado satisface los criterios de rendimiento, accesibilidad, mejores prácticas y SEO evaluados mediante Lighthouse.
     \item \textbf{Los usuarios finales consideran la interfaz útil y fácil de usar.} La evaluación mediante el cuestionario SUS (System Usability Scale) debe arrojar una puntuación superior a 68, umbral que define la usabilidad aceptable, y preferiblemente superior a 80.3, categoría ``excelente'' según Bangor et al. \cite{bangor2009}.
 \end{enumerate}
@@ -48,7 +48,7 @@ La Tabla \ref{tab:pruebas_funcionales} resume el estado de cumplimiento de las f
 \hline
 CP01 & Inicio de sesión & Credenciales válidas & Acceso al sistema según el rol del usuario & Acceso concedido correctamente & \checkmark \\
 \hline
-CP02 & Registro de reporte ESAVI& Datos completos del reporte & Reporte almacenado y documento PDF generado & Operación realizada correctamente & \checkmark \\
+CP02 & Registro de reporte ESAVI& Datos completos del reporte & Mensaje éxito y número de notificación & Operación realizada correctamente & \checkmark \\
 \hline
 CP03 & Consulta por número de notificación & Número de notificación existente & Visualización del estado y detalles del reporte & Información mostrada correctamente & \checkmark \\
 \hline
@@ -431,7 +431,7 @@ Las Figuras \ref{fig:busqueda-latencia} y \ref{fig:busqueda-porcentaje} muestran
     \begin{minipage}{0.40\textwidth}
         \small
          
-Hasta 70 VUs, todas las curvas permanecen agrupadas por debajo de 1000 ms, sin diferencias significativas entre tamaños de base de datos. 
+Hasta 70 VUs, todas las curvas permanecen agrupadas por debajo de 1500 ms, sin diferencias significativas entre tamaños de base de datos. 
 A partir de 100 VUs las curvas comienzan a separarse: $10^3$, $4 \times 10^3$ y $10^4$ reportes permanecen por debajo del umbral de 3000 ms incluso con 200 VUs, mientras que $5 \times 10^4$ lo supera con 200 VUs (3250 ms) y $10^5$ lo hace desde los 150 VUs (3100 ms). Esto evidencia que el volumen de datos impacta progresivamente en la latencia bajo alta concurrencia.
     \end{minipage}
     \caption{Evolución del p(95) de latencia según usuarios concurrentes para 1,000, 4,000, 10,000, 50,000 y 100,000 reportes.}
@@ -491,7 +491,7 @@ A partir de 100 VUs las curvas comienzan a separarse: $10^3$, $4 \times 10^3$ y 
     \hfill
     \begin{minipage}{0.40\textwidth}
         \small
-        Con $10^3$, $4 \times 10^3$ y $10^4$ reportes, más del 97\% de las solicitudes responde por debajo de 3000 ms incluso con 200 VUs. Con $5 \times 10^4$ y $10^5$ reportes, el porcentaje desciende al 94.5\% y 92.3\% respectivamente con 200 VUs, manteniéndose siempre por encima del 90\%. 
+        Con $10^3$, $4 \times 10^3$ y $10^4$ reportes, más del 97\% de las solicitudes responde por debajo de 3000 ms incluso con 100 VUs. Con $5 \times 10^4$ y $10^5$ reportes, el porcentaje desciende al 94.5\% y 92.3\% respectivamente con 200 VUs, manteniéndose siempre por encima del 90\%. 
         En ningún nivel ocurrieron errores funcionales (100\% status 202).
     \end{minipage}
     \caption{Porcentaje de solicitudes por debajo del umbral de 3000 ms según usuarios concurrentes y tamaño de base de datos.}
@@ -869,7 +869,7 @@ El sistema obtuvo \textbf{91/100} de forma uniforme en todas las páginas y ento
 La auditoría detectó dos carencias puntuales:
 
 \begin{itemize}
-    \item \textbf{Ausencia de meta descripción:} el documento HTML no incluye una etiqueta \texttt{<meta name="description">}, utilizada por los buscadores para generar el fragmento descriptivo en los resultados.
+    \item \textbf{Ausencia de meta descripción:} el documento HTML no incluye una etiqueta \texttt{<meta name=``description''>}, utilizada por los buscadores para generar el fragmento descriptivo en los resultados.
 
     \item \textbf{Archivo robots.txt no válido:} Vercel, al no encontrar un archivo \texttt{robots.txt} en el proyecto, devuelve el \texttt{index.html} en su lugar, lo que genera errores de sintaxis en la auditoría. La solución consistiría en agregar un archivo \texttt{robots.txt} básico que indique las reglas de rastreo.
 \end{itemize}

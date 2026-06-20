@@ -186,7 +186,7 @@ El sistema deberá adaptarse adecuadamente a diferentes dispositivos y resolucio
 El sistema deberá ser compatible con los principales navegadores web modernos: Google Chrome, Mozilla Firefox, Microsoft Edge y Safari.
 
 \item \textbf{RNF-05. Rendimiento:}  
-El sistema deberá procesar el envío de un reporte en menos de 5 segundos, medidos desde la recepción de la solicitud en el servidor hasta la respuesta de confirmación. 
+El sistema deberá procesar el envío de un reporte en menos de 3 segundos, medidos desde la recepción de la solicitud en el servidor hasta la respuesta de confirmación. 
 El Capítulo \ref{chapter:result} describe el entorno de desarrollo utilizado para las pruebas de rendimiento. Estas pruebas excluyen la latencia de red externa.
 
 \item \textbf{RNF-06. Mantenibilidad:}  
@@ -226,7 +226,7 @@ A continuación, la lógica de negocio asociada a cada interacción:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.2]{Graphics/Cap3/diagrama_06_06.drawio.png}
+    \includegraphics[scale=0.2]{Graphics/Cap3/casos_uso_20_06.drawio.png}
     \caption[Diagrama de casos de uso]{Diagrama de casos de usos. Fuente: elaboración propia.}
     \label{fig:diagrama_casos_uso}
 \end{figure}
@@ -249,10 +249,10 @@ A continuación, la lógica de negocio asociada a cada interacción:
                     \item \textbf{Datos del reportante:} relación con el sujeto vacunado, nombre comleto, número de identidad, sexo, provincia, municipio, teléfono y correo electrónico.
                 \end{itemize}
             
-            Al completar el envío, el sistema genera un número de recibo único, envía una notificación al jefe de vacunación del municipio correspondiente sobre el nuevo reporte.
+            Al completar el envío, el sistema genera un número de notificación único, envía un mensaje al jefe de vacunación del municipio correspondiente sobre el nuevo reporte.
             Este caso de uso posee una relación de tipo \textit{extend} hacia \textbf{Exportar a PDF}, lo que indica que el usuario puede, opcionalmente, generar un comprobante documental tras completar el registro.
 
-            \item \textbf{Consultar estado de reporte:} Permite al reportante verificar el estado de sus envíos previos ingresando el número de recibo.
+            \item \textbf{Consultar estado de reporte:} Permite al reportante verificar el estado de sus envíos previos ingresando el número de notificación.
         \end{itemize}
 
 
@@ -279,7 +279,7 @@ A continuación, la lógica de negocio asociada a cada interacción:
 
     \item \textbf{Gestión Clínica (Médico Evaluador):}
     \begin{itemize}
-        \item \textbf{Gestionar reportes asignados:} Vista principal donde el médico visualiza los reportes que le han sido asignados por el jefe de vacunación de su municipio. Cada reporte muestra el número de recibo, la fecha de creación y la gravedad. La tabla permite filtrar y ordenar por antigüedad, gravedad u otros criterios para priorizar la carga de trabajo.
+        \item \textbf{Gestionar reportes asignados:} Vista principal donde el médico visualiza los reportes que le han sido asignados por el jefe de vacunación de su municipio. Cada reporte muestra el número de notificación, la fecha de creación y la gravedad. La tabla permite filtrar y ordenar por antigüedad, gravedad u otros criterios para priorizar la carga de trabajo.
         \item \textbf{Revisar reporte:} El médico accede al detalle del reporte, analiza la información clínica del sujeto vacunado, los datos de vacunación y los eventos adversos descritos. A partir de esta información, determina la causalidad del evento, emite un dictamen y completa la revisión. La regla RN-08 de \ref{section:reglas_negocio} establece el plazo máximo para completar esta evaluación según la prioridad del reporte. Al finalizar, el sistema notifica al jefe de vacunación sobre la conclusión de la evaluación.
     \end{itemize}
    
@@ -376,9 +376,11 @@ La Tabla \ref{tab:monolito_microservicios} contrapone ambos enfoques en aspectos
 	
 	\renewcommand{\arraystretch}{1.3}
 	
-	\begin{tabular}{p{3.2cm} p{4.3cm} p{4.3cm}}
+	\begin{tabular}{|p{3.2cm}| p{4.3cm}| p{4.3cm}|}
+        \hline
 		
 		\textbf{Características} & \textbf{Monolito} & \textbf{Microservicios}\\[6pt]
+        \hline
 		
 		Unidad de despliegue &
 	    Única (un solo archivo ejecutable) \cite{ibm_microservices_monolith} &
@@ -398,8 +400,8 @@ La Tabla \ref{tab:monolito_microservicios} contrapone ambos enfoques en aspectos
 		
 	Escalabilidad
 	& Escala toda la aplicación completa \cite{ibm_microservices_monolith}
-	& Escala cada servicio según su demanda específica \cite{aws_monolith_microservices}
-    
+	& Escala cada servicio según su demanda específica \cite{aws_monolith_microservices} \\
+    \hline
 	\end{tabular}
 \end{table}
 
@@ -509,10 +511,10 @@ Esta satisface los criterios de independencia de la infraestructura, testabilida
 
 Asimismo, la regla de dependencia y la separación en anillos facilitan la aplicación de los principios \gls{SOLID} y DRY (ver glosario \gls{DRY}), al conducir naturalmente a clases con responsabilidades únicas, interfaces segregadas y lógica no duplicada \cite{martin2018}.
 
-\subsection{Diseño del sistema basado en Arquitectura Limpia}
+\subsection{Diseño del sistema basado en arquitectura limpia}
 \label{subsection:clean_architecture}
 
-El diseño del sistema ESAVI adopta la estructura en capas propuesta por la Arquitectura Limpia, organizando el código en cuatro niveles concéntricos con responsabilidades claramente delimitadas.
+El diseño del sistema ESAVI adopta la estructura en capas propuesta por la arquitectura limpia, organizando el código en cuatro niveles concéntricos con responsabilidades claramente delimitadas.
 La Figura \ref{fig:arquitectura} ilustra esta organización: las dependencias entre capas reflejan estrictamente la regla de dependencia, apuntando únicamente hacia el centro.
 
 \begin{figure}[htbp]
@@ -539,7 +541,7 @@ La estructura en capas resuelve la separación de responsabilidades, pero persis
 \begin{itemize}
     \item \textbf{Repositorio:} Abstrae el acceso a los datos mediante una interfaz que simula una colección en memoria, permitiendo al dominio obtener y almacenar objetos sin conocer los detalles de persistencia. En la arquitectura limpia, la capa de aplicación declara las interfaces que necesita para sus casos de uso y la capa de infraestructura proporciona la implementación concreta. Así, un cambio en la tecnología de almacenamiento no afecta al núcleo del sistema \cite{evans2003, fowler2002}.
     
-    \item \textbf{Unit of Work:} Agrupa un conjunto de operaciones sobre el repositorio y las persiste de forma atómica. En la arquitectura limpia, este patrón garantiza que el sistema confirme o descarte los cambios de una transacción de negocio como una sola unidad, manteniendo la consistencia de los datos sin que la lógica de dominio tenga que gestionar conexiones ni sesiones \cite{fowler2002}.
+    \item \textbf{Unidad de trabajo (Unit of Work):} Agrupa un conjunto de operaciones sobre el repositorio y las persiste de forma atómica. En la arquitectura limpia, este patrón garantiza que el sistema confirme o descarte los cambios de una transacción de negocio como una sola unidad, manteniendo la consistencia de los datos sin que la lógica de dominio tenga que gestionar conexiones ni sesiones \cite{fowler2002}.
 
     \item \textbf{Inyección de dependencias:} Patrón mediante el cual un objeto recibe las dependencias que necesita en lugar de instanciarlas directamente, invirtiendo el control de su creación. 
     En la arquitectura limpia, este patrón es el mecanismo que permite que cada capa trabaje con interfaces y que el framework resuelva en tiempo de ejecución la implementación concreta que corresponde. 
@@ -591,14 +593,14 @@ Un índice es una estructura auxiliar que permite al motor de base de datos loca
 
 \subsubsection{Módulo 1: Gestión de Usuarios y Roles}
 Este módulo establece la base de la seguridad y el control de acceso. 
-El diseño emplea una jerarquía de herencia donde la entidad \textit{usuario} concentra los atributos comunes, mientras que las tablas \textit{administrador}, \textit{jefe de vacunación municipal} y \textit{médico evaluador} resuelven la especialización técnica. 
+El diseño emplea una jerarquía de herencia donde la entidad usuario concentra los atributos comunes, mientras que las tablas administrador, jefe de vacunación municipal y médico evaluador resuelven la especialización técnica. 
 Para cumplir con las observaciones de diseño, la capa de aplicación garantiza la exclusividad de estos roles, impidiendo que una cuenta pertenezca a múltiples categorías simultáneamente. 
 El sistema protege las contraseñas mediante mecanismos de hashing criptográfico antes de persistirlas, asegurando que nunca almacene texto plano.
 El Capítulo \ref{chapter:implementation} detalla la implementación concreta de este mecanismo.
 
 \subsubsection{Módulo 2: Gestión de Reportes}
 Este módulo constituye el eje central de la solución al integrar la información del sujeto vacunado y del reportante en cada notificación de evento adverso. 
-El diseño organiza los datos mediante una jerarquía de herencia basada en la entidad \textit{persona}, la cual centraliza la identidad inmutable del ciudadano (nombre completo, género y número de identidad). 
+El diseño organiza los datos mediante una jerarquía de herencia basada en la entidad persona, la cual centraliza la identidad inmutable del ciudadano (nombre completo, género y número de identidad). 
 Esta estructura permite que un mismo individuo asuma distintos roles de forma simultánea, figurando como sujeto en un reporte y como reportante en otro.
 
 Para armonizar la protección de datos sensibles (\textbf{RNF-07}) con la necesidad de detectar reportes duplicados (\textbf{RF-11}), la infraestructura implementa un índice ciego (blind index) sobre el número de identidad. 
@@ -608,7 +610,7 @@ Este mecanismo permite realizar búsquedas de coincidencia exacta para validar s
 El diseño sitúa los datos de contacto (correo y teléfono) específicamente en las tablas hijas. 
 Esta decisión técnica resuelve la disparidad en las restricciones de nulidad: el sistema exige estos datos como obligatorios para el reportante, pero los mantiene como opcionales para el sujeto. 
 Así, el modelo aplica reglas de integridad precisas según cada rol y evita columnas nulables innecesarias en la entidad madre.
-Finalmente, el sistema asegura la unicidad de cada trámite mediante el número de recibo.
+Finalmente, el sistema asegura la unicidad de cada trámite mediante el número de notificación.
 
 
 \subsubsection{Módulo 3: Vacunación}
@@ -626,18 +628,15 @@ Para acelerar las consultas clínicas, el modelo incorpora índices sobre las co
 
 \subsubsection{Módulo 5: Asignación y Evaluación}
 El último módulo coordina el flujo de trabajo posterior a la notificación. 
-El sistema genera alertas automáticas para los jefes municipales, quienes distribuyen la carga de trabajo hacia los médicos evaluadores mediante la tabla de \textit{asignación}. 
+El sistema genera alertas automáticas para los jefes municipales, quienes distribuyen la carga de trabajo hacia los médicos evaluadores mediante la tabla de asignación. 
 
-El proceso culmina cuando el médico registra el dictamen clínico final en la tabla de \textit{evaluación}. 
+El proceso culmina cuando el médico registra el dictamen clínico final en la tabla de evaluación. 
 El diseño incorpora una escala de causalidad basada en los estándares de la Organización Mundial de la Salud (WHO-UMC), adaptada a las categorías específicas del Instituto Finlay de Vacunas. 
 
 
 
 
 \subsection{Normalización}
-
-La normalización es el proceso de organizar los datos de una base de datos para eliminar redundancias y garantizar la integridad de la información. 
-Este proceso, estructurado en formas normales sucesivas, evita anomalías de inserción, actualización y borrado que comprometerían la fiabilidad del sistema \cite{codd1970}.
 El esquema relacional desarrollado alcanza la Tercera Forma Normal (3FN), nivel que constituye el estándar aceptado en aplicaciones transaccionales \cite{date2012}.
 
 \textbf{Primera Forma Normal (1FN).} Una tabla está en 1FN si en cada posición de fila y columna existe un único valor, nunca un conjunto de valores \cite{ibm-admin-guide}. 
@@ -652,7 +651,8 @@ Por tanto, el cumplimiento de esta forma normal es inherente a la estructura del
 En otras palabras, no deben existir dependencias transitivas donde un atributo no clave dependa de otro atributo no clave que, a su vez, dependa de la clave \cite{ibm-third-normal-form}. 
 Las entidades de catálogo —Síntoma, Vacuna, Promotor, Centro de Vacunación, Municipio y Provincia— quedaron modeladas como tablas independientes, evitando que las tablas transaccionales contengan atributos descriptivos que dependan de claves foráneas en lugar de la clave primaria.
 
-La elección de la 3FN como nivel objetivo responde a dos razones: elimina los problemas prácticos de redundancia sin introducir una fragmentación excesiva de tablas que afecte el rendimiento de las consultas, y constituye el nivel ampliamente aceptado en aplicaciones transaccionales como criterio de calidad suficiente \cite{date2012}. Formas normales superiores como Boyce-Codd (BCNF) y Cuarta Forma Normal (4FN) abordan casos específicos que no aparecen en el dominio de este sistema, por lo que no se justifica su aplicación \cite{silberschatz2019}.
+La elección de la 3FN como nivel objetivo responde a dos razones: elimina los problemas prácticos de redundancia sin introducir una fragmentación excesiva de tablas que afecte el rendimiento de las consultas, y constituye el nivel ampliamente aceptado en aplicaciones transaccionales como criterio de calidad suficiente \cite{date2012}. 
+Formas normales superiores como Boyce-Codd (BCNF) y Cuarta Forma Normal (4FN) abordan casos específicos que no aparecen en el dominio de este sistema, lo que no justifica su aplicación \cite{silberschatz2019}.
 
 En conclusión, el esquema relacional satisface las tres formas normales definidas por Codd \cite{codd1970, codd1971}. El análisis no identificó dependencias parciales ni transitivas que requirieran descomposición adicional, por lo que el diseño garantiza la integridad de los datos.
 
