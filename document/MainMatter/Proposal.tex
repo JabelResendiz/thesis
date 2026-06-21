@@ -39,7 +39,7 @@ Estas prácticas guardan una relación de complemento mutuo. Juntas buscan reduc
 \subsection{Comparación de metodologías de desarrollo aplicadas al sistema}
 \label{subsection:comparacion_metodologias_sistema}
 
-Para seleccionar la metodología más adecuada para el desarrollo del sistema de autorreporte de ESAVI, este análisis comparativo evalúa los diferentes enfoques de desarrollo de software frente a las características específicas del proyecto. La Tabla \ref{tab:comparacion_metodologias_4criterios} sintetiza esta comparación.
+Para seleccionar la metodología más adecuada para el desarrollo del sistema de autorreporte de ESAVI, este análisis comparativo evalúa los diferentes enfoques de desarrollo de software frente a las características específicas del proyecto. La tabla \ref{tab:comparacion_metodologias_4criterios} sintetiza esta comparación.
 
 Los criterios analizados incluyen la flexibilidad ante cambios de requisitos, la calidad y mantenibilidad del código resultante, el soporte para una arquitectura modular y la adecuación al contexto de desarrollo individual con restricciones operativas como cortes de energía eléctrica y problemas de conectividad.
 
@@ -99,7 +99,7 @@ Cada ciclo comenzaba con la definición del objetivo y las tareas según las pri
 Las funcionalidades desarrolladas fueron:
 
 \begin{itemize}
-    \item \textbf{\textit{Sprint} 1:} Arquitectura base del sistema, modelo de datos y formulario de autorreporte con captura de datos del paciente, vacunas administradas y eventos adversos.
+    \item \textbf{\textit{Sprint} 1:} Arquitectura base del sistema, modelo de datos y formulario de autorreporte con captura de datos del sujeto vacunado, vacunas administradas y eventos adversos.
     \item \textbf{\textit{Sprint} 2:} Módulos de gestión de usuarios y roles, panel de seguimiento de reportes y flujo de asignación.
     \item \textbf{\textit{Sprint} 3:} Exportación de reportes en formatos PDF y Excel, notificaciones automáticas por correo electrónico mediante servidor SMTP y seguridad con control antibot basado en captcha.
     \item \textbf{\textit{Sprint} 4:} Validaciones del formulario de evaluación (campos obligatorios, coherencia de fechas y justificación de dictámenes), ajustes de usabilidad y diseño responsivo.
@@ -221,7 +221,7 @@ De acuerdo con el modelado funcional, el sistema cuenta con cinco actores princi
 
 \subsection{Análisis de los casos de uso}
 
-La Figura \ref{fig:diagrama_casos_uso} recoge los casos de uso del sistema. 
+La figura \ref{fig:diagrama_casos_uso} recoge los casos de uso del sistema. 
 A continuación, la lógica de negocio asociada a cada interacción:
 
 \begin{figure}[H]
@@ -317,8 +317,8 @@ Las reglas de negocio definen las restricciones y políticas que rigen la operac
     \item \textbf{RN-07. Priorización de reportes por nivel de riesgo:} El sistema clasifica cada reporte según el evento adverso más grave que contenga. La prioridad responde al siguiente criterio:
     \begin{itemize}
         \item \textbf{Prioridad alta:} el evento es serio (resultó en muerte, hospitalización, visita al doctor o a emergencias, discapacidad permanente o anomalía congénita).
-        \item \textbf{Prioridad media:} el evento no es serio pero la intensidad del síntoma es severa, o el paciente continúa sin recuperarse o presenta secuelas.
-        \item \textbf{Prioridad baja:} el evento no cumple ninguna de las restricciones anteriores (evento no serio, paciente recuperado ,en recuperación, desconocido, intensidad breve)
+        \item \textbf{Prioridad media:} el evento no es serio pero la intensidad del síntoma es severa, o el sujeto vacunado continúa sin recuperarse o presenta secuelas.
+        \item \textbf{Prioridad baja:} el evento no cumple ninguna de las restricciones anteriores (evento no serio, sujeto recuperado , en recuperación, desconocido, intensidad breve)
     \end{itemize}
 
     \item \textbf{RN-08. Plazo de evaluación según prioridad:} Los reportes de prioridad alta deben evaluarse en un máximo de 24 horas; los de prioridad media, en un máximo de 5 días; los de prioridad baja, en un máximo de 7 días. 
@@ -367,7 +367,7 @@ Comprender sus diferencias resulta fundamental para decidir cómo estructurar un
 
 \end{itemize}
 
-La Tabla \ref{tab:monolito_microservicios} contrapone ambos enfoques en aspectos fundamentales como la unidad de despliegue, la complejidad operativa, la facilidad de depuración y la escalabilidad. 
+La tabla \ref{tab:monolito_microservicios} contrapone ambos enfoques en aspectos fundamentales como la unidad de despliegue, la complejidad operativa, la facilidad de depuración y la escalabilidad. 
 
 \begin{table}[H]
 	\centering
@@ -509,13 +509,13 @@ Alta. La división en Entidades y Casos de Uso indica exactamente dónde modific
 Con base en los resultados de la tabla, la selección recayó en la arquitectura limpia. 
 Esta satisface los criterios de independencia de la infraestructura, testabilidad y facilidad para agregar y mantener reglas de negocio. Además, su diseño basado en interfaces permite intercambiar tecnologías —base de datos, proveedor de correo electrónico, sistema de notificaciones— sin modificar el núcleo del sistema. 
 
-Asimismo, la regla de dependencia y la separación en anillos facilitan la aplicación de los principios \gls{SOLID} y DRY (ver glosario \gls{DRY}), al conducir naturalmente a clases con responsabilidades únicas, interfaces segregadas y lógica no duplicada \cite{martin2018}.
+Asimismo, la regla de dependencia y la separación en anillos facilitan la aplicación de los principios SOLID y DRY (ver glosario \gls{SOLID} y \gls{DRY}), al conducir naturalmente a clases con responsabilidades únicas, interfaces segregadas y lógica no duplicada \cite{martin2018}.
 
 \subsection{Diseño del sistema basado en arquitectura limpia}
 \label{subsection:clean_architecture}
 
 El diseño del sistema ESAVI adopta la estructura en capas propuesta por la arquitectura limpia, organizando el código en cuatro niveles concéntricos con responsabilidades claramente delimitadas.
-La Figura \ref{fig:arquitectura} ilustra esta organización: las dependencias entre capas reflejan estrictamente la regla de dependencia, apuntando únicamente hacia el centro.
+La figura \ref{fig:arquitectura} ilustra esta organización: las dependencias entre capas reflejan estrictamente la regla de dependencia, apuntando únicamente hacia el centro.
 
 \begin{figure}[htbp]
     \centering
@@ -548,7 +548,12 @@ La estructura en capas resuelve la separación de responsabilidades, pero persis
     Así, ninguna capa necesita conocer los detalles de construcción de sus dependencias \cite{fowler2004}.
     
 
-\item \textbf{Mapper (DTO Mapper):} Convierte objetos entre capas sin que ninguna conozca la estructura interna de la otra. Los DTO transportan únicamente los datos que cada capa necesita: entidades de dominio hacia la presentación, datos de entrada hacia la aplicación, o metadatos agregados desde infraestructura hacia aplicación. Este mecanismo actúa como traductor en todos esos cruces, garantiza que el dominio permanezca encapsulado y permite que cada capa evolucione sin afectar a las demás \cite{fowler2002}.
+\item \textbf{Mapper (DTO Mapper):} Convierte objetos entre capas sin que ninguna conozca la estructura interna de la otra. 
+% Los DTO (Data Transfer ) transportan únicamente los datos que cada capa necesita: entidades de dominio hacia la presentación, datos de entrada hacia la aplicación, o metadatos agregados desde infraestructura hacia aplicación. 
+% Este mecanismo actúa como traductor en todos esos cruces, garantiza que el dominio permanezca encapsulado y permite que cada capa evolucione sin afectar a las demás \cite{fowler2002}.
+Los DTO (Data Transfer Objects, objetos de transferencia de datos) son objetos planos que solo contienen propiedades.
+Transportan únicamente los datos que cada capa necesita: entidades de dominio hacia la presentación, datos de entrada hacia la aplicación, o metadatos agregados desde infraestructura hacia aplicación. 
+Este mecanismo actúa como traductor en todos esos cruces, garantiza que el dominio permanezca encapsulado y permite que cada capa evolucione sin afectar a las demás \cite{fowler2002}.
 
  
 \end{itemize}
@@ -569,7 +574,7 @@ Una vez definida la arquitectura del sistema y los patrones que gestionan la per
 El diseño de la base de datos adopta un enfoque relacional, orientado a garantizar la integridad referencial y la trazabilidad de cada reporte desde su creación hasta su evaluación clínica.
 
 \subsection{Modelo Entidad-Relación Extendido (MERX)}
-La Figura \ref{fig:merx} presenta el diagrama MERX (Modelo Entidad-Relación Extendido), el cual muestra las relaciones entre entidades, sus cardinalidades y las jerarquías de herencia para los roles de usuario.
+La figura \ref{fig:merx} presenta el diagrama MERX (Modelo Entidad-Relación Extendido), el cual muestra las relaciones entre entidades, sus cardinalidades y las jerarquías de herencia para los roles de usuario.
 
 \begin{figure}[H]
     \centering
@@ -623,7 +628,7 @@ Este lote permite al reportante seleccionarlo cuando desconoce el dato real, sat
 
 \subsubsection{Módulo 4: Evento Adverso}
 Este módulo constituye el núcleo clínico del sistema al registrar las manifestaciones detectadas tras la inmunización. 
-El diseño permite asociar múltiples eventos adversos a un mismo reporte, reconociendo la realidad médica donde un paciente presenta diversos síntomas simultáneos que requieren evaluación. 
+El diseño permite asociar múltiples eventos adversos a un mismo reporte, reconociendo la realidad médica donde un sujeto vacunado presenta diversos síntomas simultáneos que requieren evaluación. 
 Para acelerar las consultas clínicas, el modelo incorpora índices sobre las columnas de desenlace, intensidad, nombre del síntoma y fechas.
 
 \subsubsection{Módulo 5: Asignación y Evaluación}

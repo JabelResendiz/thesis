@@ -92,12 +92,12 @@ Además, la plataforma publica los datos recopilados en formato anonimizado para
 
 \subsection{Análisis comparativo de los sistemas estudiados}
 
-Este análisis compara los sistemas VAERS, NotificaRAM, V-safe y el formulario del CECMED en términos de su enfoque metodológico, actores involucrados, canales de notificación y mecanismos de captura de datos. La Tabla \ref{tab:sistemas_comparacion} sintetiza estos criterios con el objetivo de evidenciar diferencias estructurales en los modelos actuales de farmacovigilancia.
+Este análisis compara los sistemas VAERS, NotificaRAM, V-safe y el formulario del CECMED en términos de su enfoque metodológico, actores involucrados, canales de notificación y mecanismos de captura de datos. La tabla \ref{tab:sistemas_comparacion} sintetiza estos criterios con el objetivo de evidenciar diferencias estructurales en los modelos actuales de farmacovigilancia.
 
 \begin{table}[htbp]
 \centering
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|p{2.8cm}|p{2.7cm}|p{2.7cm}|p{2.7cm}|p{2.7cm}|}
+\begin{tabular}{|p{3.5cm}|p{2.7cm}|p{2.7cm}|p{2.7cm}|p{2.7cm}|}
 \hline
 \textbf{Criterio} & \textbf{VAERS} & \textbf{NotificaRAM} & \textbf{V-safe} & \textbf{CECMED}\\[6pt]
 \hline
@@ -371,7 +371,7 @@ A diferencia de .NET y Spring Boot, no incluye una herramienta de persistencia i
 
 \subsubsection{Comparación de las plataformas de desarrollo}
 
-La Tabla \ref{tab:comparacion_backend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}.
+La tabla \ref{tab:comparacion_backend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}.
 
 \begin{table}[htbp]
 	\centering
@@ -396,7 +396,7 @@ Godinho et al. (2024) compararon el rendimiento de APIs REST implementadas en .N
 Sus resultados muestran que, en estado de reposo, Spring Boot consume aproximadamente el doble de memoria RAM que .NET (1.40 GiB frente a 694 MiB), mientras que el uso de CPU es similar en ambos \cite{performance_study}. 
 En cuanto al throughput —el número de respuestas por segundo que el servidor es capaz de procesar—, .NET supera consistentemente a Spring Boot bajo carga concurrente. 
 Esta ventaja también aparece en los benchmarks independientes de TechEmpower\footnote{TechEmpower Framework Benchmarks es un proyecto de código abierto que ejecuta pruebas estandarizadas sobre cientos de frameworks web. Evalúa múltiples escenarios —consultas a base de datos, serialización JSON, texto plano, entre otros— midiendo el rendimiento relativo de cada tecnología bajo condiciones homogéneas de carga \cite{techempower_benchmarks}.}, que sitúan a .NET por delante de Spring Boot y de NestsJs en el escenario de múltiples consultas por solicitud .
-La Figura \ref{fig:benchmark_rendimiento} muestra ambas métricas: .NET obtiene la mayor tasa de transferencia y el menor tiempo de procesamiento entre los tres frameworks, lo que fundamenta la valoración de este criterio.
+La figura \ref{fig:benchmark_rendimiento} muestra ambas métricas: .NET obtiene la mayor tasa de transferencia y el menor tiempo de procesamiento entre los tres frameworks, lo que fundamenta la valoración de este criterio.
 
 \begin{figure}[htbp]
     \centering
@@ -456,7 +456,7 @@ Su reducido tamaño lo hace adecuado para cargas rápidas en redes con conectivi
 
 \subsubsection{Comparación de los frameworks de interfaz de usuarios}
 
-La Tabla \ref{tab:comparacion_frontend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}. 
+La tabla \ref{tab:comparacion_frontend} resume la comparación realizada según los criterios definidos en la Sección~\ref{subsection:criterios}. 
 En la interfaz de usuario, la eficiencia corresponde a la velocidad de actualización de la vista, la escalabilidad a la gestión de componentes complejos, y la mantenibilidad a la estructura del código.
 
 \begin{table}[htbp]
@@ -520,7 +520,7 @@ Las bases de datos no relacionales mantienen su vigencia para escenarios complem
 
 Una vez seleccionado el paradigma relacional, el análisis compara tres gestores —MySQL, PostgreSQL y SQL Server— que comparten un perfil adecuado para aplicaciones web multiusuario: todos operan como servicio independiente, admiten concurrencia y ofrecen integración con .NET \cite{microsoft_sql_comparison}. 
 
-La comparación valora cuatro criterios, resumidos en la Tabla \ref{tab:comparacion_sql}: 
+La comparación valora cuatro criterios, resumidos en la tabla \ref{tab:comparacion_sql}.
 La integración con .NET determina la facilidad de conexión entre el gestor y el framework de desarrollo elegido, y evita configuraciones adicionales.
 La licencia condiciona la viabilidad económica del proyecto: una licencia comercial introduce costos que una solución de código abierto elimina. 
 El despliegue multiplataforma garantiza que el sistema pueda trasladarse entre entornos sin cambios en la configuración. 

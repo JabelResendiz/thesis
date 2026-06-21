@@ -586,7 +586,7 @@ La capa de aplicación captura esta excepción y notifica al usuario que el esta
 
 \subsubsection{Idempotencia en la creación de reportes}
 
-Aunque el sistema incorpora mecanismos para que un jefe de sección pueda detectar y validar posibles reportes duplicados, existen situaciones ajenas a la lógica de negocio que pueden provocar la creación innecesaria de múltiples registros. 
+Aunque el sistema incorpora mecanismos para que un jefe municipal pueda detectar y validar posibles reportes duplicados, existen situaciones ajenas a la lógica de negocio que pueden provocar la creación innecesaria de múltiples registros. 
 Entre ellas figuran los dobles clics sobre el botón de envío, los reintentos automáticos ocasionados por fallos de red o la repetición accidental de una misma solicitud por parte del cliente.
 
 Para evitar este problema, el sistema implementa una estrategia de idempotencia.
@@ -985,7 +985,7 @@ public class UserContextService : IUserContextService
 \end{lstlisting}
 
 El método \texttt{GetUserId()} obtiene el \texttt{HttpContext} de la solicitud actual mediante \texttt{IHttpContextAccessor} y recupera el claim \texttt{ClaimTypes.NameIdentifier} —cuyo valor quedó establecido durante la generación del JWT con \texttt{JwtRegisteredClaimNames.Sub}—.
-Este enfoque elimina la necesidad de que cada endpoint reciba explícitamente el identificador del usuario como parámetro, lo que reduce el riesgo de suplantación: el identificador no puede ser manipulado por el cliente porque proviene del token validado por el servidor.
+Este enfoque elimina la necesidad de que cada ruta reciba explícitamente el identificador del usuario como parámetro, lo que reduce el riesgo de suplantación: el identificador no puede ser manipulado por el cliente porque proviene del token validado por el servidor.
 
 La capa de aplicación consume este servicio para personalizar las consultas según el usuario autenticado. 
 El siguiente fragmento muestra cómo un revisor médico obtiene únicamente los reportes que le fueron asignados, sin recibir como parámetro su propio identificador:
@@ -1046,7 +1046,7 @@ Las rutas públicas del sistema —inicio de sesión, registro de reportes, cons
 
 Entre los distintos tipos de CAPTCHA, el sistema opta por Friendly CAPTCHA, un servicio basado en prueba de trabajo (proof-of-work) que resuelve el desafío criptográfico en segundo plano sin interrumpir al usuario. La documentación oficial describe que este mecanismo exige al cliente resolver un cálculo criptográfico antes de enviar la solicitud, y que el servicio ajusta la dificultad del desafío en función del comportamiento del cliente para dificultar ataques automatizados \cite{friendlycaptcha}. 
 
-La Figura \ref{fig:captcha_flow} ilustra el flujo de verificación: un widget —un pequeño fragmento de código JavaScript que Friendly CAPTCHA proporciona para incrustar en los formularios del frontend— resuelve el desafío mientras el usuario completa los campos, adjunta un token a la solicitud y el controlador lo verifica antes de ejecutar el caso de uso.
+La figura \ref{fig:captcha_flow} ilustra el flujo de verificación: un widget —un pequeño fragmento de código JavaScript que Friendly CAPTCHA proporciona para incrustar en los formularios del frontend— resuelve el desafío mientras el usuario completa los campos, adjunta un token a la solicitud y el controlador lo verifica antes de ejecutar el caso de uso.
 
 \begin{figure}[H]
     \centering
@@ -1065,7 +1065,7 @@ El rate limiting actúa como segunda barrera: si un atacante resuelve el CAPTCHA
 
 \paragraph{Limitación por IP y por sesión}
 
-El sistema aplica un limitador global que contabiliza todas las solicitudes de un mismo cliente, independientemente del endpoint de destino. 
+El sistema aplica un limitador global que contabiliza todas las solicitudes de un mismo cliente, independientemente de la ruta de destino. 
 Para clientes anónimos —como un reportante que envía un formulario público—, el límite opera por dirección IP: 100 solicitudes por minuto. 
 Para usuarios autenticados, el límite opera por identificador de sesión extraído del JWT: 200 solicitudes por minuto. 
 Esta diferenciación evita que usuarios legítimos que comparten red —como el personal de un mismo centro de salud— resulten bloqueados por el comportamiento de un tercero, y otorga mayor margen a quienes ya superaron la barrera de autenticación. 
@@ -1112,7 +1112,7 @@ options.AddFixedWindowLimiter("Command", config =>
 
 
 \paragraph{Aplicación a rutas}
-El atributo \texttt{[EnableRate\-Limiting]} aplica las políticas sobre controladores completos o rutas específicas. Un mismo endpoint puede combinar múltiples políticas cuando requiere protección en distintas ventanas de tiempo. Por ejemplo, el controlador de autenticación declara únicamente \texttt{Auth} a nivel de clase:
+El atributo \texttt{[EnableRate\-Limiting]} aplica las políticas sobre controladores completos o rutas específicas. Una misma ruta puede combinar múltiples políticas cuando requiere protección en distintas ventanas de tiempo. Por ejemplo, el controlador de autenticación declara únicamente \texttt{Auth} a nivel de clase:
 
 \begin{lstlisting}[language={[Sharp]C}, caption={Aplicación del rate limiting a controladores y rutas}, label={lst:ratelimitingapplication}]
 [ApiController]
@@ -1121,10 +1121,10 @@ El atributo \texttt{[EnableRate\-Limiting]} aplica las políticas sobre controla
 public class AuthenticationController : ControllerBase { }
 \end{lstlisting}
 
-El endpoint de creación de reportes, en cambio, combina dos políticas: \texttt{Command} limita la tasa por minuto y \texttt{ReportDaily} impone un límite diario por IP. 
+La ruta de creación de reportes, en cambio, combina dos políticas: \texttt{Command} limita la tasa por minuto y \texttt{ReportDaily} impone un límite diario por IP. 
 Ambas actúan en conjunto con el limitador global: la solicitud solo recibe procesamiento si las tres capas lo permiten.
 
-\begin{lstlisting}[language={[Sharp]C}, caption={Combinación de políticas en un mismo endpoint}, label={lst:ratelimitingcombination}]
+\begin{lstlisting}[language={[Sharp]C}, caption={Combinación de políticas en una misma ruta}, label={lst:ratelimitingcombination}]
 [HttpPost]
 [EnableRateLimiting("Command")]
 [EnableRateLimiting("ReportDaily")]
@@ -1178,7 +1178,7 @@ Los contextos globales de autenticación y reportes envuelven toda la aplicació
 
 \subsection{Gestión del estado y comunicación con la API}
 
-El estado global de autenticación reside en un contexto de React que expone los datos del usuario, el estado de la sesión y las funciones de inicio y cierre de sesión. Al cargar la aplicación, este contexto intenta restaurar la sesión mediante el endpoint de refresco de token, lo que evita que el usuario deba iniciar sesión nuevamente si su token de acceso expiró.
+El estado global de autenticación reside en un contexto de React que expone los datos del usuario, el estado de la sesión y las funciones de inicio y cierre de sesión. Al cargar la aplicación, este contexto intenta restaurar la sesión mediante la ruta de refresco de token, lo que evita que el usuario deba iniciar sesión nuevamente si su token de acceso expiró.
 
 La comunicación con el backend recae en una instancia de Axios —biblioteca de JavaScript para realizar solicitudes HTTP— configurada con interceptores que gestionan automáticamente los tokens. 
 El interceptor de solicitud inyecta el encabezado de autorización con el token de acceso; el interceptor de respuesta detecta los códigos 401, intenta renovar el token y reenvía la solicitud original. El refresco excluye las rutas de autenticación para evitar bucles y preserva los encabezados originales en el reintento. 
@@ -1191,7 +1191,7 @@ Esta decisión reduce el riesgo de robo por lecturas desde almacenamiento persis
 Por ello, el patrón de seguridad completo combina el token de acceso en memoria con un refresh token almacenado en una cookie HttpOnly, Secure y con SameSite estricta, que el frontend no manipula y por tanto no es vulnerable a ataques de cross-site scripting.
 
 Esta estrategia conlleva un riesgo: el token de acceso desaparece al recargar la página.
-Para mitigarlo, el contexto de autenticación invoca el endpoint de refresco al cargar la aplicación. 
+Para mitigarlo, el contexto de autenticación invoca la ruta de refresco al cargar la aplicación. 
 Si el refresco tiene éxito, el nuevo token queda en memoria y la sesión restaura sin interrupción para el usuario.
 
 \subsection{Validación en tiempo real}
